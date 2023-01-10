@@ -12,9 +12,10 @@ interface State {
 	auth: boolean;
 };
 
-type Action = 
-	| { type: 'login' }
-	| { type: 'logout' };
+interface Action {
+	type: string,
+	payload: { [key: string]: any }
+}
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const reducer = (state: State, action: Action) => {

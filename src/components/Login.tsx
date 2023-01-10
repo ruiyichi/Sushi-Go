@@ -1,22 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/Auth";
+import { OAUTH_URL } from "../CONSTANTS";
 
 const Login = () => {
-	const { state, dispatch } = useAuth();
-	const navigate = useNavigate();
-
 	return (
 		<div>
 			Login
 			<div>
-				<button
-					onClick={() => {
-						dispatch({ type: state.auth ? 'logout' : 'login' });
-						navigate('/', { replace: true });
-					}}
-				>
-					{ state.auth ? 'Log out' : 'Login' }
-				</button>
+				<a href={OAUTH_URL}>Login with discord</a>
 			</div>
 		</div>
 	);

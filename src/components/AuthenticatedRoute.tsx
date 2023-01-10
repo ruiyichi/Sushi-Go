@@ -1,4 +1,4 @@
-import { useAuth } from "../contexts/Auth";
+import { useAuth } from "../contexts/AuthContext";
 import { useLocation, Navigate } from "react-router-dom";
 
 const AuthenticatedRoute = ({ children }: { children: JSX.Element }) => {

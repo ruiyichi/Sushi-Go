@@ -3,6 +3,7 @@ import Login from './components/Login';
 import { useRoutes, Outlet } from 'react-router-dom';
 import MainPage from './components/MainPage';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
+import Auth from './components/Auth';
 
 const App = () => {
 	const routes = useRoutes([
@@ -30,6 +31,10 @@ const App = () => {
 						</AuthenticatedRoute>
 					)
 				},
+				{
+					path: '/auth',
+					element: <Auth />
+				}
 			]
 		},
 	])
