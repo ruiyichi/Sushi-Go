@@ -68,6 +68,11 @@ body {
     align-items: center;
     gap: 0.5em; 
   }
+
+  #lobby-message {
+    color: red;
+    font-size: 0.5em;
+  }
 }
 
 .main-page-container {
@@ -83,5 +88,13 @@ body {
     display: flex;
     color: white;
     justify-content: center;
+  }
+}
+
+.lobby-container {
+  .game-code-container {
+    position: absolute;
+    left: 0%;
+    bottom: 0%;
   }
 }

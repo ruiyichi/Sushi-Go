@@ -4,7 +4,7 @@ const UserContext = createContext({} as UserContextInterface);
 
 interface UserContextInterface { 
 	user: User,
-	dispatch: React.Dispatch<any>
+	updateUser: React.Dispatch<any>
 };
 interface UserProviderProps { children: React.ReactNode };
 
@@ -19,11 +19,11 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 		return { ...user, ...payload };
 	}
 
-	const [user, dispatch] = useReducer(reducer, { auth: false } as User);
+	const [user, updateUser] = useReducer(reducer, { auth: false } as User);
 
 	const value: UserContextInterface = { 
 		user,
-		dispatch
+		updateUser
 	};
 
 	return (
