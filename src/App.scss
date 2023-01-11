@@ -1,0 +1,87 @@
+body {
+  background-color: rgb(112, 112, 112);
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  position: absolute;
+  right: 0%;
+  top: 0%;
+  padding-right: 0.25em;
+}
+
+.login-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+  gap: 25px;
+
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    padding-top: 0.5em;
+    background-color: white;
+    width: 400px;
+    height: 600px;
+    border-radius: 0.5em;
+  }
+}
+
+.lobby-dialog {
+  display: flex;
+  flex-direction: column;
+  border: 0.05em solid #000;
+  width: 650px;
+  height: 450px;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: white;
+  border-radius: 0.5em;
+  font-size: 2em;
+  
+  button {
+    width: max-content;
+    font-size: 0.5em;
+  }
+
+  .create-lobby-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+
+    .number-players-container {
+      display: flex;
+      gap: 0.8em;
+    }
+  }
+
+  .join-lobby-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em; 
+  }
+}
+
+.main-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+  gap: 25px;
+
+  .main-title {
+    position: relative;
+    font-size: 5em;
+    display: flex;
+    color: white;
+    justify-content: center;
+  }
+}

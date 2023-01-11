@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { StrictMode } from 'react';
-import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
 import { SocketProvider } from './contexts/SocketContext';
 
 const root = ReactDOM.createRoot(
@@ -13,9 +13,9 @@ root.render(
 	<StrictMode>
 		<BrowserRouter>
 			<SocketProvider>
-				<AuthProvider>
+				<UserProvider>
 					<App/>
-				</AuthProvider>
+				</UserProvider>
 			</SocketProvider>
 		</BrowserRouter>
 	</StrictMode>

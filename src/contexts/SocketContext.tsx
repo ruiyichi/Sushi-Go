@@ -8,7 +8,6 @@ interface SocketProviderProps { children: React.ReactNode };
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const socket = io("http://localhost:3001");
-  console.log(socket)
 
   const value: SocketContextInterface = { socket };
 

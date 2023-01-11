@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import { Server } from "socket.io";
-import { DISCORD_TOKEN_URL } from "./CONSTANTS";
+import { DISCORD_TOKEN_URL, DISCORD_USER_URL } from "./CONSTANTS";
 import { handleResponseErrors } from "./utils";
 import { URLSearchParams } from "url";
 import fetch from "node-fetch";
@@ -11,7 +11,7 @@ const io = new Server(3001, { cors: { origin: "http://localhost:3000" }});
 
 io.on("connection", socket => {
 	socket.on('validateUser', async (code, callback) => {
-		let response = await fetch(DISCORD_TOKEN_URL, {
+		let discordTokenRes = await fetch(DISCORD_TOKEN_URL, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -24,9 +24,18 @@ io.on("connection", socket => {
 				redirect_uri: 'http://localhost:3000/auth'
 			})
 		})
-		let responseJSON = await handleResponseErrors(response);
-		console.log(responseJSON)
-
-		if (!responseJSON) return;
+		let discordTokenResJSON = await handleResponseErrors(discordTokenRes);
+		let discordUserResJSON;
+		
+		if (discordTokenResJSON) {
+			let { token_type, access_token } = discordTokenResJSON;
+			let discordUserRes = await fetch(DISCORD_USER_URL, { 
+				headers: { 
+					authorization: `${token_type} ${access_token}` 
+				} 
+			});
+			discordUserResJSON = await handleResponseErrors(discordUserRes);
+		}
+		callback(discordUserResJSON);
 	})
 });
