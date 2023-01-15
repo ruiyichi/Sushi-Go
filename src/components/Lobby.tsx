@@ -28,7 +28,6 @@ const Lobby = () => {
 					</div>
 				))}
 			</div>
-			
 		</div>
 	)
 }

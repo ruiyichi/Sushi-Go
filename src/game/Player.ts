@@ -3,11 +3,11 @@ import { Card } from "./Cards";
 export class Player {
   hand: Array<Card>;
   keptHand: Array<Card>;
-  name: String;
+  id: String;
   score: Number;
 
-  constructor(name: String) {
-    this.name = name;
+  constructor(id: String) {
+    this.id = id;
     this.hand = [];
     this.keptHand = [];
     this.score = 0;

@@ -5,6 +5,7 @@ import { createLobbyCode, handleResponseErrors } from "./utils";
 import { URLSearchParams } from "url";
 import fetch from "node-fetch";
 import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
+import { Player } from "../src/game/Player";
 
 dotenv.config();
 
@@ -16,7 +17,8 @@ const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
 	return { 
 		playerIDs: [userID],
 		maxPlayers: numPlayers,
-		status: "In lobby"
+		status: "In lobby",
+		players: []
 	};
 }
 
@@ -95,6 +97,7 @@ io.on("connection", socket => {
 		let gameCode = socketCodes[socket.id];
 		let gameState = gameStates[gameCode];
 		gameState.status = "In progress";
-		io.in(gameCode).emit("startGame");
+		gameState.playerIDs.forEach(id => gameState.players.push(new Player(id)));
+		io.in(gameCode).emit("startGame", gameState.players);
 	});
 });

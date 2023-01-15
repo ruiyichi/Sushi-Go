@@ -1,3 +1,5 @@
+import { Player } from "../src/game/Player";
+
 export interface Room {
 	[key: string]: string
 }
@@ -9,7 +11,8 @@ export interface GameStates {
 export interface GameState {
 	playerIDs: string[],
 	maxPlayers: number,
-	status: "In lobby" | "In progress" | "Completed"
+	status: "In lobby" | "In progress" | "Completed",
+	players: Player[]
 }
 
 export interface SocketCodes {

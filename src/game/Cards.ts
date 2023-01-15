@@ -1,5 +1,3 @@
-type IObject = { [key: number]: number };
-
 export class Card {
 	name: String;
 
@@ -46,7 +44,7 @@ export class Dumpling extends Card {
 	}
 
 	pointValue(numCards: number) {
-		let pointsDistribution = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 } as IObject;
+		let pointsDistribution = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 } as { [key: number]: number };
 		if (numCards > 5) {
 			numCards = 5;
 		}
