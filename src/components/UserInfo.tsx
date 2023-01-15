@@ -1,7 +1,7 @@
-import { useUser } from "../contexts/UserContext";
+import { useSushiGo } from "../contexts/SushiGoContext";
 
 const UserInfo = () => {
-	const { user } = useUser();
+	const { user } = useSushiGo();
 	return (
 		<div className="user-info-container">
 			Logged in as: { user.username }

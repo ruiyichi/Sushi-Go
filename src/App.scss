@@ -97,4 +97,11 @@ body {
     left: 0%;
     bottom: 0%;
   }
+
+  .lobby-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
 }

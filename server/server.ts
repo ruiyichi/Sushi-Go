@@ -4,15 +4,20 @@ import { DISCORD_TOKEN_URL, DISCORD_USER_URL } from "./CONSTANTS";
 import { createLobbyCode, handleResponseErrors } from "./utils";
 import { URLSearchParams } from "url";
 import fetch from "node-fetch";
-import { DiscordUser, GameState } from "./interfaces";
+import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
 
 dotenv.config();
 
-const gameStates = {} as GameState;
+const gameStates = {} as GameStates;
 const users = {} as DiscordUser;
+const socketCodes = {} as SocketCodes;
 
-const getDefaultGameState = (numPlayers: number, userID: string) => {
-	return { playerIDs: [userID], maxPlayers: numPlayers };
+const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
+	return { 
+		playerIDs: [userID],
+		maxPlayers: numPlayers,
+		status: "In lobby"
+	};
 }
 
 const io = new Server(3001, { cors: { origin: "http://localhost:3000" }});
@@ -60,6 +65,8 @@ io.on("connection", socket => {
 		let gameState = getDefaultGameState(numPlayers, userID);
 		gameStates[lobbyCode] = gameState;
 		socket.join(lobbyCode);
+		socketCodes[socket.id] = lobbyCode;
+		io.in(lobbyCode).emit("playerIDs", gameState.playerIDs);
 		callback(lobbyCode);
 	});
 
@@ -77,8 +84,17 @@ io.on("connection", socket => {
 		}
 		else if (!gameState.playerIDs.includes(userID)) {
 			socket.join(code);
+			socketCodes[socket.id] = code;
 			gameState.playerIDs.push(userID);
+			io.in(code).emit("playerIDs", gameState.playerIDs);
 		}
-		callback(status);
+		callback(status, gameState.maxPlayers);
+	});
+
+	socket.on("startGame", () => {
+		let gameCode = socketCodes[socket.id];
+		let gameState = gameStates[gameCode];
+		gameState.status = "In progress";
+		io.in(gameCode).emit("startGame");
 	});
 });

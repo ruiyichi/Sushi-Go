@@ -1,13 +1,11 @@
 import localforage from "localforage";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useSocket } from "../contexts/SocketContext";
-import { useUser } from "../contexts/UserContext";
+import { useSushiGo } from "../contexts/SushiGoContext";
 import { DiscordUser } from "../Interfaces";
 
 const Auth = () => {
 	const [searchParams] = useSearchParams();
-	const { socket } = useSocket();
-	const { user, updateUser } = useUser();
+	const { user, updateUser, socket } = useSushiGo();
 	const navigate = useNavigate();
 
 	socket.emit('validateUser', searchParams.get('code'), (discordUser: DiscordUser) => {

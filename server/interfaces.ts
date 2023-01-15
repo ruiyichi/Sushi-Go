@@ -2,11 +2,18 @@ export interface Room {
 	[key: string]: string
 }
 
+export interface GameStates {
+	[code: string]: GameState
+}
+
 export interface GameState {
-	[code: string]: { 
-		playerIDs: string[],
-		maxPlayers: number,
-	},
+	playerIDs: string[],
+	maxPlayers: number,
+	status: "In lobby" | "In progress" | "Completed"
+}
+
+export interface SocketCodes {
+	[id: string]: string 
 }
 
 export interface DiscordUser {

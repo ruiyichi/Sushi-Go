@@ -1,16 +1,14 @@
 import localforage from "localforage";
-import { useGame } from "../contexts/GameContext";
-import { useUser } from "../contexts/UserContext";
+import { useSushiGo } from "../contexts/SushiGoContext";
 import Lobby from "./Lobby";
 import LobbyMenu from "./LobbyMenu";
 import Login from "./Login";
 import UserInfo from "./UserInfo";
+import Game from "./Game";
 import { useState, useEffect } from "react";
 
 const SushiGo = () => {
-	const { user, updateUser } = useUser();
-	const { game } = useGame();
-
+	const { user, updateUser, game } = useSushiGo();
 	const [settingSavedUser, setSettingSavedUser] = useState(true);
 
 	const setUserFromLocalForage = async () => {
@@ -27,12 +25,14 @@ const SushiGo = () => {
 	
 	return settingSavedUser 
 		? 
-		<div>Trying to login...</div>
+			<div>Trying to login...</div>
 		:
 		!user.auth 
 			? 
 			<Login /> 
-			:  
+			:
+			game.status === "In lobby"
+			?
 			<div>
 				<UserInfo />
 					{game.code.length === 0
@@ -42,6 +42,8 @@ const SushiGo = () => {
 						<Lobby />
 					}
 			</div>
+			:
+			<Game />
 }
 
 export default SushiGo;
