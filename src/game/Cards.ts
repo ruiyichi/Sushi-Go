@@ -28,6 +28,24 @@ export class Maki extends Card {
 	}
 }
 
+export class Maki_1 extends Maki {
+	constructor() {
+		super(1);
+	}
+}
+
+export class Maki_2 extends Maki {
+	constructor() {
+		super(2);
+	}
+}
+
+export class Maki_3 extends Maki {
+	constructor() {
+		super(3);
+	}
+}
+
 export class Sashimi extends Card {
 	constructor() {
 		super("Sashimi");
@@ -44,7 +62,7 @@ export class Dumpling extends Card {
 	}
 
 	pointValue(numCards: number) {
-		let pointsDistribution = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 } as { [key: number]: number };
+		let pointsDistribution: { [key: number]: number } = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 };
 		if (numCards > 5) {
 			numCards = 5;
 		}

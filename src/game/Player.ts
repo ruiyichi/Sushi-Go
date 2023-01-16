@@ -1,7 +1,7 @@
 import { Card } from "./Cards";
 
 export class Player {
-  hand: Array<Card>;
+  hand: Array<undefined | Card>;
   keptHand: Array<Card>;
   id: String;
   score: Number;

@@ -6,6 +6,7 @@ import { URLSearchParams } from "url";
 import fetch from "node-fetch";
 import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
 import { Player } from "../src/game/Player";
+import { Game } from "../src/game/Game";
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
 		playerIDs: [userID],
 		maxPlayers: numPlayers,
 		status: "In lobby",
-		players: []
+		players: [],
+		game: null
 	};
 }
 
@@ -67,7 +69,7 @@ io.on("connection", socket => {
 		let gameState = getDefaultGameState(numPlayers, userID);
 		gameStates[lobbyCode] = gameState;
 		socket.join(lobbyCode);
-		socketCodes[socket.id] = lobbyCode;
+		socketCodes[socket.id] = { userID, lobbyCode };
 		io.in(lobbyCode).emit("playerIDs", gameState.playerIDs);
 		callback(lobbyCode);
 	});
@@ -86,7 +88,7 @@ io.on("connection", socket => {
 		}
 		else if (!gameState.playerIDs.includes(userID)) {
 			socket.join(code);
-			socketCodes[socket.id] = code;
+			socketCodes[socket.id] = { userID, lobbyCode: code };
 			gameState.playerIDs.push(userID);
 			io.in(code).emit("playerIDs", gameState.playerIDs);
 		}
@@ -94,10 +96,25 @@ io.on("connection", socket => {
 	});
 
 	socket.on("startGame", () => {
-		let gameCode = socketCodes[socket.id];
-		let gameState = gameStates[gameCode];
+		const { lobbyCode } = socketCodes[socket.id];
+		const gameState = gameStates[lobbyCode];
+
 		gameState.status = "In progress";
 		gameState.playerIDs.forEach(id => gameState.players.push(new Player(id)));
-		io.in(gameCode).emit("startGame", gameState.players);
+
+		const game = new Game(gameState.players);
+		gameState.game = game;
+		const { turn, round, players } = game;
+
+		const clients = io.sockets.adapter.rooms.get(lobbyCode);
+		clients?.forEach(clientID => {
+			const clientSocket = io.sockets.sockets.get(clientID);
+			const { userID } = socketCodes[clientID];
+			clientSocket?.emit("startGame", { 
+				player: players.find(player => player.id === userID),
+				turn,
+				round,
+			});
+		});
 	});
 });

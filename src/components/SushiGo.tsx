@@ -43,7 +43,10 @@ const SushiGo = () => {
 					}
 			</div>
 			:
-			<Game />
+			<>
+				<UserInfo />
+				<Game />
+			</>
 }
 
 export default SushiGo;
