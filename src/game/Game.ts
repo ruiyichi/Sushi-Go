@@ -41,7 +41,10 @@ export class Game {
 	dealCards() {
 		this.players.forEach(player => {
 			for (let i = 0; i < CARDS_TO_DEAL[this.players.length]; i++) {
-				player.hand.push(this.deck.pop());
+				let topCard = this.deck.pop();
+				if (topCard) {
+					player.hand.push();
+				}
 			}
 		})
 	}

@@ -5,15 +5,10 @@
 		"lib": ["es6", "DOM"],                     
 		"allowJs": true,
 		"outDir": "build",                          
-		"rootDir": "",
+		"rootDir": "../",
 		"strict": true,         
 		"noImplicitAny": true,
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
-		"paths": {
-			"player": ["../src/game/Player"],
-			"cards": ["../src/game/Cards"]
-		},
-		"typeRoots": ["node_modules/@types", "types"]
 	}
 }

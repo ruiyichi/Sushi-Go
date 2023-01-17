@@ -1,12 +1,12 @@
 import { Card } from "./Cards";
 
 export class Player {
-  hand: Array<undefined | Card>;
+  hand: Array<Card>;
   keptHand: Array<Card>;
-  id: String;
+  id: string;
   score: Number;
 
-  constructor(id: String) {
+  constructor(id: string) {
     this.id = id;
     this.hand = [];
     this.keptHand = [];

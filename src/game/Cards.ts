@@ -1,7 +1,7 @@
 export class Card {
-	name: String;
+	name: string;
 
-	constructor(name: String) {
+	constructor(name: string) {
 		this.name = name;
 	}
 }
@@ -111,7 +111,7 @@ export class Nigiri extends Card {
 	hasWasabi: boolean;
 	points: number;
 
-	constructor(name: String, points: number) {
+	constructor(name: string, points: number) {
 		super(name);
 		this.hasWasabi = false;
 		this.points = points;
