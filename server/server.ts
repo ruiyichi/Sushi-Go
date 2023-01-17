@@ -103,8 +103,8 @@ io.on("connection", socket => {
 		gameState.playerIDs.forEach(id => gameState.players.push(new Player(id)));
 
 		const game = new Game(gameState.players);
-		gameState.game = game;
 		const { turn, round, players } = game;
+		gameState.game = game;
 
 		const clients = io.sockets.adapter.rooms.get(lobbyCode);
 		clients?.forEach(clientID => {

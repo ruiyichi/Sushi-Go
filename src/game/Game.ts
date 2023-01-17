@@ -43,7 +43,7 @@ export class Game {
 			for (let i = 0; i < CARDS_TO_DEAL[this.players.length]; i++) {
 				let topCard = this.deck.pop();
 				if (topCard) {
-					player.hand.push();
+					player.hand.push(topCard);
 				}
 			}
 		})

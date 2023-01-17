@@ -12,27 +12,16 @@ import tempura from "./assets/tempura.jpg";
 import wasabi from "./assets/wasabi.jpg";
 
 export const CARD_IMAGES: { [key: string]: string } = {
-	"Tempura": 
-		tempura,
-	"Sashimi": 
-		sashimi,
-	"Dumpling": 
-		dumpling,
-	"Maki 1": 
-		maki1,
-	"Maki 2": 
-		maki2,
-	"Maki 3": 
-		maki3,
-	"Salmon Nigiri": 
-		salmonnigiri,
-	"Squid Nigiri": 
-		squidnigiri,
-	"Egg Nigiri": 
-		eggnigiri,
-	"Pudding": 
-		pudding,
-	"Wasabi": 
-		wasabi,
+	"Tempura": tempura,
+	"Sashimi": sashimi,
+	"Dumpling": dumpling,
+	"Maki 1": maki1,
+	"Maki 2": maki2,
+	"Maki 3": maki3,
+	"Salmon Nigiri": salmonnigiri,
+	"Squid Nigiri": squidnigiri,
+	"Egg Nigiri": eggnigiri,
+	"Pudding": pudding,
+	"Wasabi": wasabi,
 	"Chopsticks": chopsticks,
 };
