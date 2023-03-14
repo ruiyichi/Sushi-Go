@@ -4,6 +4,14 @@ export class Card {
 	constructor(name: string) {
 		this.name = name;
 	}
+
+	static pointValue(...params: any) {
+		return 0;
+	}
+
+	pointValue(...params: any) {
+		return 0;
+	}
 }
 
 export class Tempura extends Card {
@@ -11,7 +19,7 @@ export class Tempura extends Card {
 		super("Tempura");
 	}
 
-	pointValue(numCards: number) {
+	static pointValue(numCards: number) {
 		return Math.floor(numCards / 2) * 5;
 	}
 }
@@ -23,7 +31,7 @@ export class Maki extends Card {
 		this.numRolls = numRolls;
 	}
 
-	pointValue(placement: "most" | "secondMost") {
+	static pointValue(placement: "most" | "secondMost") {
 		return placement === "most" ? 6 : 3;
 	}
 }
@@ -51,7 +59,7 @@ export class Sashimi extends Card {
 		super("Sashimi");
 	}
 
-	pointValue(numCards: number) {
+	static pointValue(numCards: number) {
 		return Math.floor(numCards / 3) * 10;
 	}
 }
@@ -61,7 +69,7 @@ export class Dumpling extends Card {
 		super("Dumpling");
 	}
 
-	pointValue(numCards: number) {
+	static pointValue(numCards: number) {
 		let pointsDistribution: { [key: number]: number } = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 };
 		if (numCards > 5) {
 			numCards = 5;
@@ -75,7 +83,7 @@ export class Chopsticks extends Card {
 		super("Chopsticks");
 	}
 
-	pointValue() {
+	static pointValue() {
 		return 0;
 	}
 }
@@ -92,7 +100,7 @@ export class Wasabi extends Card {
 		this.used = true;
 	}
 
-	pointValue() {
+	static pointValue() {
 		return 0;
 	}
 }
@@ -102,7 +110,7 @@ export class Pudding extends Card {
 		super("Pudding");
 	}
 
-	pointValue(placement: "most" | "least") {
+	static pointValue(placement: "most" | "least") {
 		return placement === "most" ? 6 : -6;
 	}
 }

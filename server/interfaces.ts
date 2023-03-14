@@ -14,7 +14,7 @@ export interface GameState {
 	maxPlayers: number,
 	status: "In lobby" | "In progress" | "Completed",
 	players: Player[],
-	game: null | Game
+	game: Game
 }
 
 export interface SocketCodes {

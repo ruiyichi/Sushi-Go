@@ -112,24 +112,39 @@ body {
 		margin: 0px;
 	}
 
+	.card {
+		display: flex;
+		position: relative;
+		transform-origin: center bottom;
+		transition: transform 0.4s ease-out;
+		cursor: pointer;
+		overflow: hidden;
+
+		img {
+			border: 2px solid black;
+			border-radius: 10px;
+		}
+
+		.card-info {
+			position: absolute;
+			left: 25%;
+			bottom: 0%;
+		}
+	}
+
 	.player-hand {
-		position: absolute;
-		bottom: 15%;
+		position: fixed;
+		bottom: 150px;
 		left: 50%;
+		transform: translate(-50%, 0);
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
 
-		.card {
-			position: relative;
-			transform-origin: center bottom;
-			transition: transform 0.4s ease-out;
-			cursor: pointer;
-			margin-left: -75px;
-
-			img {
-				border: 2px solid black;
-			}
-		}
+	.player-kept-hand {
+		display: flex;
+		justify-content: center;
+		gap: 5px;
 	}
 }

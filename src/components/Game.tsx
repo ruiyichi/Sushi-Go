@@ -1,6 +1,6 @@
 import { useSushiGo } from "../contexts/SushiGoContext";
-import { CARD_IMAGES } from "../game/Images";
-import Card from "./Card";
+import { CARDS_TO_DEAL } from "../game/Settings";
+import { HandCard, PlayedCard } from "./Cards";
 
 const Game = () => {
 	const { game } = useSushiGo();
@@ -8,7 +8,7 @@ const Game = () => {
 	return game.player && (
 		<div className="game-container">
 			<div className="title-container">
-				Round { game.round } - Turn { game.turn }
+				Round { game.round } - Turn { game.turn } / { CARDS_TO_DEAL[game.maxPlayers] }
 			</div>
 			<div>
 				{game.player.id}
@@ -16,11 +16,19 @@ const Game = () => {
 			<div>
 				<div className="player-hand">
 					{game.player.hand.map((card, i) => 
-						<Card 
-							key={i} 
+						<HandCard 
+							key={i + (game.player?.hand?.length || 0)} 
 							idx={i} 
-							numCards={game.player?.hand.length || 0} 
-							src={CARD_IMAGES[card.name]} 
+							numCards={game.player?.hand?.length || 0}
+							card={card}
+						/>
+					)}
+				</div>
+				<div className="player-kept-hand">
+					{game.player.keptHand.map((card, i) => 
+						<PlayedCard
+							key={i}
+							card={card}
 						/>
 					)}
 				</div>

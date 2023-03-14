@@ -24,6 +24,7 @@ interface Game {
 	maxPlayers: number,
 	status: "In lobby" | "In progress" | "Completed",
 	player: null | Player,
+	players: Object,
 	turn: number,
 	round: number
 };
@@ -34,6 +35,7 @@ const defaultGameState = {
 	maxPlayers: 0,
 	status: "In lobby",
 	player: null,
+	players: [],
 	turn: 0,
 	round: 0,
 } as Game;
@@ -42,7 +44,7 @@ const socket = io("http://localhost:3001");
 
 export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => {
 	socket.on("playerIDs", playerIDs => updateGame({ playerIDs } as Game));
-	socket.on("startGame", ({ player, turn, round }) => updateGame({ player, turn, round, status: "In progress" } as Game));
+	socket.on("updateGame", params => updateGame(params as Game));
 	socket.on("player", (player: Player) => updateGame({ player } as Game));
 
 	const gameReducer = (game: Game, payload: Game) => {

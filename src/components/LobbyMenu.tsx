@@ -10,7 +10,10 @@ const LobbyMenu = () => {
 
 	const createLobby = (maxPlayers: number) => socket.emit(
 		'createLobby', 
-		maxPlayers, user.id, (code: string) => updateGame({ code, maxPlayers })
+		maxPlayers, user.id, (code: string) => {
+			updateGame({ code, maxPlayers });
+			navigator.clipboard.writeText(code);
+		}
 	);
 	
 	const joinLobby = () => socket.emit(

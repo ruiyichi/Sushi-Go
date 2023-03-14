@@ -7,6 +7,7 @@ import fetch from "node-fetch";
 import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
 import { Player } from "../src/game/Player";
 import { Game } from "../src/game/Game";
+import { CARD_SETTINGS } from "../src/game/Settings";
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
 		maxPlayers: numPlayers,
 		status: "In lobby",
 		players: [],
-		game: null
+		game: new Game(),
 	};
 }
 
@@ -110,11 +111,63 @@ io.on("connection", socket => {
 		clients?.forEach(clientID => {
 			const clientSocket = io.sockets.sockets.get(clientID);
 			const { userID } = socketCodes[clientID];
-			clientSocket?.emit("startGame", { 
+			clientSocket?.emit("updateGame", { 
 				player: players.find(player => player.id === userID),
 				turn,
 				round,
+				status: gameState.status
 			});
 		});
+	});
+
+	socket.on("keepCard", (card, idx) => {
+		const { lobbyCode, userID } = socketCodes[socket.id];
+		const gameState = gameStates[lobbyCode];
+
+		const clientSenderSocket = io.sockets.sockets.get(socket.id);
+
+		const playerTakenCard = (player: Player) => {
+			return player.keptHand.length >= gameState.game.turn;
+		}
+
+		if (gameState.playerIDs.includes(userID)) {
+			let player = gameState.players.find(p => p.id === userID);
+
+			if (player && !playerTakenCard(player)) {
+				let cardOnServer = player.hand[idx];
+
+				if (cardOnServer.name === card.name) {
+					player.keepCard(cardOnServer);
+
+					clientSenderSocket?.emit("updateGame", {
+						player
+					});
+				}
+			}
+		}
+
+		if (gameState.players.every(p => playerTakenCard(p))) {
+			if (gameState.game.turn < gameState.game.maxTurns) {
+				gameState.game.turn += 1;
+				gameState.game.rotateHands();
+			}
+			else if (gameState.game.round < gameState.game.maxRounds) {
+				gameState.game.round += 1;
+				gameState.game.turn = 1;
+				gameState.game.dealCards();
+			}
+
+			const clients = io.sockets.adapter.rooms.get(lobbyCode);
+			clients?.forEach(clientID => {
+				const clientSocket = io.sockets.sockets.get(clientID);
+				const { userID } = socketCodes[clientID];
+				const { players, turn } = gameState.game;
+
+				clientSocket?.emit("updateGame", { 
+					player: players.find(player => player.id === userID),
+					turn
+				});
+			});
+		}
 	});
 });

@@ -4,7 +4,7 @@ export class Player {
   hand: Array<Card>;
   keptHand: Array<Card>;
   id: string;
-  score: Number;
+  score: number;
 
   constructor(id: string) {
     this.id = id;
