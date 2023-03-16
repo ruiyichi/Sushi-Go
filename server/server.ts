@@ -7,7 +7,6 @@ import fetch from "node-fetch";
 import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
 import { Player } from "../src/game/Player";
 import { Game } from "../src/game/Game";
-import { CARD_SETTINGS } from "../src/game/Settings";
 
 dotenv.config();
 
@@ -126,6 +125,7 @@ io.on("connection", socket => {
 
 		const clientSenderSocket = io.sockets.sockets.get(socket.id);
 
+		// this causes a bug since the puddings persist in keptHand from round to round
 		const playerTakenCard = (player: Player) => {
 			return player.keptHand.length >= gameState.game.turn;
 		}
@@ -152,8 +152,8 @@ io.on("connection", socket => {
 				gameState.game.rotateHands();
 			}
 			else if (gameState.game.round < gameState.game.maxRounds) {
-				gameState.game.round += 1;
-				gameState.game.turn = 1;
+				gameState.game.nextRound();
+				
 				gameState.game.dealCards();
 			}
 
@@ -165,6 +165,15 @@ io.on("connection", socket => {
 
 				clientSocket?.emit("updateGame", { 
 					player: players.find(player => player.id === userID),
+					players: players.filter(p => p.id !== userID).map(p => {
+						return (
+							{
+								id: p.id,
+								score: p.score,
+								keptHand: p.keptHand
+							}
+						);
+					}),
 					turn
 				});
 			});

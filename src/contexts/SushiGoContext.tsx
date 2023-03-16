@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { io, Socket } from "socket.io-client";
 import { Player } from "../game/Player";
+import { Card } from "../game/Cards";
 
 const SushiGoContext = createContext({} as SushiGoInterface);
 
@@ -8,6 +9,12 @@ interface User {
 	auth: boolean,
 	username: string,
 	id: string
+};
+
+interface ProtectedPlayer {
+	id: string,
+	keptHand: Card[],
+	score: number,
 };
 
 interface SushiGoInterface { 
@@ -24,7 +31,7 @@ interface Game {
 	maxPlayers: number,
 	status: "In lobby" | "In progress" | "Completed",
 	player: null | Player,
-	players: Object,
+	players: ProtectedPlayer[],
 	turn: number,
 	round: number
 };

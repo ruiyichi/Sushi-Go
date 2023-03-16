@@ -126,7 +126,7 @@ export class Nigiri extends Card {
 	}
 
 	pointValue() {
-		return this.hasWasabi ? this.points : this.points * 3;
+		return this.hasWasabi ? this.points * 3 : this.points;
 	}
 }
 

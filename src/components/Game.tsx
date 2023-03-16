@@ -24,6 +24,9 @@ const Game = () => {
 						/>
 					)}
 				</div>
+				<div className="player-score">
+					Score: {game.player.score}
+				</div>
 				<div className="player-kept-hand">
 					{game.player.keptHand.map((card, i) => 
 						<PlayedCard

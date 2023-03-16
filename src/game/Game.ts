@@ -61,14 +61,26 @@ export class Game {
 		}
 	}
 
-	scoreRound(finalRound=false) {
+	nextRound() {
+		this.scoreRound();
+		this.players.forEach(p => {
+			console.log(JSON.parse(JSON.stringify(p.keptHand)))
+			console.log(p.id)
+		})
+		this.players.forEach(p => p.keptHand = p.keptHand.filter(c => c.name === 'Pudding'));
+		this.round += 1;
+		this.turn = 1;
+	}
+
+	scoreRound() {
+		let finalRound = this.round === this.maxRounds;
+		
 		let makis = {} as { [key: string]: number };
 		let playersWithMostMakis = [];
 		let playersWithSecondMostMakis = [];
 		let puddings = {} as { [key: string]: number };
 
 		this.players.forEach(player => {
-			let roundScore = 0;
 			let makiCount = 0;
 			let puddingCount = 0;
 			let tempuraCount = 0;
@@ -89,24 +101,19 @@ export class Game {
 					sashimiCount += 1;
 				}
 				else if (card instanceof Cards.Pudding) {
-					if (finalRound) {
-						puddingCount += 1;
-					}
+					puddingCount += 1;
 				}
 				else {
-					roundScore += card.pointValue();
+					player.score += card.pointValue();
 				}
 			});
 
-			roundScore += Cards.Tempura.pointValue(tempuraCount);
-			roundScore += Cards.Dumpling.pointValue(dumplingCount);
-			roundScore += Cards.Sashimi.pointValue(sashimiCount);
-			player.score += roundScore;
+			player.score += Cards.Tempura.pointValue(tempuraCount);
+			player.score += Cards.Dumpling.pointValue(dumplingCount);
+			player.score += Cards.Sashimi.pointValue(sashimiCount);
 
 			makis[player.id] = makiCount;
-			if (finalRound) {
-				puddings[player.id] = puddingCount;
-			}
+			puddings[player.id] = puddingCount;
 		});
 
 		let mostMakis = Math.max(...Object.values(makis));
@@ -122,6 +129,48 @@ export class Game {
 			}
 		}
 
-		
+		for (let playerID of playersWithMostMakis) {
+			let player = this.players.find(p => p.id === playerID);
+			if (player) {
+				player.score += Math.floor(Cards.Maki.pointValue("most") / playersWithMostMakis.length);
+			}
+		}
+
+		for (let playerID of playersWithSecondMostMakis) {
+			let player = this.players.find(p => p.id === playerID);
+			if (player) {
+				player.score += Math.floor(Cards.Maki.pointValue("secondMost") / playersWithSecondMostMakis.length);
+			}
+		}
+
+		if (finalRound) {
+			let mostPuddings = Math.max(...Object.values(puddings));
+			let leastPuddings = Math.min(...Object.values(puddings));
+			let mostPuddingPlayerIDs = [];
+			let leastPuddingPlayerIDs = [];
+
+			for (let playerID of Object.keys(puddings)) {
+				if (puddings[playerID] === mostPuddings) {
+					mostPuddingPlayerIDs.push(playerID);
+				}
+				else if (puddings[playerID] === leastPuddings) {
+					leastPuddingPlayerIDs.push(playerID);
+				}
+			}
+
+			for (let playerID of mostPuddingPlayerIDs) {
+				let player = this.players.find(p => p.id === playerID);
+				if (player) {
+					player.score += Math.floor(Cards.Pudding.pointValue("most") / mostPuddingPlayerIDs.length);
+				}
+			}
+
+			for (let playerID of leastPuddingPlayerIDs) {
+				let player = this.players.find(p => p.id === playerID);
+				if (player) {
+					player.score += Math.floor(Cards.Pudding.pointValue("least") / leastPuddingPlayerIDs.length);
+				}
+			}
+		}
 	}
 }
