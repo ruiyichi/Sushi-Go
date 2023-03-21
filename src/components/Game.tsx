@@ -1,6 +1,6 @@
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { CARDS_TO_DEAL } from "../game/Settings";
-import { HandCard, PlayedCard } from "./Cards";
+import { PlayerHand, PlayerKeptHand } from "./Hands";
 
 const Game = () => {
 	const { game } = useSushiGo();
@@ -14,26 +14,11 @@ const Game = () => {
 				{game.player.id}
 			</div>
 			<div>
-				<div className="player-hand">
-					{game.player.hand.map((card, i) => 
-						<HandCard 
-							idx={i} 
-							numCards={game.player?.hand.length || 0}
-							card={card}
-						/>
-					)}
-				</div>
+				<PlayerHand hand={game.player.hand} />
 				<div className="player-score">
 					Score: {game.player.score}
 				</div>
-				<div className="player-kept-hand">
-					{game.player.keptHand.map((card, i) => 
-						<PlayedCard
-							key={i}
-							card={card}
-						/>
-					)}
-				</div>
+				<PlayerKeptHand hand={game.player.keptHand} />
 			</div>
 		</div>
 	);

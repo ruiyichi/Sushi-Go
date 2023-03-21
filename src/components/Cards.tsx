@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useSushiGo } from "../contexts/SushiGoContext";
 import { Card as GameCard } from "../game/Cards";
 import { CARD_IMAGES } from "../game/Images";
 import { motion, Variants } from "framer-motion";
+import { v4 as uuid } from "uuid";
 
 export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameCard, onClick?: Function, defaultStyle?: { [key: string]: any } }) => {
 	const [loaded, setLoaded] = useState(false);
@@ -17,6 +17,7 @@ export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameC
 
 	return (
 		<motion.div
+			key={uuid()}
 			className="card"
 			initial="default"
 			whileHover="hover"
@@ -34,41 +35,5 @@ export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameC
 				height={150}
 			/>
 		</motion.div>
-	);
-}
-
-export const HandCard = ({ card, idx, numCards }: { card: GameCard, idx: number, numCards: number }) => {
-	const { socket } = useSushiGo();
-
-	const factor = 0.15 * numCards;
-	let x = (idx - Math.floor(0.5 * numCards)) * 0.05;
-	if (numCards % 2 === 0) {
-		x += 0.025;
-	}
-	const angle = x * (Math.PI / factor);
-
-	const fanWidth = numCards * 50;
-  const fanHeight = fanWidth * 1.5;
-
-	return (
-		<Card
-			card={card}
-			onClick={() => socket.emit('keepCard', card, idx)}
-			defaultStyle={{
-				rotate: `${angle}rad`,
-				x: fanWidth * Math.sin(angle),
-				y: fanHeight * (1 - Math.cos(angle)),
-				zIndex: idx
-			}}
-		/>
-	);
-}
-
-export const PlayedCard = ({ card }: { card: GameCard }) => {
-	return (
-		<Card
-			card={card}
-			defaultStyle={{ position: 'relative' }}
-		/>
 	);
 }
