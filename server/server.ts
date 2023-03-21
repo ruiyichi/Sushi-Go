@@ -7,6 +7,7 @@ import fetch from "node-fetch";
 import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
 import { Player } from "../src/game/Player";
 import { Game } from "../src/game/Game";
+import { Card } from "../src/game/Cards";
 
 dotenv.config();
 
@@ -26,41 +27,41 @@ const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
 
 const io = new Server(3001, { cors: { origin: "http://localhost:3000" }});
 
-io.on("connection", socket => {
-	socket.on('validateUser', async (code, callback) => {
-		let discordTokenRes = await fetch(DISCORD_TOKEN_URL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: new URLSearchParams({
-				client_id: process.env.CLIENT_ID || '',
-				client_secret: process.env.CLIENT_SECRET || '',
-				grant_type: 'authorization_code',
-				code,
-				redirect_uri: 'http://localhost:3000/auth'
-			})
+const validateUser = async (code: string, callback: Function) => {
+	let discordTokenRes = await fetch(DISCORD_TOKEN_URL, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: new URLSearchParams({
+			client_id: process.env.CLIENT_ID || '',
+			client_secret: process.env.CLIENT_SECRET || '',
+			grant_type: 'authorization_code',
+			code,
+			redirect_uri: 'http://localhost:3000/auth'
 		})
-		let discordTokenResJSON = await handleResponseErrors(discordTokenRes);
-		let discordUserResJSON;
-		
-		if (discordTokenResJSON) {
-			let { token_type, access_token } = discordTokenResJSON;
-			let discordUserRes = await fetch(DISCORD_USER_URL, { 
-				headers: { 
-					authorization: `${token_type} ${access_token}` 
-				} 
-			});
-			discordUserResJSON = await handleResponseErrors(discordUserRes);
-			if (discordUserResJSON) {
-				let { username, id } = discordUserResJSON;
-				users[id] = { username };
-			}
+	})
+	let discordTokenResJSON = await handleResponseErrors(discordTokenRes);
+	let discordUserResJSON;
+	
+	if (discordTokenResJSON) {
+		let { token_type, access_token } = discordTokenResJSON;
+		let discordUserRes = await fetch(DISCORD_USER_URL, { 
+			headers: { 
+				authorization: `${token_type} ${access_token}` 
+			} 
+		});
+		discordUserResJSON = await handleResponseErrors(discordUserRes);
+		if (discordUserResJSON) {
+			let { username, id } = discordUserResJSON;
+			users[id] = { username };
 		}
-		callback(discordUserResJSON);
-	});
+	}
+	callback(discordUserResJSON);
+};
 
-	socket.on("createLobby", (numPlayers, userID, callback) => {
+io.on("connection", socket => {
+	const createLobby = (numPlayers: number, userID: string, callback: Function) => {
 		let allLobbyCodes = Object.keys(gameStates);
 		let lobbyCode = createLobbyCode(5);
 		while (allLobbyCodes.includes(lobbyCode)) {
@@ -70,11 +71,11 @@ io.on("connection", socket => {
 		gameStates[lobbyCode] = gameState;
 		socket.join(lobbyCode);
 		socketCodes[socket.id] = { userID, lobbyCode };
-		io.in(lobbyCode).emit("playerIDs", gameState.playerIDs);
+		io.in(lobbyCode).emit("updateGame", { playerIDs: gameState.playerIDs });
 		callback(lobbyCode);
-	});
+	}
 
-	socket.on("joinLobby", (code, userID, callback) => {
+	const joinLobby = (code: string, userID: string, callback: Function) => {
 		let status = "OK";
 
 		if (!Object.keys(gameStates).includes(code)) {
@@ -90,12 +91,12 @@ io.on("connection", socket => {
 			socket.join(code);
 			socketCodes[socket.id] = { userID, lobbyCode: code };
 			gameState.playerIDs.push(userID);
-			io.in(code).emit("playerIDs", gameState.playerIDs);
+			io.in(code).emit("updateGame", { playerIDs: gameState.playerIDs });
 		}
 		callback(status, gameState.maxPlayers);
-	});
+	}
 
-	socket.on("startGame", () => {
+	const startGame = () => {
 		const { lobbyCode } = socketCodes[socket.id];
 		const gameState = gameStates[lobbyCode];
 
@@ -117,66 +118,69 @@ io.on("connection", socket => {
 				status: gameState.status
 			});
 		});
-	});
+	}
 
-	socket.on("keepCard", (card, idx) => {
+	const keepCard = (card: Card, idx: number) => {
 		const { lobbyCode, userID } = socketCodes[socket.id];
 		const gameState = gameStates[lobbyCode];
 
 		const clientSenderSocket = io.sockets.sockets.get(socket.id);
 
-		// this causes a bug since the puddings persist in keptHand from round to round
-		const playerTakenCard = (player: Player) => {
-			return player.keptHand.length >= gameState.game.turn;
-		}
-
 		if (gameState.playerIDs.includes(userID)) {
 			let player = gameState.players.find(p => p.id === userID);
 
-			if (player && !playerTakenCard(player)) {
+			if (player && !player.keptCard) {
 				let cardOnServer = player.hand[idx];
 
 				if (cardOnServer.name === card.name) {
 					player.keepCard(cardOnServer);
 
-					clientSenderSocket?.emit("updateGame", {
-						player
-					});
+					clientSenderSocket?.emit("updateGame", { player });
 				}
 			}
 		}
 
-		if (gameState.players.every(p => playerTakenCard(p))) {
-			if (gameState.game.turn < gameState.game.maxTurns) {
-				gameState.game.turn += 1;
-				gameState.game.rotateHands();
-			}
-			else if (gameState.game.round < gameState.game.maxRounds) {
-				gameState.game.nextRound();
+		if (gameState.players.every(p => p.keptCard)) {
+			if (gameState.game.players.some(p => p.hand.filter(c => c.name === 'Chopsticks').length > 0)) {
 				
-				gameState.game.dealCards();
+			}
+			else {
+				if (gameState.game.turn < gameState.game.maxTurns) {
+					gameState.game.nextTurn();
+				}
+				else if (gameState.game.round < gameState.game.maxRounds) {
+					gameState.game.nextRound();
+				}
+				else if (gameState.game.round === gameState.game.maxRounds) {
+					gameState.game.finalRound();
+				}
 			}
 
 			const clients = io.sockets.adapter.rooms.get(lobbyCode);
 			clients?.forEach(clientID => {
 				const clientSocket = io.sockets.sockets.get(clientID);
 				const { userID } = socketCodes[clientID];
-				const { players, turn } = gameState.game;
+				const { players, turn, round } = gameState.game;
 
 				clientSocket?.emit("updateGame", { 
 					player: players.find(player => player.id === userID),
 					players: players.filter(p => p.id !== userID).map(p => {
-						return (
-							{
-								id: p.id,
-								score: p.score,
-								keptHand: p.keptHand
-							}
-						);
+						return ({
+							id: p.id,
+							score: p.score,
+							keptHand: p.keptHand
+						});
 					}),
-					turn
+					turn,
+					round
 				});
 			});
 		}
-	});
+	}
+
+	socket.on('validateUser', validateUser);
+	socket.on("createLobby", createLobby);
+	socket.on("joinLobby", joinLobby);
+	socket.on("startGame", startGame);
+	socket.on("keepCard", keepCard);
 });

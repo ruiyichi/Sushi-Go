@@ -50,9 +50,7 @@ const defaultGameState = {
 const socket = io("http://localhost:3001");
 
 export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => {
-	socket.on("playerIDs", playerIDs => updateGame({ playerIDs } as Game));
 	socket.on("updateGame", params => updateGame(params as Game));
-	socket.on("player", (player: Player) => updateGame({ player } as Game));
 
 	const gameReducer = (game: Game, payload: Game) => {
 		return { ...game, ...payload };

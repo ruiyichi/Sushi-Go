@@ -63,13 +63,27 @@ export class Game {
 
 	nextRound() {
 		this.scoreRound();
-		this.players.forEach(p => {
-			console.log(JSON.parse(JSON.stringify(p.keptHand)))
-			console.log(p.id)
-		})
-		this.players.forEach(p => p.keptHand = p.keptHand.filter(c => c.name === 'Pudding'));
+		this.players.forEach(p => p.clearKeptHand());
 		this.round += 1;
 		this.turn = 1;
+		this.dealCards();
+		this.clearPlayersKeptCard();
+	}
+
+	nextTurn() {
+		this.turn += 1;
+		this.rotateHands();
+		this.clearPlayersKeptCard();
+	}
+
+	finalRound() {
+		this.scoreRound();
+		this.players.forEach(p => p.clearKeptHand());
+		this.clearPlayersKeptCard();
+	}
+
+	clearPlayersKeptCard() {
+		this.players.forEach(p => p.keptCard = false);
 	}
 
 	scoreRound() {

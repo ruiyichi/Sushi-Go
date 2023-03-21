@@ -17,9 +17,8 @@ const Game = () => {
 				<div className="player-hand">
 					{game.player.hand.map((card, i) => 
 						<HandCard 
-							key={i + (game.player?.hand?.length || 0)} 
 							idx={i} 
-							numCards={game.player?.hand?.length || 0}
+							numCards={game.player?.hand.length || 0}
 							card={card}
 						/>
 					)}
@@ -36,9 +35,6 @@ const Game = () => {
 					)}
 				</div>
 			</div>
-			<button id="hide-hand-button">
-				Hide hand
-			</button>
 		</div>
 	);
 }

@@ -2,17 +2,25 @@ import { useState } from "react";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { Card as GameCard } from "../game/Cards";
 import { CARD_IMAGES } from "../game/Images";
+import { motion, Variants } from "framer-motion";
 
-export const Card = ({ card, onClick=() => {}, defaultStyle={}, onHoverStyle={} }: { card: GameCard, onClick?: Function, defaultStyle?: Object, onHoverStyle?: Object }) => {
+export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameCard, onClick?: Function, defaultStyle?: { [key: string]: any } }) => {
 	const [loaded, setLoaded] = useState(false);
-	const [style, setStyle] = useState(defaultStyle);
+	
+	const variants: Variants = {
+		default: defaultStyle,
+		hover: {
+			scale: 1.1,
+			transition: { duration: 0.3 },
+		}
+	};
 
 	return (
-		<div
+		<motion.div
 			className="card"
-			style={style}
-			onMouseEnter={() => setStyle(onHoverStyle)}
-			onMouseLeave={() => setStyle(defaultStyle)}
+			initial="default"
+			whileHover="hover"
+			variants={variants}
 			onClick={() => onClick()}
 		>
 			<div className="card-info">
@@ -25,45 +33,42 @@ export const Card = ({ card, onClick=() => {}, defaultStyle={}, onHoverStyle={} 
 				width={100} 
 				height={150}
 			/>
-		</div>
+		</motion.div>
 	);
 }
 
 export const HandCard = ({ card, idx, numCards }: { card: GameCard, idx: number, numCards: number }) => {
 	const { socket } = useSushiGo();
 
-	let maxAngleOffset = 45;
-	let rotationAngle = (idx / (numCards - 1)) * 2 * maxAngleOffset - maxAngleOffset;
+	const factor = 0.15 * numCards;
+	let x = (idx - Math.floor(0.5 * numCards)) * 0.05;
+	if (numCards % 2 === 0) {
+		x += 0.025;
+	}
+	const angle = x * (Math.PI / factor);
 
-	let minTopOffset = -25;
-	let topOffset = -minTopOffset * Math.abs((numCards - 1) * 0.5 - idx);
-
-	const defaultStyle = {
-		zIndex: idx,
-		transform: `rotate(${rotationAngle}deg)`,
-		top: `${topOffset}px`,
-		marginLeft: '-75px'
-	};
+	const fanWidth = numCards * 50;
+  const fanHeight = fanWidth * 1.5;
 
 	return (
 		<Card
 			card={card}
 			onClick={() => socket.emit('keepCard', card, idx)}
-			defaultStyle={defaultStyle}
-			onHoverStyle={{ ...defaultStyle, transform: `${defaultStyle.transform} translateY(-50px) scale(1.1)` }}
+			defaultStyle={{
+				rotate: `${angle}rad`,
+				x: fanWidth * Math.sin(angle),
+				y: fanHeight * (1 - Math.cos(angle)),
+				zIndex: idx
+			}}
 		/>
 	);
 }
 
 export const PlayedCard = ({ card }: { card: GameCard }) => {
-	const onHoverStyle = {
-		transform: 'scale(1.1)'
-	};
-
 	return (
 		<Card
 			card={card}
-			onHoverStyle={onHoverStyle}
+			defaultStyle={{ position: 'relative' }}
 		/>
 	);
 }

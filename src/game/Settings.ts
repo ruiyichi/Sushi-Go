@@ -52,7 +52,7 @@ export const CARD_SETTINGS: { [key: string]: { numCards: number, className: any 
 }
 
 export const CARDS_TO_DEAL: { [key: number]: number } = {
-	2: 3,
+	2: 10,
 	3: 9,
 	4: 8,
 	5: 7,

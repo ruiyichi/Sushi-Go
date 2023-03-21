@@ -107,16 +107,10 @@ body {
 }
 
 .game-container {
-	#hide-hand-button {
-		position: absolute;
-		margin: 0px;
-	}
-
 	.card {
 		display: flex;
-		position: relative;
+		position: absolute;
 		transform-origin: center bottom;
-		transition: transform 0.4s ease-out;
 		cursor: pointer;
 		overflow: hidden;
 
@@ -134,11 +128,9 @@ body {
 
 	.player-hand {
 		position: fixed;
-		bottom: 150px;
-		left: 50%;
-		transform: translate(-50%, 0);
+		bottom: 300px;
+		width: 100%;
 		display: flex;
-		align-items: center;
 		justify-content: center;
 	}
 
