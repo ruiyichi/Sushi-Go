@@ -128,6 +128,10 @@ export class Nigiri extends Card {
 	pointValue() {
 		return this.hasWasabi ? this.points * 3 : this.points;
 	}
+
+	addWasabi() {
+		this.hasWasabi = true;
+	}
 }
 
 export class SquidNigiri extends Nigiri {

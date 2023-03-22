@@ -128,7 +128,7 @@ body {
 
 	.player-hand {
 		position: fixed;
-		bottom: 350px;
+		bottom: 300px;
 		width: 100%;
 		display: flex;
 		justify-content: center;
@@ -138,5 +138,11 @@ body {
 		display: flex;
 		justify-content: center;
 		gap: 5px;
+
+		.group {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+		}
 	}
 }

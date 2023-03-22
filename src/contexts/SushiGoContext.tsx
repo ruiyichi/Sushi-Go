@@ -33,7 +33,8 @@ interface Game {
 	player: null | Player,
 	players: ProtectedPlayer[],
 	turn: number,
-	round: number
+	round: number,
+	phase: string,
 };
 
 const defaultGameState = {
@@ -45,6 +46,7 @@ const defaultGameState = {
 	players: [],
 	turn: 0,
 	round: 0,
+	phase: "",
 } as Game;
 
 const socket = io("http://localhost:3001");

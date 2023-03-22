@@ -4,13 +4,13 @@ import { CARD_IMAGES } from "../game/Images";
 import { motion, Variants } from "framer-motion";
 import { v4 as uuid } from "uuid";
 
-export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameCard, onClick?: Function, defaultStyle?: { [key: string]: any } }) => {
+export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameCard, onClick?: Function, defaultStyle?: Record<string, any> }) => {
 	const [loaded, setLoaded] = useState(false);
 	
 	const variants: Variants = {
 		default: defaultStyle,
 		hover: {
-			scale: 1.1,
+			scale: 1.2,
 			transition: { duration: 0.3 },
 		}
 	};
@@ -33,6 +33,7 @@ export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameC
 				onLoad={() => setLoaded(true)}
 				width={100} 
 				height={150}
+				draggable={false}
 			/>
 		</motion.div>
 	);

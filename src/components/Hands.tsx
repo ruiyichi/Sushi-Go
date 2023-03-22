@@ -3,7 +3,7 @@ import { useSushiGo } from "../contexts/SushiGoContext";
 import { Card as GameCard } from "../game/Cards";
 import { Card } from "./Cards";
 
-export const PlayerHand = ({ hand }: { hand: GameCard[] }) => {
+export const PlayerHand = ({ hand, keptCard }: { hand: GameCard[], keptCard: boolean }) => {
 	const { socket } = useSushiGo();
 	const [handWidth, setHandWidth] = useState(0);
 	const ref = useRef<HTMLDivElement | null>(null);
@@ -11,6 +11,7 @@ export const PlayerHand = ({ hand }: { hand: GameCard[] }) => {
 	const hasRef = ref.current !== undefined;
 	useEffect(() => {
 		const onResize = () => setHandWidth(ref.current!.clientWidth);
+
 		onResize();
 		window.addEventListener("resize", onResize);
 		return () => window.removeEventListener("resize", onResize);
@@ -35,8 +36,9 @@ export const PlayerHand = ({ hand }: { hand: GameCard[] }) => {
 				const angle = cardAngle(idx);
 				return (
 					<Card
+						key={idx}
 						card={card}
-						onClick={() => socket.emit('keepCard', card, idx)}
+						onClick={() => socket.emit(keptCard ? 'keepSecondCard' : 'keepCard', card, idx)}
 						defaultStyle={{
 							rotate: `${angle}rad`,
 							x: fanWidth * Math.sin(angle),
@@ -51,13 +53,28 @@ export const PlayerHand = ({ hand }: { hand: GameCard[] }) => {
 }
 
 export const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
+	const usedNigiris = hand.filter(c => c.name.includes('Nigiri') && 'hasWasabi' in c && c.hasWasabi);
+	const usedWasabis = hand.filter(c => c.name === 'Wasabi' && 'used' in c && c.used);
+
+	const pairedWasabiAndNigiris = usedNigiris.map((nigiri, i) => [usedWasabis[i], nigiri]);
+
+	const groupedHand = hand.filter(card => !usedNigiris.includes(card) && !usedWasabis.includes(card)).reduce((g: Record<string, GameCard[]>, c: GameCard) => {
+    g[c.name] = g[c.name] || [];
+    g[c.name].push(c);
+    return g;
+  }, Object.create(null));
+
 	return (
 		<div className="player-kept-hand">
-			{hand.map(card => 
-				<Card
-					card={card}
-					defaultStyle={{ position: 'relative' }}
-				/>
+			{Object.values(groupedHand).concat(pairedWasabiAndNigiris).map(group => 
+				<div className="group">
+					{group.map((card, idx) => 
+						<Card
+							card={card}
+							defaultStyle={{ position: 'relative', zIndex: idx, y: -120 * idx }}
+						/>
+					)}
+				</div>
 			)}
 		</div>
 	);

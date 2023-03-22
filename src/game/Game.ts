@@ -10,6 +10,7 @@ export class Game {
 	turn: number;
 	maxTurns: number;
 	maxRounds: number;
+	phase: string;
 
 	constructor(players: Player[]=[]) {
 		this.deck = [];
@@ -19,10 +20,16 @@ export class Game {
 		this.turn = 1;
 		this.maxTurns = CARDS_TO_DEAL[this.players.length];
 		this.maxRounds = NUM_ROUNDS;
+		this.phase = "";
 
+		this.updatePhase();
 		this.setDeck();
 		this.shuffleDeck();
 		this.dealCards();
+	}
+
+	updatePhase() {
+		this.phase = `Waiting for players ${this.players.filter(p => !p.keptCard).map(p => p.id).join(', ')} to play`;
 	}
 
 	setDeck() {
@@ -74,6 +81,7 @@ export class Game {
 		this.turn += 1;
 		this.rotateHands();
 		this.clearPlayersKeptCard();
+		this.players.forEach(p => p.setHadChopsticks());
 	}
 
 	finalRound() {

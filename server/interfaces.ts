@@ -1,20 +1,13 @@
 import { Game } from "../src/game/Game";
 import { Player } from "../src/game/Player";
 
-export interface Room {
-	[key: string]: string
-}
-
-export interface GameStates {
-	[code: string]: GameState
-}
-
 export interface GameState {
 	playerIDs: string[],
 	maxPlayers: number,
 	status: "In lobby" | "In progress" | "Completed",
 	players: Player[],
-	game: Game
+	game: Game,
+	phase: string
 }
 
 export interface SocketCodes {
@@ -22,10 +15,4 @@ export interface SocketCodes {
 		lobbyCode: string,
 		userID: string
 	}
-}
-
-export interface DiscordUser {
-  [id: string]: {
-    username: string,
-  },
 }

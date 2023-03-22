@@ -4,15 +4,15 @@ import { DISCORD_TOKEN_URL, DISCORD_USER_URL } from "./CONSTANTS";
 import { createLobbyCode, handleResponseErrors } from "./utils";
 import { URLSearchParams } from "url";
 import fetch from "node-fetch";
-import { DiscordUser, GameState, GameStates, SocketCodes } from "./interfaces";
+import { GameState, SocketCodes } from "./interfaces";
 import { Player } from "../src/game/Player";
 import { Game } from "../src/game/Game";
 import { Card } from "../src/game/Cards";
 
 dotenv.config();
 
-const gameStates = {} as GameStates;
-const users = {} as DiscordUser;
+const gameStates = {} as Record<string, GameState>;
+const users = {} as Record<string, { username: string }>;
 const socketCodes = {} as SocketCodes;
 
 const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
@@ -22,6 +22,7 @@ const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
 		status: "In lobby",
 		players: [],
 		game: new Game(),
+		phase: "",
 	};
 }
 
@@ -104,7 +105,7 @@ io.on("connection", socket => {
 		gameState.playerIDs.forEach(id => gameState.players.push(new Player(id)));
 
 		const game = new Game(gameState.players);
-		const { turn, round, players } = game;
+		const { turn, round, players, phase } = game;
 		gameState.game = game;
 
 		const clients = io.sockets.adapter.rooms.get(lobbyCode);
@@ -115,7 +116,8 @@ io.on("connection", socket => {
 				player: players.find(player => player.id === userID),
 				turn,
 				round,
-				status: gameState.status
+				status: gameState.status,
+				phase
 			});
 		});
 	}
@@ -125,6 +127,7 @@ io.on("connection", socket => {
 		const gameState = gameStates[lobbyCode];
 
 		const clientSenderSocket = io.sockets.sockets.get(socket.id);
+		const clients = io.sockets.adapter.rooms.get(lobbyCode);
 
 		if (gameState.playerIDs.includes(userID)) {
 			let player = gameState.players.find(p => p.id === userID);
@@ -134,47 +137,76 @@ io.on("connection", socket => {
 
 				if (cardOnServer.name === card.name) {
 					player.keepCard(cardOnServer);
+					gameState.game.updatePhase();
 
 					clientSenderSocket?.emit("updateGame", { player });
+
+					clients?.forEach(clientID => {
+						const clientSocket = io.sockets.sockets.get(clientID);
+						clientSocket?.emit("updateGame", { phase: gameState.game.phase });
+					});
 				}
 			}
 		}
 
 		if (gameState.players.every(p => p.keptCard)) {
-			if (gameState.game.players.some(p => p.hand.filter(c => c.name === 'Chopsticks').length > 0)) {
-				
+			if (gameState.game.turn < gameState.game.maxTurns) {
+				gameState.game.nextTurn();
 			}
-			else {
-				if (gameState.game.turn < gameState.game.maxTurns) {
-					gameState.game.nextTurn();
-				}
-				else if (gameState.game.round < gameState.game.maxRounds) {
-					gameState.game.nextRound();
-				}
-				else if (gameState.game.round === gameState.game.maxRounds) {
-					gameState.game.finalRound();
-				}
+			else if (gameState.game.round < gameState.game.maxRounds) {
+				gameState.game.nextRound();
 			}
+			else if (gameState.game.round === gameState.game.maxRounds) {
+				gameState.game.finalRound();
+			}
+
+			gameState.game.updatePhase();
 
 			const clients = io.sockets.adapter.rooms.get(lobbyCode);
 			clients?.forEach(clientID => {
 				const clientSocket = io.sockets.sockets.get(clientID);
 				const { userID } = socketCodes[clientID];
-				const { players, turn, round } = gameState.game;
+				const { players, turn, round, phase } = gameState.game;
 
 				clientSocket?.emit("updateGame", { 
 					player: players.find(player => player.id === userID),
-					players: players.filter(p => p.id !== userID).map(p => {
-						return ({
-							id: p.id,
-							score: p.score,
-							keptHand: p.keptHand
-						});
-					}),
+					players: players.filter(p => p.id !== userID).map(p => ({
+						id: p.id,
+						score: p.score,
+						keptHand: p.keptHand
+					})),
 					turn,
-					round
+					round,
+					phase
 				});
 			});
+		}
+	}
+
+	const keepSecondCard = (card: Card, idx: number) => {
+		const { lobbyCode, userID } = socketCodes[socket.id];
+		const gameState = gameStates[lobbyCode];
+
+		const clientSenderSocket = io.sockets.sockets.get(socket.id);
+
+		if (gameState.playerIDs.includes(userID)) {
+			let player = gameState.players.find(p => p.id === userID);
+
+			if (player) {
+				let cardOnServer = player.hand[idx];
+
+				if (player.hadChopsticks && player.keptHand.some(card => card.name === 'Chopsticks') && cardOnServer.name === card.name) {
+					player.keepCard(cardOnServer);
+					let chopsticks = player.keptHand.find(card => card.name === 'Chopsticks');
+					if (chopsticks) {
+						player.hand.push(chopsticks);
+						player.keptHand.splice(player.keptHand.indexOf(chopsticks), 1);
+					}
+					player.hadChopsticks = false;
+
+					clientSenderSocket?.emit("updateGame", { player });
+				}
+			}
 		}
 	}
 
@@ -183,4 +215,5 @@ io.on("connection", socket => {
 	socket.on("joinLobby", joinLobby);
 	socket.on("startGame", startGame);
 	socket.on("keepCard", keepCard);
+	socket.on("keepSecondCard", keepSecondCard);
 });
