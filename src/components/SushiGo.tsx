@@ -8,7 +8,7 @@ import Game from "./Game";
 import { useState, useEffect } from "react";
 
 const SushiGo = () => {
-	const { user, updateUser, game } = useSushiGo();
+	const { user, updateUser, game, socket } = useSushiGo();
 	const [settingSavedUser, setSettingSavedUser] = useState(true);
 
 	const setUserFromLocalForage = async () => {
@@ -18,9 +18,14 @@ const SushiGo = () => {
 		}
 		setSettingSavedUser(false);
 	}
+
+	const reloadSavedGame = () => {
+		socket.emit("reloadSavedGame");
+	}
 	
 	useEffect(() => {
 		setUserFromLocalForage();
+		reloadSavedGame();
 	}, []);
 	
 	return settingSavedUser 
