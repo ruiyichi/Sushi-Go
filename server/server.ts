@@ -1,45 +1,59 @@
 import * as dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import credentials from "./middleware/credentials";
+import corsOptions from "./config/corsOptions";
+import { logger } from "./middleware/logEvents";
+import { errorHandler } from "./middleware/errorHandler";
+import { connectDB } from "./config/dbConnection";
+import cookieParser from "cookie-parser";
+import verifyJWT from "./middleware/verifyJWT";
 import path from "path";
-import cors, { CorsOptions } from "cors";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3500;
-import { logger } from "./middleware/logEvents";
-import { errorHandler } from "./middleware/errorHandler";
 
+connectDB();
 
 app.use(logger);
 
-const whitelist = ["http://localhost:3000"];
-const corsOptions: CorsOptions = {
-	origin: (origin, callback) => {
-		if (!origin || whitelist.indexOf(origin) !== -1) {
-			callback(null, true);
-		} else {
-			callback(new Error("Not allowed by CORS"));
-		}
-	},
-	optionsSuccessStatus: 200
-};
+app.use(credentials);
 
 app.use(cors(corsOptions));
-
-app.get('/', (req, res) => {
-	res.send('Hello World!');
-});
 
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
 
-app.all("*", (req, res) => {
+app.use(cookieParser());
+
+// routes
+app.use('/', require('./routes/root'));
+app.use('/register', require('./routes/register'));
+app.use('/auth', require('./routes/auth'));
+app.use('/refresh', require('./routes/refresh'));
+app.use('/logout', require('./routes/logout'));
+
+app.use(verifyJWT);
+app.use('/users', require('./routes/api/users'));
+
+app.all('*', (req, res) => {
 	res.status(404);
-	res.type("txt").send("404 Not Found");
+	if (req.accepts('html')) {
+		res.sendFile(path.join(__dirname, 'views', '404.html'));
+	} else if (req.accepts('json')) {
+		res.json({ "error": "404 Not Found" });
+	} else {
+		res.type('txt').send("404 Not Found");
+	}
 });
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose.connection.once('open', () => {
+	console.log('Connected to MongoDB');
+	app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
