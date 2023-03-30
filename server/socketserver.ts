@@ -1,9 +1,6 @@
 import * as dotenv from "dotenv";
 import { Server } from "socket.io";
-import { DISCORD_TOKEN_URL, DISCORD_USER_URL } from "./CONSTANTS";
-import { createLobbyCode, handleResponseErrors } from "./utils";
-import { URLSearchParams } from "url";
-import fetch from "node-fetch";
+import { createLobbyCode } from "./utils";
 import { GameState, SocketCodes } from "./interfaces";
 import { Player } from "../src/game/Player";
 import { Game } from "../src/game/Game";
@@ -12,7 +9,6 @@ import { Card } from "../src/game/Cards";
 dotenv.config();
 
 const gameStates = {} as Record<string, GameState>;
-const users = {} as Record<string, { username: string }>;
 const socketCodes = {} as SocketCodes;
 
 const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
@@ -27,39 +23,6 @@ const getDefaultGameState = (numPlayers: number, userID: string): GameState => {
 }
 
 const io = new Server(3001, { cors: { origin: "http://localhost:3000" }});
-
-const validateUser = async (code: string, callback: Function) => {
-	let discordTokenRes = await fetch(DISCORD_TOKEN_URL, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: new URLSearchParams({
-			client_id: process.env.CLIENT_ID || '',
-			client_secret: process.env.CLIENT_SECRET || '',
-			grant_type: 'authorization_code',
-			code,
-			redirect_uri: 'http://localhost:3000/auth'
-		})
-	})
-	let discordTokenResJSON = await handleResponseErrors(discordTokenRes);
-	let discordUserResJSON;
-	
-	if (discordTokenResJSON) {
-		let { token_type, access_token } = discordTokenResJSON;
-		let discordUserRes = await fetch(DISCORD_USER_URL, { 
-			headers: { 
-				authorization: `${token_type} ${access_token}` 
-			} 
-		});
-		discordUserResJSON = await handleResponseErrors(discordUserRes);
-		if (discordUserResJSON) {
-			let { username, id } = discordUserResJSON;
-			users[id] = { username };
-		}
-	}
-	callback(discordUserResJSON);
-};
 
 io.on("connection", socket => {
 	const createLobby = (numPlayers: number, userID: string, callback: Function) => {
@@ -87,8 +50,7 @@ io.on("connection", socket => {
 		let gameState = gameStates[code];
 		if (gameState.playerIDs.length === gameState.maxPlayers) {
 			status = "Lobby full";
-		}
-		else if (!gameState.playerIDs.includes(userID)) {
+		} else if (!gameState.playerIDs.includes(userID)) {
 			socket.join(code);
 			socketCodes[socket.id] = { userID, lobbyCode: code };
 			gameState.playerIDs.push(userID);
@@ -152,11 +114,9 @@ io.on("connection", socket => {
 		if (gameState.players.every(p => p.keptCard)) {
 			if (gameState.game.turn < gameState.game.maxTurns) {
 				gameState.game.nextTurn();
-			}
-			else if (gameState.game.round < gameState.game.maxRounds) {
+			} else if (gameState.game.round < gameState.game.maxRounds) {
 				gameState.game.nextRound();
-			}
-			else if (gameState.game.round === gameState.game.maxRounds) {
+			} else if (gameState.game.round === gameState.game.maxRounds) {
 				gameState.game.finalRound();
 			}
 
@@ -210,15 +170,9 @@ io.on("connection", socket => {
 		}
 	}
 
-	const reloadSavedGame = () => {
-
-	}
-
-	socket.on('validateUser', validateUser);
 	socket.on("createLobby", createLobby);
 	socket.on("joinLobby", joinLobby);
 	socket.on("startGame", startGame);
 	socket.on("keepCard", keepCard);
 	socket.on("keepSecondCard", keepSecondCard);
-	socket.on("reloadSavedGame", reloadSavedGame);
 });

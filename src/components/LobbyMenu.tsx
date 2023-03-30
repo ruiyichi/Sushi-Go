@@ -1,6 +1,7 @@
 import { MAX_PLAYERS, MIN_PLAYERS } from "../game/Settings";
 import { useState } from "react";
 import { useSushiGo } from "../contexts/SushiGoContext";
+import { useNavigate } from "react-router-dom";
 
 const LobbyMenu = () => {
 	const { socket, user, updateGame } = useSushiGo();
@@ -8,23 +9,26 @@ const LobbyMenu = () => {
 	const [gameCode, setGameCode] = useState('');
 	const [lobbyMessage, setLobbyMessage] = useState('');
 
+	const navigate = useNavigate();
+
 	const createLobby = (maxPlayers: number) => socket.emit(
 		'createLobby', 
-		maxPlayers, user.id, (code: string) => {
+		maxPlayers, user.username, (code: string) => {
 			updateGame({ code, maxPlayers });
 			navigator.clipboard.writeText(code);
+			navigate('/lobby');
 		}
 	);
 	
 	const joinLobby = () => socket.emit(
 		'joinLobby',
-		gameCode, user.id, (status: "OK" | "Invalid code" | "Lobby full", maxPlayers: number) => {
+		gameCode, user.username, (status: "OK" | "Invalid code" | "Lobby full", maxPlayers: number) => {
 			if (status === "OK") {
 				updateGame({ code: gameCode, maxPlayers });
-			}
-			else {
+			} else {
 				setLobbyMessage(status);
 			}
+			navigate('/lobby');
 		}
 	);
 

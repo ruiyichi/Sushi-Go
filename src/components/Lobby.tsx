@@ -1,11 +1,23 @@
+import { useNavigate } from "react-router-dom";
 import { useSushiGo } from "../contexts/SushiGoContext";
+import { useEffect } from "react";
 
 const Lobby = () => {
 	const { game, user, socket } = useSushiGo();
+	const navigate = useNavigate();
 
-	const is_host = game.playerIDs?.[0] === user.id;
+	const is_host = game.playerIDs?.[0] === user.username;
 
-	const startGame = () => socket.emit("startGame");
+	const startGame = () => {
+		socket.emit("startGame");
+		navigate('/game');
+	};
+
+	useEffect(() => {
+		if (game.status === 'In progress') {
+			navigate('/game');
+		}
+	}, [game]);
 
 	return (
 		<div className="lobby-container">
@@ -29,7 +41,7 @@ const Lobby = () => {
 				))}
 			</div>
 		</div>
-	)
+	);
 }
 
-export default Lobby
+export default Lobby;

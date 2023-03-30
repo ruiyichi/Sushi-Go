@@ -8,7 +8,9 @@ const SushiGoContext = createContext({} as SushiGoInterface);
 interface User {
 	auth: boolean,
 	username: string,
-	id: string
+	id: string,
+	pwd: string,
+	accessToken: string,
 };
 
 interface ProtectedPlayer {
@@ -62,7 +64,7 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const userReducer = (user: User, payload: User) => {
 		return { ...user, ...payload };
 	}
-	const [user, updateUser] = useReducer(userReducer, { auth: false } as User);
+	const [user, updateUser] = useReducer(userReducer, {} as User);
 
 	const value: SushiGoInterface = { 
 		game,

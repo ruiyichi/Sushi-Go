@@ -14,12 +14,10 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
 		process.env.REFRESH_TOKEN_SECRET as Secret,
 		(err: any, decoded: any) => {
 			if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
-			const roles = Object.values(foundUser.roles);
 			const accessToken = jwt.sign(
 				{
-					"UserInfo": {
-						"username": decoded.username,
-						"roles": roles
+					UserInfo: {
+						username: decoded.username,
 					}
 				},
 				process.env.ACCESS_TOKEN_SECRET as Secret,
