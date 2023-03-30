@@ -7,7 +7,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 const LOGIN_URL = '/auth';
 
 const Login = () => {
-	const { updateUser } = useSushiGo();
+	const { updateUser, persist, setPersist } = useSushiGo();
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -19,6 +19,10 @@ const Login = () => {
 	const [username, setUsername] = useState('');
 	const [pwd, setPwd] = useState('');
 	const [errMsg, setErrMsg] = useState('');
+
+	useEffect(() => {
+		localStorage.setItem('persist', persist);
+	}, [persist]);
 
 	useEffect(() => {
 		usernameRef?.current?.focus();
@@ -37,7 +41,7 @@ const Login = () => {
 			);
 
 			const accessToken = response?.data?.accessToken;
-			updateUser({ username, pwd, accessToken });
+			updateUser({ username, accessToken });
 			setUsername('');
 			setPwd('');
 
@@ -84,6 +88,15 @@ const Login = () => {
 						required
 					/>
 					<button>Sign in</button>
+					<div>
+						Stay signed in
+						<input 
+							type='checkbox'
+							id='persist'
+							onChange={() => setPersist((prev: boolean) => !prev)}
+							value={persist}
+						/>
+					</div>
 				</form>
 				<div>
 					<Link to='/register'>Sign up</Link>

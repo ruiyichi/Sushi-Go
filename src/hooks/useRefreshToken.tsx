@@ -9,13 +9,13 @@ const useRefreshToken = () => {
       withCredentials: true
     });
 
-    const { accessToken } = response.data;
+    const { accessToken, username } = response.data;
 
-    updateUser({ accessToken });
+    updateUser({ accessToken, username });
     return accessToken;
   }
 
   return refresh;
 }
 
-export default useRefreshToken();
+export default useRefreshToken;

@@ -9,6 +9,7 @@ import Game from './components/Game';
 import Missing from './components/Missing';
 import RequireAuth from './components/RequireAuth';
 import Lobby from './components/Lobby';
+import PersistLogin from './components/PersistLogin';
 
 const App = () => {
 	return (
@@ -18,10 +19,12 @@ const App = () => {
 				<Route path="register" element={<Register />} />
 				<Route path="unauthorized" element={<Unauthorized />} />
 
-				<Route element={<RequireAuth />}>
-					<Route path="/" element={<Home />} />
-					<Route path="game" element={<Game />} />
-					<Route path="lobby" element={<Lobby />} />
+				<Route element={<PersistLogin />}>
+					<Route element={<RequireAuth />}>
+						<Route path="/" element={<Home />} />
+						<Route path="game" element={<Game />} />
+						<Route path="lobby" element={<Lobby />} />
+					</Route>
 				</Route>
 
 				<Route path="*" element={<Missing />} />
