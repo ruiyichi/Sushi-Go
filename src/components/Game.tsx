@@ -1,4 +1,4 @@
-import SwapIcon from "../assets/SwapIcon";
+import SwapIcon from "../icons/SwapIcon";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { CARDS_TO_DEAL } from "../game/Settings";
 import { PlayerHand, PlayerKeptHand } from "./Hands";

@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import { useSushiGo } from "../contexts/SushiGoContext";
+import Loading from "./Loading";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +30,7 @@ const PersistLogin = () => {
       {!persist
         ? <Outlet /> 
         : isLoading
-          ? <div>Loading...</div>
+          ? <Loading />
           : <Outlet />
       }
     </>

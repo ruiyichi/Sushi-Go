@@ -10,6 +10,7 @@ import Missing from './components/Missing';
 import RequireAuth from './components/RequireAuth';
 import Lobby from './components/Lobby';
 import PersistLogin from './components/PersistLogin';
+import Loading from './components/Loading';
 
 const App = () => {
 	return (
@@ -18,6 +19,7 @@ const App = () => {
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
 				<Route path="unauthorized" element={<Unauthorized />} />
+				<Route path="loading" element={<Loading />} />
 
 				<Route element={<PersistLogin />}>
 					<Route element={<RequireAuth />}>

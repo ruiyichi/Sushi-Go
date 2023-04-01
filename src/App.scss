@@ -1,16 +1,30 @@
+@font-face {
+	font-family: 'akaDylanPlain';
+	src: url(./assets/akaDylanPlain.ttf) format('truetype');
+}
+
 body {
 	background-color: rgb(112, 112, 112);
+}
+
+.App {
+	position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .user-info-container {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	gap: 5px;
-	position: absolute;
+	gap: 0.1em;
 	right: 0%;
 	top: 0%;
-	padding-right: 0.25em;
+	padding-right: 10px;
+	padding-top: 5px;
+	font-size: 1em;
 }
 
 .login-page-container {
@@ -38,61 +52,79 @@ body {
 	}
 }
 
-.lobby-dialog {
-	display: flex;
-	flex-direction: column;
-	border: 0.05em solid #000;
-	width: 650px;
-	height: 450px;
-	align-items: center;
-	justify-content: space-evenly;
-	background-color: white;
-	border-radius: 0.5em;
-	font-size: 2em;
+.home {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+
+	.main-page-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
 	
-	button {
-		width: max-content;
-		font-size: 0.5em;
-	}
-
-	.create-lobby-container {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5em;
-		align-items: center;
-
-		.number-players-container {
+		.main-title {
+			font-family: akaDylanPlain;
+			position: relative;
+			font-size: 4em;
 			display: flex;
-			gap: 0.8em;
+			color: white;
+			justify-content: center;
+			background-color: #C12025;
+			padding: .3em .4em;
+			border-radius: 0.3em;
+			text-align: center;
+			border: 0.04em solid #000;
+	
+			#inner-border {
+				background-color: #8E181B;
+				border-radius: 0.3em;
+				padding: .1em .2em;
+				text-shadow: .1em 0 #000, -.03em 0 #000, 0 .03em #000, 0 -.03em #000,
+				.015em .015em #000, -.015em -.015em #000, .015em -.015em #000, -.015em .015em #000;
+			}
 		}
-	}
 
-	.join-lobby-container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.5em; 
-	}
-
-	#lobby-message {
-		color: red;
-		font-size: 0.5em;
-	}
-}
-
-.main-page-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-top: 100px;
-	gap: 25px;
-
-	.main-title {
-		position: relative;
-		font-size: 5em;
-		display: flex;
-		color: white;
-		justify-content: center;
+		.lobby-dialog {
+			display: flex;
+			flex-direction: column;
+			border: 0.05em solid #000;
+			align-items: center;
+			justify-content: space-evenly;
+			background-color: white;
+			border-radius: 0.5em;
+			font-size: 2em;
+			padding: .8em .6em;
+			
+			button {
+				width: max-content;
+				font-size: 0.5em;
+			}
+		
+			.create-lobby-container {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5em;
+				align-items: center;
+		
+				.number-players-container {
+					display: flex;
+					gap: 0.8em;
+				}
+			}
+		
+			.join-lobby-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.5em; 
+			}
+		
+			#lobby-message {
+				color: red;
+				font-size: 0.5em;
+			}
+		}
 	}
 }
 
@@ -150,4 +182,17 @@ body {
 			flex-direction: column;
 		}
 	}
+}
+
+.loading-container {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 1em;
+	width: 100%;
+	height: 100%;
+	font-size: 2em;
+	font-family: akaDylanPlain;
 }

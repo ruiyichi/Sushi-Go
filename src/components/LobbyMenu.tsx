@@ -35,7 +35,9 @@ const LobbyMenu = () => {
 	return (
 		<div className="main-page-container">
 			<div className="main-title">
-				Sushi Go
+					<div id='inner-border'>
+						Sushi Go!
+					</div>
 			</div>
 			<div className="lobby-dialog">
 				<div className="create-lobby-container">

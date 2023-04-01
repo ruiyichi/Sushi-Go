@@ -3,7 +3,7 @@ import LobbyMenu from "./LobbyMenu";
 
 const Home = () => {
 	return (
-		<div>
+		<div className='home'>
 			<UserInfo />
 			<LobbyMenu />
 		</div>
