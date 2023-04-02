@@ -1,19 +1,20 @@
 import { useSushiGo } from "../contexts/SushiGoContext";
 import useLogout from "../hooks/useLogout";
-import { useNavigate } from "react-router-dom";
+import classNames from "classnames";
 
 const UserInfo = () => {
 	const { user } = useSushiGo();
 	const logout = useLogout();
-	const navigate = useNavigate();
 
 	return (
-		<div className="user-info-container">
+		<div className={classNames({
+			"user-info-container": true,
+			hidden: user.username === undefined
+		})}>
 			Logged in as: { user.username }
 			<button
 				onClick={async () => {
 					await logout();
-					navigate('/login');
 				}}
 			>
 				Log out

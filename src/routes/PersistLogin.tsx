@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import { useSushiGo } from "../contexts/SushiGoContext";
-import Loading from "./Loading";
+import Loading from "../components/Loading";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);

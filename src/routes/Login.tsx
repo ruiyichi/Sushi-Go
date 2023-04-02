@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import axios from '../api/axios';
 import { isAxiosError } from 'axios';
 import { useSushiGo } from '../contexts/SushiGoContext';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Logo from '../components/Logo';
 
 const LOGIN_URL = '/auth';
 
@@ -64,30 +65,38 @@ const Login = () => {
 
 	return (
 		<div className='login-page-container'>
+			<Logo />
 			<div className='login-container'>
-				<div className='title'>
-					Welcome to Sushi Go!
-				</div>
 				<div ref={errRef} className={errMsg ? "error" : "hidden"}>{errMsg}</div>
+				<div className='title-container'>
+					Log In
+				</div>
 				<form id='login-form' onSubmit={handleSubmit}>
-					<label>Username:</label>
-					<input 
-						type='text'
-						id='username'
-						ref={usernameRef}
-						onChange={(e => setUsername(e.target.value))}
-						value={username}
-						required
-					/>
-					<label>Password:</label>
-					<input
-						type='password'
-						id='password'
-						onChange={e => setPwd(e.target.value)}
-						value={pwd}
-						required
-					/>
-					<button>Sign in</button>
+					<div className='user-login-info-container'>
+						Username:
+						<input 
+							type='text'
+							id='username'
+							ref={usernameRef}
+							onChange={(e => setUsername(e.target.value))}
+							value={username}
+							required
+							placeholder='Username'
+						/>
+					</div>
+					
+					<div className='user-login-info-container'>
+						Password:
+						<input
+							type='password'
+							id='password'
+							onChange={e => setPwd(e.target.value)}
+							value={pwd}
+							required
+							placeholder='Password'
+						/>
+					</div>
+					
 					<div>
 						Stay signed in
 						<input 
@@ -97,10 +106,8 @@ const Login = () => {
 							value={persist}
 						/>
 					</div>
+					<button>Go!</button>
 				</form>
-				<div>
-					<Link to='/register'>Sign up</Link>
-				</div>
 			</div>
 		</div>
 	);

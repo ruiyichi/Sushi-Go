@@ -22,7 +22,7 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
 					}
 				},
 				process.env.ACCESS_TOKEN_SECRET as Secret,
-				{ expiresIn: '10s' }
+				{ expiresIn: '1d' }
 			);
 			res.json({ accessToken, username: foundUser.username });
 		}

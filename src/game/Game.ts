@@ -1,8 +1,10 @@
 import * as Cards from "./Cards"
+import { v4 as uuid } from "uuid";
 import { Player } from "./Player";
 import { CARD_SETTINGS, CARDS_TO_DEAL, NUM_ROUNDS } from "./Settings";
 
 export class Game {
+	id: string;
 	deck: Cards.Card[];
 	discardDeck: Cards.Card[];
 	players: Player[];
@@ -11,8 +13,10 @@ export class Game {
 	maxTurns: number;
 	maxRounds: number;
 	phase: string;
+	status: string;
 
 	constructor(players: Player[]=[]) {
+		this.id = uuid();
 		this.deck = [];
 		this.discardDeck = [];
 		this.players = players;
@@ -21,6 +25,7 @@ export class Game {
 		this.maxTurns = CARDS_TO_DEAL[this.players.length];
 		this.maxRounds = NUM_ROUNDS;
 		this.phase = "";
+		this.status = "In progress";
 
 		this.updatePhase();
 		this.setDeck();

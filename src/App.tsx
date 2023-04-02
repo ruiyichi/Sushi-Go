@@ -1,31 +1,29 @@
 import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Login from './components/Login';
-import Register from './components/Register';
-import Unauthorized from './components/Unauthorized';
-import Home from './components/Home';
-import Game from './components/Game';
-import Missing from './components/Missing';
-import RequireAuth from './components/RequireAuth';
-import Lobby from './components/Lobby';
-import PersistLogin from './components/PersistLogin';
-import Loading from './components/Loading';
+import Login from './routes/Login';
+import Register from './routes/Register';
+import Unauthorized from './routes/Unauthorized';
+import Home from './routes/Home';
+import Missing from './routes/Missing';
+import RequireAuth from './routes/RequireAuth';
+import PersistLogin from './routes/PersistLogin';
+import LobbyRoute from './routes/LobbyRoute';
+import GameRoute from './routes/GameRoute';
 
 const App = () => {
 	return (
 		<Routes>
 			<Route path="/" element={<Layout />}>
-				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
 				<Route path="unauthorized" element={<Unauthorized />} />
-				<Route path="loading" element={<Loading />} />
 
 				<Route element={<PersistLogin />}>
+					<Route path="/" element={<Home />} />
+					<Route path="login" element={<Login />} />
 					<Route element={<RequireAuth />}>
-						<Route path="/" element={<Home />} />
-						<Route path="game" element={<Game />} />
-						<Route path="lobby" element={<Lobby />} />
+						<Route path="game" element={<GameRoute />} />
+						<Route path="lobby/*" element={<LobbyRoute />} />
 					</Route>
 				</Route>
 

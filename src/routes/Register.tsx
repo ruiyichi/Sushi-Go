@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import axios from '../api/axios';
 import { isAxiosError } from 'axios';
-import { Link } from "react-router-dom";
 
 const REGISTER_URL = '/register';
 
@@ -104,12 +103,6 @@ const Register = () => {
 						/>
 						<button>Sign Up</button>
 					</form>
-					<div>
-						Already registered?
-						<div>
-							<Link to="/">Sign In</Link>
-						</div>
-					</div>
 				</div>
 			)}
 		</>
