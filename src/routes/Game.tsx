@@ -1,15 +1,14 @@
 import SwapIcon from "../icons/SwapIcon";
 import { useSushiGo } from "../contexts/SushiGoContext";
-import { CARDS_TO_DEAL } from "../game/Settings";
 import { PlayerHand, PlayerKeptHand } from "../components/Hands";
 
 const Game = () => {
-	const { game, lobby, socket } = useSushiGo();
+	const { game } = useSushiGo();
 
 	return game.player && (
 		<div className="game-container">
 			<div className="title-container">
-				Round { game.round } - Turn { game.turn } / { CARDS_TO_DEAL[lobby.playerIDs.length] }
+				Round { game.round } - Turn { game.turn } / { game.maxTurns }
 			</div>
 			<div>
 				{ game.player.id }

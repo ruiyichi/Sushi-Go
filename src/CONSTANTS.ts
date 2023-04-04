@@ -1,1 +1,1 @@
-export const OAUTH_URL = 'https://discord.com/api/oauth2/authorize?client_id=1056962125744062584&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=code&scope=identify';
+export const SOCKET_SERVER_URI = "http://localhost:3001";

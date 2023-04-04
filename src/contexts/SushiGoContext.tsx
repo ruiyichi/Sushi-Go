@@ -1,8 +1,9 @@
-import { createContext, useContext, useReducer, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Player } from "../game/Player";
 import { Card } from "../game/Cards";
 import { Lobby } from "../game/Lobby";
+import { SOCKET_SERVER_URI } from "../CONSTANTS";
 
 const SushiGoContext = createContext({} as SushiGoInterface);
 
@@ -29,7 +30,8 @@ interface SushiGoInterface {
 	persist: string,
 	setPersist: React.Dispatch<any>,
 	lobby: Lobby,
-	updateLobby: React.Dispatch<any>
+	updateLobby: React.Dispatch<any>,
+	getUpdatedGame: Function
 };
 
 interface Game {
@@ -39,6 +41,7 @@ interface Game {
 	turn: number,
 	round: number,
 	phase: string,
+	maxTurns: number,
 };
 
 type UserAction = { type: 'update', payload: User } | { type: 'clear'};
@@ -54,16 +57,13 @@ const defaultGameState = {
 	turn: 0,
 	round: 0,
 	phase: "",
+	maxTurns: 0
 } as Game;
 
-const socket = io("http://localhost:3001");
+let socket = io(SOCKET_SERVER_URI);
 
 export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => {
-	socket.on("updateGame", payload => updateGame(payload as Game));
-	socket.on("updateLobby", payload => updateLobby(payload as Lobby));
-
 	const gameReducer = (game: Game, payload: Game) => {
-		console.log(JSON.parse(JSON.stringify({ ...game, ...payload })))
 		return { ...game, ...payload };
 	}
 	const [game, updateGame] = useReducer(gameReducer, defaultGameState);
@@ -79,6 +79,12 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		}
 	}
 	const [user, dispatchUser] = useReducer(userReducer, {} as User);
+
+	useEffect(() => {
+		socket = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
+		socket.on("updateGame", payload => updateGame(payload as Game));
+		socket.on("updateLobby", payload => updateLobby(payload as Lobby));
+	}, [user.accessToken]);
 
 	const updateUser = (payload: User) => {
 		dispatchUser({ type: 'update', payload });
@@ -97,13 +103,17 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		}
 	}
 
-	const [lobby, dispatchLobby] = useReducer(lobbyReducer, new Lobby());
+	const [lobby, dispatchLobby] = useReducer(lobbyReducer, {} as Lobby);
 
 	const updateLobby = (payload: Lobby) => {
 		dispatchLobby({ type: 'update', payload });
 	}
 
 	const [persist, setPersist] = useState(JSON.parse(localStorage.getItem('persist') || 'false') || false);
+
+	const getUpdatedGame = () => {
+		socket.emit("getGame");
+	}
 
 	const value: SushiGoInterface = { 
 		game,
@@ -116,6 +126,7 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		setPersist,
 		lobby,
 		updateLobby,
+		getUpdatedGame,
 	};
 
 	return (

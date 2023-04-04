@@ -93,6 +93,7 @@ export class Game {
 		this.scoreRound();
 		this.players.forEach(p => p.clearKeptHand());
 		this.clearPlayersKeptCard();
+		this.status = 'Completed';
 	}
 
 	clearPlayersKeptCard() {

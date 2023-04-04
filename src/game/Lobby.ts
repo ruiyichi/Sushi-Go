@@ -1,10 +1,12 @@
 import { MAX_PLAYERS } from "./Settings";
 
 export class Lobby {
+  code: string;
   playerIDs: string[];
   maxPlayers: number;
 
-  constructor(playerIDs: string[]=[]) {
+  constructor(code: string, playerIDs: string[]=[]) {
+    this.code = code;
     this.playerIDs = playerIDs;
     this.maxPlayers = MAX_PLAYERS;
   }

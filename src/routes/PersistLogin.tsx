@@ -10,6 +10,10 @@ const PersistLogin = () => {
   const refresh = useRefreshToken();
 
   useEffect(() => {
+		localStorage.setItem('persist', persist);
+	}, [persist]);
+
+  useEffect(() => {
     const verifyRefreshToken = async () => {
       try {
         await refresh();
@@ -22,7 +26,7 @@ const PersistLogin = () => {
       }
     }
 
-    !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
+    persist && !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
   return (

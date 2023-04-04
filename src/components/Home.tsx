@@ -1,12 +1,12 @@
-import UserInfo from "../components/UserInfo";
-import LobbyMenu from "../components/LobbyMenu";
+import LobbyMenu from "./LobbyMenu";
+import LoginMenu from "./LoginMenu";
+import Logo from "./Logo";
+import UserInfo from "./UserInfo";
 import { useSushiGo } from "../contexts/SushiGoContext";
-import Logo from "../components/Logo";
-import LoginMenu from "../components/LoginMenu";
 
 const Home = () => {
 	const { user } = useSushiGo();
-	
+
 	return (
 		<div className='home'>
 			<UserInfo />
