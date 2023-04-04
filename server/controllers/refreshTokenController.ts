@@ -14,17 +14,17 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
 		refreshToken,
 		process.env.REFRESH_TOKEN_SECRET as Secret,
 		(err: any, decoded: any) => {
-			if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
+			if (err || !foundUser._id.equals(decoded.id)) return res.sendStatus(403);
 			const accessToken = jwt.sign(
 				{
 					UserInfo: {
-						username: decoded.username,
+						id: decoded.id,
 					}
 				},
 				process.env.ACCESS_TOKEN_SECRET as Secret,
 				{ expiresIn: '1d' }
 			);
-			res.json({ accessToken, username: foundUser.username });
+			res.json({ accessToken, username: foundUser.username, id: foundUser._id });
 		}
 	);
 }

@@ -1,0 +1,1 @@
+export interface BasicUser { id: string, username: string };

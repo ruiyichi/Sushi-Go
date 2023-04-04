@@ -3,22 +3,24 @@ import { useSushiGo } from "../contexts/SushiGoContext";
 import { useNavigate } from "react-router-dom";
 
 const LobbyMenu = () => {
-	const { socket, user } = useSushiGo();
+	const { socketRef, user } = useSushiGo();
 	const [gameCode, setGameCode] = useState('');
 	const [lobbyMessage, setLobbyMessage] = useState('');
 
 	const navigate = useNavigate();
 
-	const createLobby = () => socket.emit(
-		'createLobby', user.username, 
+	const { id, username } = user;
+
+	const createLobby = () => socketRef.current?.emit(
+		'createLobby', { id, username }, 
 		(code: string) => {
 			navigator.clipboard.writeText(code);
 			navigate(`lobby?code=${code}`);
 		}
 	);
 	
-	const joinLobby = () => socket.emit(
-		'joinLobby', gameCode, user.username, 
+	const joinLobby = () => socketRef.current?.emit(
+		'joinLobby', gameCode, { id, username }, 
 		(status: "OK" | "Invalid code" | "Lobby full") => {
 			if (status !== "OK") {
 				setLobbyMessage(status);

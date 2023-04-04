@@ -1,19 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { useEffect } from "react";
+import Logo from "../components/Logo";
 
 const Lobby = ({ code }: { code: string }) => {
-	const { lobby, game, user, socket } = useSushiGo();
+	const { lobby, game, user, socketRef } = useSushiGo();
 	const navigate = useNavigate();
 
-	const is_host = lobby?.playerIDs?.[0] === user.username;
+	const is_host = lobby?.players?.[0].id === user.id;
 
 	const startGame = () => {
-		socket.emit("startGame");
+		socketRef.current?.emit("startGame");
 	};
 
 	useEffect(() => {
-		if (!lobby.playerIDs) {
+		if (!lobby.players) {
 			navigate('/');
 		}
 		if (game.status === 'In progress') {
@@ -23,24 +24,34 @@ const Lobby = ({ code }: { code: string }) => {
 
 	return (
 		<div className="lobby-container">
+			<Logo />
+
 			<div className="game-code-container">
-				Game code: { code }
+				CODE: { code }
 			</div>
+			
+			<div className="players-container">
+				{ lobby?.players?.slice()?.sort?.((a, b) => {
+					if (a.username === user.username) {
+						return -1;
+					} else if (b.username === user.username) {
+						return 1;
+					} else {
+						return 0;
+					}}).map(player => (
+						<div key={player.id}>
+							{ player.username === user.username ? 'You' : player.username }
+						</div>
+					))}
+			</div>
+
 			<div className="lobby-title">
-				{ is_host ? "YOU are the host" : "Waiting for the host to start" }
-				{is_host && lobby?.playerIDs?.length > 1 &&
+				{ is_host ? "YOU are the host" : "Waiting for host to start..." }
+				{is_host && lobby?.players?.length > 1 &&
 					<button onClick={startGame}>
 						Start game
 					</button>
 				}
-			</div>
-			<div className="players-container">
-				Players: { lobby?.playerIDs?.length }/{ lobby?.maxPlayers }
-				{ lobby?.playerIDs?.map(id => (
-					<div key={id}>
-						{ id }
-					</div>
-				))}
 			</div>
 		</div>
 	);

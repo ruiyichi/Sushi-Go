@@ -20,16 +20,21 @@ body {
 }
 
 .user-info-container {
-	align-self: flex-end;
 	display: flex;
+	align-self: flex-end;
 	flex-direction: column;
-	align-items: flex-end;
+	align-items: center;
 	gap: 0.1em;
 	right: 0%;
 	top: 0%;
 	padding-right: 10px;
 	padding-top: 5px;
 	font-size: 1em;
+	
+	img {
+		width: 3em;
+		height: 3em;
+	}
 }
 
 .login-page-container {
@@ -170,10 +175,17 @@ body {
 }
 
 .lobby-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5em;
+	margin-top: 5em;
+
 	.game-code-container {
-		position: absolute;
-		left: 0%;
-		bottom: 0%;
+		background-color: white;
+		border: 0.05em solid black;
+		padding: 0.3em 0.4em;
+		font-size: 2em;
 	}
 
 	.lobby-title {
@@ -181,6 +193,13 @@ body {
 		flex-direction: column;
 		align-items: center;
 		gap: 2px;
+		font-size: 1.5em;
+	}
+
+	.players-container {
+		display: flex;
+		gap: 1em;
+		font-size: 1.5em;
 	}
 }
 

@@ -1,13 +1,14 @@
 import { MAX_PLAYERS } from "./Settings";
+import { BasicUser } from "../interfaces";
 
 export class Lobby {
   code: string;
-  playerIDs: string[];
+  players: BasicUser[];
   maxPlayers: number;
 
-  constructor(code: string, playerIDs: string[]=[]) {
+  constructor(code: string, players: BasicUser[]=[]) {
     this.code = code;
-    this.playerIDs = playerIDs;
+    this.players = players;
     this.maxPlayers = MAX_PLAYERS;
   }
 }

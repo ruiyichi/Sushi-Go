@@ -36,9 +36,8 @@ const Login = () => {
 					withCredentials: true,
 				}
 			);
-
-			const accessToken = response?.data?.accessToken;
-			updateUser({ username, accessToken });
+			const { accessToken, id } = response.data;
+			updateUser({ id, username, accessToken });
 			setUsername('');
 			setPwd('');
 

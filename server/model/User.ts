@@ -9,7 +9,11 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	refreshToken: String
+	refreshToken: String,
+	profilePicture: {
+		type: String,
+		default: 'default.png'
+	}
 });
 
 export default mongoose.model('User', userSchema);

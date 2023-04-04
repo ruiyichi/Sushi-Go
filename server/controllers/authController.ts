@@ -14,14 +14,14 @@ export const handleLogin = async (req: Request, res: Response) => {
 		const accessToken = jwt.sign(
 			{
 				UserInfo: {
-					username: foundUser.username,
+					id: foundUser._id,
 				}
 			},
 			process.env.ACCESS_TOKEN_SECRET as Secret,
 			{ expiresIn: '10s' }
 		);
 		const refreshToken = jwt.sign(
-			{ username: foundUser.username },
+			{ id: foundUser._id },
 			process.env.REFRESH_TOKEN_SECRET as Secret,
 			{ expiresIn: '1d' }
 		);
@@ -29,7 +29,7 @@ export const handleLogin = async (req: Request, res: Response) => {
 		await User.updateOne({ username }, { refreshToken });
 
 		res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 });
-		res.json({ accessToken });
+		res.json({ accessToken, id: foundUser._id });
 
 	} else {
 		res.sendStatus(401);

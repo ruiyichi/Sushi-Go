@@ -1,3 +1,4 @@
+import { SERVER_URI } from "../CONSTANTS";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import useLogout from "../hooks/useLogout";
 import classNames from "classnames";
@@ -9,9 +10,14 @@ const UserInfo = () => {
 	return (
 		<div className={classNames({
 			"user-info-container": true,
-			hidden: user.username === undefined
+			hidden: user.id === undefined
 		})}>
-			Logged in as: { user.username }
+			{user.id && 
+				<img 
+					src={`${SERVER_URI}/images/profiles/${user.id}`} 
+				/>
+			}
+			{user.username}
 			<button
 				onClick={async () => {
 					await logout();

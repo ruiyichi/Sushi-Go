@@ -6,6 +6,7 @@ import { Game } from "../src/game/Game";
 import { Card } from "../src/game/Cards";
 import { Lobby } from "../src/game/Lobby";
 import jwt, { Secret } from 'jsonwebtoken';
+import { BasicUser } from "../src/interfaces";
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ io.use((socket: Socket, next) => {
 		const token = socket.handshake.query.token as string;
 		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as Secret, (err, decoded: any) => {
 			if (err) return next(new Error('Authentication error'));
-			socketUsers[socket.id] = decoded?.UserInfo?.username;
+			socketUsers[socket.id] = decoded?.UserInfo?.id;
 			next();
 		});
 	} else {
@@ -31,19 +32,19 @@ io.use((socket: Socket, next) => {
 	const userID = socketUsers[socket.id];
 	socket.join(playerGames[userID]?.id);
 
-	const createLobby = (userID: string, callback: Function) => {
+	const createLobby = (user: BasicUser, callback: Function) => {
 		let lobbyCode = createLobbyCode(5);
 		while (Object.values(playerLobbies).map(lobby => lobby.code).includes(lobbyCode)) {
 			lobbyCode = createLobbyCode(5);
 		}
-		const lobby = new Lobby(lobbyCode, [userID]);
+		const lobby = new Lobby(lobbyCode, [user]);
 		playerLobbies[userID] = lobby;
 		socket.join(lobbyCode);
 		io.in(lobbyCode).emit("updateLobby", { ...lobby });
 		callback(lobbyCode);
 	}
 
-	const joinLobby = (lobbyCode: string, userID: string, callback: Function) => {
+	const joinLobby = (lobbyCode: string, user: BasicUser, callback: Function) => {
 		let status = "OK";
 		if (!Object.values(playerLobbies).map(lobby => lobby.code).includes(lobbyCode)) {
 			status = "Invalid code";
@@ -51,12 +52,14 @@ io.use((socket: Socket, next) => {
 		};
 
 		const lobby = Object.values(playerLobbies).find(lobby => lobby.code === lobbyCode) as Lobby;
-		if (lobby.playerIDs.length === lobby.maxPlayers) {
+		const lobbyPlayerIDs = lobby.players.map(p => p.id);
+
+		if (lobbyPlayerIDs.length === lobby.maxPlayers) {
 			status = "Lobby full";
-		} else if (!lobby.playerIDs.includes(userID)) {
-			playerLobbies[userID] = lobby;
+		} else if (!lobbyPlayerIDs.includes(user.id)) {
+			playerLobbies[user.id] = lobby;
 			socket.join(lobbyCode);
-			lobby.playerIDs.push(userID);
+			lobby.players.push(user);
 			io.in(lobbyCode).emit("updateLobby", { ...lobby });
 		}
 		callback(status);
@@ -64,19 +67,20 @@ io.use((socket: Socket, next) => {
 
 	const startGame = () => {
 		const hostUserID = socketUsers[socket.id];
-		const { playerIDs, code } = playerLobbies[hostUserID];
+		const lobby = playerLobbies[hostUserID];
+		const lobbyPlayerIDs = lobby.players.map(p => p.id);
 
-		const players = playerIDs.map(id => new Player(id));
+		const players = lobbyPlayerIDs.map(id => new Player(id));
 		const game = new Game(players);
 
 		players.forEach(player => playerGames[player.id] = game);
 
-		const clients = io.sockets.adapter.rooms.get(code);
+		const clients = io.sockets.adapter.rooms.get(lobby.code);
 		clients?.forEach(clientID => {
 			const clientSocket = io.sockets.sockets.get(clientID);
 			const userID = socketUsers[clientID];
 
-			clientSocket?.leave(code);
+			clientSocket?.leave(lobby.code);
 			delete playerLobbies[userID];
 
 			clientSocket?.join(game.id);
@@ -168,11 +172,11 @@ io.use((socket: Socket, next) => {
 		const player = gameState.players.find(p => p.id === userID);
 
 		if (player) {
-			let cardOnServer = player.hand[idx];
+			const cardOnServer = player.hand[idx];
 
 			if (player.hadChopsticks && player.keptHand.some(card => card.name === 'Chopsticks') && cardOnServer.name === card.name) {
 				player.keepCard(cardOnServer);
-				let chopsticks = player.keptHand.find(card => card.name === 'Chopsticks');
+				const chopsticks = player.keptHand.find(card => card.name === 'Chopsticks');
 				if (chopsticks) {
 					player.hand.push(chopsticks);
 					player.keptHand.splice(player.keptHand.indexOf(chopsticks), 1);

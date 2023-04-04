@@ -4,7 +4,7 @@ import { Card as GameCard } from "../game/Cards";
 import { Card } from "./Cards";
 
 export const PlayerHand = ({ hand, keptCard }: { hand: GameCard[], keptCard: boolean }) => {
-	const { socket } = useSushiGo();
+	const { socketRef } = useSushiGo();
 	const [handWidth, setHandWidth] = useState(0);
 	const ref = useRef<HTMLDivElement | null>(null);
 
@@ -38,7 +38,7 @@ export const PlayerHand = ({ hand, keptCard }: { hand: GameCard[], keptCard: boo
 					<Card
 						key={idx}
 						card={card}
-						onClick={() => socket.emit(keptCard ? 'keepSecondCard' : 'keepCard', card, idx)}
+						onClick={() => socketRef.current?.emit(keptCard ? 'keepSecondCard' : 'keepCard', card, idx)}
 						defaultStyle={{
 							rotate: `${angle}rad`,
 							x: fanWidth * Math.sin(angle),

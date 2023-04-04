@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { Player } from "../game/Player";
 import { Card } from "../game/Cards";
@@ -8,14 +8,14 @@ import { SOCKET_SERVER_URI } from "../CONSTANTS";
 const SushiGoContext = createContext({} as SushiGoInterface);
 
 interface User {
-	auth: boolean,
-	username: string,
 	id: string,
+	username: string,
 	accessToken: string,
 };
 
 interface ProtectedPlayer {
 	id: string,
+	username: string,
 	keptHand: Card[],
 	score: number,
 };
@@ -23,7 +23,7 @@ interface ProtectedPlayer {
 interface SushiGoInterface { 
 	game: Game,
 	updateGame: React.Dispatch<any>,
-	socket: Socket,
+	socketRef: React.MutableRefObject<Socket | undefined>,
 	user: User,
 	updateUser: React.Dispatch<any>,
 	clearUser: React.Dispatch<any>,
@@ -60,9 +60,9 @@ const defaultGameState = {
 	maxTurns: 0
 } as Game;
 
-let socket = io(SOCKET_SERVER_URI);
-
 export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => {
+	const socketRef = useRef<undefined | Socket>();
+
 	const gameReducer = (game: Game, payload: Game) => {
 		return { ...game, ...payload };
 	}
@@ -81,9 +81,15 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const [user, dispatchUser] = useReducer(userReducer, {} as User);
 
 	useEffect(() => {
-		socket = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
-		socket.on("updateGame", payload => updateGame(payload as Game));
-		socket.on("updateLobby", payload => updateLobby(payload as Lobby));
+		socketRef.current = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
+		socketRef.current.on("updateGame", payload => updateGame(payload as Game));
+		socketRef.current.on("updateLobby", payload => updateLobby(payload as Lobby));
+
+		return () => {
+			if (socketRef.current) {
+				socketRef.current.disconnect();
+			}
+		}
 	}, [user.accessToken]);
 
 	const updateUser = (payload: User) => {
@@ -97,7 +103,8 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const lobbyReducer: React.Reducer<Lobby, LobbyAction> = (lobby: Lobby, action: LobbyAction) => {
 		switch (action.type) {
 			case 'update':
-				return { ...lobby, ...action.payload }
+				console.log({ ...lobby, ...action.payload })
+				return { ...lobby, ...action.payload };
 			default:
 				return lobby;
 		}
@@ -112,13 +119,13 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const [persist, setPersist] = useState(JSON.parse(localStorage.getItem('persist') || 'false') || false);
 
 	const getUpdatedGame = () => {
-		socket.emit("getGame");
+		socketRef.current?.emit("getGame");
 	}
 
 	const value: SushiGoInterface = { 
 		game,
 		updateGame,
-		socket,
+		socketRef,
 		user,
 		updateUser,
 		clearUser,
