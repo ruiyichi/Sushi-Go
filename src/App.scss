@@ -181,11 +181,12 @@ body {
 	gap: 5em;
 	margin-top: 5em;
 
-	.game-code-container {
+	#game-code-button {
 		background-color: white;
 		border: 0.05em solid black;
 		padding: 0.3em 0.4em;
 		font-size: 2em;
+		cursor: pointer;
 	}
 
 	.lobby-title {

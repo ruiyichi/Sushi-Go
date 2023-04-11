@@ -15,6 +15,7 @@ const playerLobbies = {} as Record<string, Lobby>;
 const socketUsers = {} as Record<string, string>;
 
 const io = new Server(3001, { cors: { origin: "http://localhost:3000" }});
+console.log("Socket server running on port 3001");
 
 io.use((socket: Socket, next) => {
 	if (socket.handshake.query && socket.handshake.query.token) {

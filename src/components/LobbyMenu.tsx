@@ -13,10 +13,7 @@ const LobbyMenu = () => {
 
 	const createLobby = () => socketRef.current?.emit(
 		'createLobby', { id, username }, 
-		(code: string) => {
-			navigator.clipboard.writeText(code);
-			navigate(`lobby?code=${code}`);
-		}
+		(code: string) => navigate(`lobby?code=${code}`)
 	);
 	
 	const joinLobby = () => socketRef.current?.emit(

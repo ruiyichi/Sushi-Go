@@ -26,12 +26,17 @@ const Lobby = ({ code }: { code: string }) => {
 		<div className="lobby-container">
 			<Logo />
 
-			<div className="game-code-container">
+			<button 
+				id="game-code-button"
+				onClick={() => {
+					navigator.clipboard.writeText(code);
+				}}
+			>
 				CODE: { code }
-			</div>
+			</button>
 			
 			<div className="players-container">
-				{ lobby?.players?.slice()?.sort?.((a, b) => {
+				{lobby?.players?.slice()?.sort?.((a, b) => {
 					if (a.username === user.username) {
 						return -1;
 					} else if (b.username === user.username) {
