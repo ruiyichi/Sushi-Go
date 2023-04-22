@@ -205,6 +205,30 @@ body {
 }
 
 .game-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	.header-container {
+		margin-top: 0.25em;
+		font-size: 2em;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.player-info-container {
+		position: absolute;
+		top: 1%;
+		right: 1%;
+		text-align: center;
+		
+		img {
+			width: 3em;
+			height: 3em;
+		}
+	}
+
 	.card {
 		display: flex;
 		position: absolute;

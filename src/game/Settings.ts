@@ -62,3 +62,5 @@ export const NUM_ROUNDS = 3;
 
 export const MIN_PLAYERS = 2;
 export const MAX_PLAYERS = 5;
+
+export const SECONDS_PER_ROUND = 30;

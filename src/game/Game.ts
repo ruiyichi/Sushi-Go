@@ -12,8 +12,9 @@ export class Game {
 	turn: number;
 	maxTurns: number;
 	maxRounds: number;
-	phase: string;
+	roundStatus: string;
 	status: string;
+	startTime: number;
 
 	constructor(players: Player[]=[]) {
 		this.id = uuid();
@@ -24,17 +25,18 @@ export class Game {
 		this.turn = 1;
 		this.maxTurns = CARDS_TO_DEAL[this.players.length];
 		this.maxRounds = NUM_ROUNDS;
-		this.phase = "";
+		this.roundStatus = "";
 		this.status = "In progress";
+		this.startTime = Date.now();
 
-		this.updatePhase();
+		//this.updateRoundStatus();
 		this.setDeck();
 		this.shuffleDeck();
 		this.dealCards();
 	}
 
-	updatePhase() {
-		this.phase = `Waiting for players ${this.players.filter(p => !p.keptCard).map(p => p.id).join(', ')} to play`;
+	updateRoundStatus() {
+		this.roundStatus = `Waiting for players ${this.players.filter(p => !p.keptCard).map(p => p.id).join(', ')} to play`;
 	}
 
 	setDeck() {
@@ -45,6 +47,10 @@ export class Game {
 				this.deck.push(new className());
 			}
 		});
+	}
+
+	setStartTime() {
+		this.startTime = Date.now();
 	}
 
 	shuffleDeck() {

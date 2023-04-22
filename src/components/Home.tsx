@@ -3,7 +3,6 @@ import LoginMenu from "./LoginMenu";
 import Logo from "./Logo";
 import UserInfo from "./UserInfo";
 import { useSushiGo } from "../contexts/SushiGoContext";
-import Background from "./3d/Background";
 
 const Home = () => {
 	const { user } = useSushiGo();
@@ -16,7 +15,7 @@ const Home = () => {
 				?
 					<LobbyMenu />
 				:
-					<Background />
+					<LoginMenu />
 			}
 		</div>
 	);

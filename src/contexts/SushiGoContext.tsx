@@ -40,7 +40,7 @@ interface Game {
 	players: ProtectedPlayer[],
 	turn: number,
 	round: number,
-	phase: string,
+	roundStatus: string,
 	maxTurns: number,
 };
 
@@ -56,7 +56,7 @@ const defaultGameState = {
 	players: [],
 	turn: 0,
 	round: 0,
-	phase: "",
+	roundStatus: "",
 	maxTurns: 0
 } as Game;
 
@@ -103,7 +103,6 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const lobbyReducer: React.Reducer<Lobby, LobbyAction> = (lobby: Lobby, action: LobbyAction) => {
 		switch (action.type) {
 			case 'update':
-				console.log({ ...lobby, ...action.payload })
 				return { ...lobby, ...action.payload };
 			default:
 				return lobby;

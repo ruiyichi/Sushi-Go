@@ -15,6 +15,7 @@ const UserInfo = () => {
 			{user.id && 
 				<img 
 					src={`${SERVER_URI}/images/profiles/${user.id}`} 
+					alt={user.id}
 				/>
 			}
 			{user.username}
