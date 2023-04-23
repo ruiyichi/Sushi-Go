@@ -17,7 +17,7 @@ const Lobby = ({ code }: { code: string }) => {
 		if (!lobby.players) {
 			navigate('/');
 		}
-		if (game.status === 'In progress') {
+		if (game.status === 'Pending') {
 			navigate('/game');
 		}
 	}, [game]);

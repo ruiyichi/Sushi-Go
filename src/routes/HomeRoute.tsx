@@ -10,7 +10,7 @@ const HomeRoute = () => {
 		getUpdatedGame();
 	}, [user.username]);
 
-	return game.status === 'In progress' 
+	return game.status === 'Pending' 
 	? 
 		<Navigate to={"/game"} />
 	:

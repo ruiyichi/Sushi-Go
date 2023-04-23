@@ -14,6 +14,7 @@ export class Game {
 	maxRounds: number;
 	roundStatus: string;
 	status: string;
+	roundStartTime: number;
 	startTime: number;
 
 	constructor(players: Player[]=[]) {
@@ -25,18 +26,15 @@ export class Game {
 		this.turn = 1;
 		this.maxTurns = CARDS_TO_DEAL[this.players.length];
 		this.maxRounds = NUM_ROUNDS;
+		this.status = "Pending";
 		this.roundStatus = "";
-		this.status = "In progress";
 		this.startTime = Date.now();
+		this.roundStartTime = Date.now();
 
 		//this.updateRoundStatus();
 		this.setDeck();
 		this.shuffleDeck();
 		this.dealCards();
-	}
-
-	updateRoundStatus() {
-		this.roundStatus = `Waiting for players ${this.players.filter(p => !p.keptCard).map(p => p.id).join(', ')} to play`;
 	}
 
 	setDeck() {
@@ -49,8 +47,8 @@ export class Game {
 		});
 	}
 
-	setStartTime() {
-		this.startTime = Date.now();
+	setRoundStartTime() {
+		this.roundStartTime = Date.now();
 	}
 
 	shuffleDeck() {
@@ -99,7 +97,8 @@ export class Game {
 		this.scoreRound();
 		this.players.forEach(p => p.clearKeptHand());
 		this.clearPlayersKeptCard();
-		this.status = 'Completed';
+		this.status = "Completed";
+		this.roundStatus = "";
 	}
 
 	clearPlayersKeptCard() {

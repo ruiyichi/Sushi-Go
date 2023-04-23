@@ -35,7 +35,7 @@ interface SushiGoInterface {
 };
 
 interface Game {
-	status: "In lobby" | "In progress" | "Completed",
+	status: "In lobby" | "Pending" | "Completed",
 	player: null | Player,
 	players: ProtectedPlayer[],
 	turn: number,
