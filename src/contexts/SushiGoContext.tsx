@@ -13,7 +13,7 @@ interface User {
 	accessToken: string,
 };
 
-interface ProtectedPlayer {
+export interface ProtectedPlayer {
 	id: string,
 	username: string,
 	keptHand: Card[],
@@ -33,7 +33,6 @@ interface SushiGoInterface {
 	updateLobby: React.Dispatch<any>,
 	getUpdatedGame: Function
 };
-
 interface Game {
 	status: "In lobby" | "Pending" | "Completed",
 	player: null | Player,

@@ -245,14 +245,13 @@ body {
 
 	.card {
 		display: flex;
-		position: absolute;
-		transform-origin: center bottom;
+		position: relative;
 		cursor: pointer;
-		overflow: hidden;
 
 		img {
 			border: 2px solid black;
 			border-radius: 10px;
+			overflow: hidden;
 		}
 
 		.card-info {
@@ -264,10 +263,11 @@ body {
 
 	.player-hand {
 		position: fixed;
-		bottom: 300px;
+		bottom: 50px;
 		width: 100%;
 		display: flex;
 		justify-content: center;
+		gap: 5px;
 	}
 
 	.player-kept-hand {
