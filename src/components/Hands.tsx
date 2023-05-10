@@ -37,7 +37,7 @@ export const PlayerHand = ({ hand, keptCard }: { hand: GameCard[], keptCard: boo
 				return (
 					<Card
 						key={idx}
-						card={card}
+						cardName={card.name}
 						onClick={() => socketRef.current?.emit(keptCard ? 'keepSecondCard' : 'keepCard', card, idx)}
 						defaultStyle={{
 							rotate: `${angle}rad`,
@@ -70,7 +70,7 @@ export const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
 				<div className="group">
 					{group.map((card, idx) => 
 						<Card
-							card={card}
+							cardName={card.name}
 							defaultStyle={{ position: 'relative', zIndex: idx, y: -120 * idx }}
 						/>
 					)}

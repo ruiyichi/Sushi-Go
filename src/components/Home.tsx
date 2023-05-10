@@ -9,7 +9,7 @@ const Home = () => {
 
 	return (
 		<div className='home'>
-			<UserInfo />
+			{ user.username && <UserInfo /> }
 			<Logo />
 			{user.username
 				?

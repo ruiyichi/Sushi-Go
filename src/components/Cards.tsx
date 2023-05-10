@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Card as GameCard } from "../game/Cards";
 import { CARD_IMAGES } from "../game/Images";
 import { motion, Variants } from "framer-motion";
 import { v4 as uuid } from "uuid";
 
-export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameCard, onClick?: Function, defaultStyle?: Record<string, any> }) => {
+export const Card = ({ cardName, onClick=() => {}, defaultStyle={} }: { cardName: string, onClick?: Function, defaultStyle?: Record<string, any> }) => {
 	const [loaded, setLoaded] = useState(false);
 	
 	const variants: Variants = {
@@ -25,11 +24,11 @@ export const Card = ({ card, onClick=() => {}, defaultStyle={}, }: { card: GameC
 			onClick={() => onClick()}
 		>
 			<div className="card-info">
-				{card.name}
+				{cardName}
 			</div>
 			<img 
 				style={{ visibility: loaded ? 'inherit' : 'hidden' }}
-				src={CARD_IMAGES[card.name]}
+				src={CARD_IMAGES[cardName]}
 				onLoad={() => setLoaded(true)}
 				width={100} 
 				height={150}
