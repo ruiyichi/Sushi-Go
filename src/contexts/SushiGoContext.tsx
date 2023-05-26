@@ -11,6 +11,7 @@ interface User {
 	id: string,
 	username: string,
 	accessToken: string,
+	profilePictureFilename: string
 };
 
 export interface ProtectedPlayer {

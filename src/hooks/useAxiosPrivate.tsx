@@ -8,7 +8,6 @@ const useAxiosPrivate = () => {
 	const refresh = useRefreshToken();
 
 	useEffect(() => {
-
 		const requestIntercept = axiosPrivate.interceptors.request.use(
 			config => {
 				if (!config.headers['Authorization']) {

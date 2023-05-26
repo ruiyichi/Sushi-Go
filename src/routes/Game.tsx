@@ -3,7 +3,6 @@ import { PlayerHand, PlayerKeptHand } from "../components/Hands";
 import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../game/Player";
-import { memo } from "react";
 
 const GameOver = ({ players }: { players: Array<ProtectedPlayer>}) => {
 	const navigate = useNavigate();
@@ -19,15 +18,14 @@ const GameOver = ({ players }: { players: Array<ProtectedPlayer>}) => {
 	);
 }
 
-const PlayerHands = memo(({ player }: { player: Player | null }) => {
-	console.log('rerender')
+const PlayerHands = ({ player }: { player: Player | null }) => {
 	return player && (
-		<div>
+		<div className='player-hands-container'>
 			<PlayerHand hand={player.hand} keptCard={player.keptCard} />
 			<PlayerKeptHand hand={player.keptHand} />
 		</div>
 	);
-});
+};
 
 const Game = () => {
 	const { game, user } = useSushiGo();

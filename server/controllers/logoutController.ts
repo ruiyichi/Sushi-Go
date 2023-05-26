@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 export const handleLogout = async (req: Request, res: Response) => {
 	const cookies = req.cookies;
-	if (!cookies?.jwt) return res.sendStatus(204); //No content
+	if (!cookies?.jwt) return res.sendStatus(204);
 	const refreshToken = cookies.jwt;
 
 	const foundUser = await User.findOne({ refreshToken }).exec();

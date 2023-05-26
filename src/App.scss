@@ -3,8 +3,25 @@
 	src: url(./assets/akaDylanPlain.ttf) format('truetype');
 }
 
+#close-icon {
+	cursor: pointer;
+	&:hover {
+		fill: red;
+	}
+}
+
 body {
 	background-color: rgb(112, 112, 112);
+}
+
+.overlay {
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 999;
 }
 
 .App {
@@ -26,19 +43,29 @@ body {
 	margin-top: 5px;
 	
 	img {
-		width: 3em;
-		height: 3em;
 		cursor: pointer;
 	}
 
-	#user-info-dialog {
+	dialog {
 		position: absolute;
-		border-radius: 1em;
+		border-radius: 0.7em;
 		margin-right: 0px;
 		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		padding-bottom: 0.5em;
+		padding-top: 1.2em;
 
 		&:focus {
 			outline: none;
+		}
+
+		svg {
+			position: absolute;
+			right: 0%;
+			top: 0%;
 		}
 
 		.user-info-dialog-container {
@@ -46,11 +73,38 @@ body {
 			flex-direction: column;
 			gap: 0.5em;
 
-			.profile-picture-container {
+			& > div {
 				display: flex;
 				flex-direction: row;
 				gap: 0.5em;
 			}
+		}
+	}
+
+	.profile-picture-selection-container {
+		border-radius: 0.5em;
+		border: 0.3em solid black;
+		background-color: white;
+		width: 30%;
+		height: 25%;
+		margin: 5% auto;
+		display: flex;
+		flex-direction: row;
+		position: relative;
+		gap: 5em;
+		padding: 1em;
+
+		#close-icon {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+
+		.profile-pictures-container {
+			display: flex;
+			height: fit-content;
+			flex-grow: 1;
+			gap: 0.5em;
 		}
 	}
 }
