@@ -1,6 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import axios from '../api/axios';
 import { isAxiosError } from 'axios';
+import BaseScreen from "./BaseScreen";
+import Button from "../components/Button";
+import Logo from "../components/Logo";
 
 const REGISTER_URL = '/register';
 
@@ -64,46 +67,60 @@ const Register = () => {
 					</div>
 				</div>
 			) : (
-				<div>
-					<div ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</div>
-					<div>Register</div>
-					<form onSubmit={handleSubmit}>
-						<label htmlFor="username">
-							Username:
-						</label>
-						<input
-							type="text"
-							id="username"
-							ref={userRef}
-							autoComplete="off"
-							onChange={e => setUsername(e.target.value)}
-							value={username}
-							required
-						/>
-						
-						<label>
-							Password:
-						</label>
-						<input
-							type="password"
-							id="password"
-							onChange={e => setPwd(e.target.value)}
-							value={pwd}
-							required
-						/>
-						<label>
-							Confirm Password:
-						</label>
-						<input
-							type="password"
-							id="confirm_pwd"
-							onChange={e => setMatchPwd(e.target.value)}
-							value={matchPwd}
-							required
-						/>
-						<button>Sign Up</button>
-					</form>
-				</div>
+				<BaseScreen>
+					<div className='register-page-container'>
+						<Logo />
+						<div className='register-container'>
+							<div ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</div>
+							<form onSubmit={handleSubmit}>
+								<div>
+									<div>
+										<label htmlFor='username'>
+											Username:
+										</label>
+										<input
+											type='text'
+											ref={userRef}
+											autoComplete='off'
+											onChange={e => setUsername(e.target.value)}
+											value={username}
+											required
+											placeholder='Username'
+										/>
+									</div>
+
+									<div>
+										<label htmlFor='password'>
+											Password:
+										</label>
+										<input
+											type='password'
+											onChange={e => setPwd(e.target.value)}
+											value={pwd}
+											required
+											placeholder='Password'
+										/>
+									</div>
+
+									<div>
+										<label>
+											Confirm Password:
+										</label>
+										<input
+											type='password'
+											onChange={e => setMatchPwd(e.target.value)}
+											value={matchPwd}
+											required
+											placeholder='Confirm password'
+										/>
+									</div>
+								</div>
+								
+								<Button>Go!</Button>
+							</form>
+						</div>
+					</div>
+				</BaseScreen>
 			)}
 		</>
 	);

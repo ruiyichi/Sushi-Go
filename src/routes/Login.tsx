@@ -3,6 +3,8 @@ import axios from '../api/axios';
 import { isAxiosError } from 'axios';
 import { useSushiGo } from '../contexts/SushiGoContext';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import Button from '../components/Button';
+import BaseScreen from './BaseScreen';
 import Logo from '../components/Logo';
 
 const LOGIN_URL = '/auth';
@@ -63,52 +65,54 @@ const Login = () => {
 		? 
 			<Navigate to={"/"} />
 		: 
-			<div className='login-page-container'>
-				<Logo />
-				<div className='login-container'>
-					<div ref={errRef} className={errMsg ? "error" : "hidden"}>{errMsg}</div>
-					<div className='title-container'>
-						Log In
+			<BaseScreen>
+				<div className='login-page-container'>
+					<Logo />
+					<div className='login-container'>
+						<div ref={errRef} className={errMsg ? "error" : "hidden"}>{errMsg}</div>
+						<form onSubmit={handleSubmit}>
+							<div>
+								<div className='user-login-info-container'>
+									Username:
+									<input 
+										type='text'
+										id='username'
+										ref={usernameRef}
+										onChange={(e => setUsername(e.target.value))}
+										value={username}
+										required
+										placeholder='Username'
+									/>
+								</div>
+								
+								<div className='user-login-info-container'>
+									Password:
+									<input
+										type='password'
+										id='password'
+										onChange={e => setPwd(e.target.value)}
+										value={pwd}
+										required
+										placeholder='Password'
+									/>
+								</div>
+								
+								<div>
+									Stay signed in
+									<input 
+										type='checkbox'
+										id='persist'
+										onChange={() => setPersist((prev: boolean) => !prev)}
+										value={persist}
+									/>
+								</div>
+							</div>
+							
+							<Button>Go!</Button>
+						</form>
 					</div>
-					<form id='login-form' onSubmit={handleSubmit}>
-						<div className='user-login-info-container'>
-							Username:
-							<input 
-								type='text'
-								id='username'
-								ref={usernameRef}
-								onChange={(e => setUsername(e.target.value))}
-								value={username}
-								required
-								placeholder='Username'
-							/>
-						</div>
-						
-						<div className='user-login-info-container'>
-							Password:
-							<input
-								type='password'
-								id='password'
-								onChange={e => setPwd(e.target.value)}
-								value={pwd}
-								required
-								placeholder='Password'
-							/>
-						</div>
-						
-						<div>
-							Stay signed in
-							<input 
-								type='checkbox'
-								id='persist'
-								onChange={() => setPersist((prev: boolean) => !prev)}
-								value={persist}
-							/>
-						</div>
-						<button>Go!</button>
-					</form>
 				</div>
-			</div>
+			</BaseScreen>
 	);
 }
 

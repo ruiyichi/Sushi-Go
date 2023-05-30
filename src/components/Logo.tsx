@@ -1,9 +1,7 @@
 const Logo = () => {
 	return (
-		<div className="logo">
-			<div id='inner-border'>
-				Sushi Go!
-			</div>
+		<div id='logo'>
+			Sushi Go!
 		</div>
 	);
 }

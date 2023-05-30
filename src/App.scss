@@ -11,7 +11,7 @@
 }
 
 body {
-	background-color: rgb(112, 112, 112);
+	background-color: #6DE5ED;
 }
 
 .overlay {
@@ -109,7 +109,20 @@ body {
 	}
 }
 
+.base-screen-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	
+	#background-image {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+}
+
 .login-page-container {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -121,7 +134,6 @@ body {
 		flex-direction: column;
 		align-items: center;
 		gap: 1em;
-		background-color: white;
 		border-radius: 0.5em;
 		padding: 1em 5em;
 
@@ -129,13 +141,19 @@ body {
 			font-size: 3em;
 		}
 
-		#login-form {
-			font-size: 1.5em;
+		> form {
+			font-size: 2em;
 			display: flex;
 			flex-direction: column;
 			gap: 1.5em;
 			align-items: center;
 			justify-content: center;
+
+			> div {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5em;
+			}
 
 			.user-login-info-container {
 				display: flex;
@@ -144,37 +162,25 @@ body {
 
 			button {
 				font-family: akaDylanPlain;
-				width: fit-content;
-				border: 0.05em solid gray;
-				border-radius: 0.25em;
-				padding: 0.05em 0.3em;
-				font-size: 2em;
+				border: 0.05em solid #000;
+				border-radius: 0.3em;
+				padding: 0.1em 0.5em;
+				font-size: 1.75em;
+				background-color: #35a4ff;
 			}
 		}
 	}
 }
 
-.logo {
-	font-family: akaDylanPlain;
+$logo-outline-color: #195383;
+#logo {
 	position: relative;
-	font-size: 4em;
-	display: flex;
+	font-family: akaDylanPlain;
+	font-size: 6em;
 	color: white;
-	justify-content: center;
-	background-color: #C12025;
-	padding: .3em .4em;
 	border-radius: 0.3em;
-	text-align: center;
-	border: 0.04em solid #000;
-	width: fit-content;
-
-	#inner-border {
-		background-color: #8E181B;
-		border-radius: 0.3em;
-		padding: .1em .2em;
-		text-shadow: .1em 0 #000, -.03em 0 #000, 0 .03em #000, 0 -.03em #000,
-		.015em .015em #000, -.015em -.015em #000, .015em -.015em #000, -.015em .015em #000;
-	}
+	text-shadow: .1em 0 $logo-outline-color, -.03em 0 $logo-outline-color, 0 .03em $logo-outline-color, 0 -.03em $logo-outline-color,
+		.015em .015em $logo-outline-color, -.015em -.015em $logo-outline-color, .015em -.015em $logo-outline-color, -.015em .015em $logo-outline-color;
 }
 
 .home {
@@ -186,15 +192,22 @@ body {
 	align-items: center;
 
 	.login-menu {
+		position: relative;
 		margin-top: 3%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 3em;
+		gap: 7em;
 
+		> div {
+			display: flex;
+			flex-direction: column;
+			gap: 3em;
+		}
+		
 		button {
-			background-color: #C12025;
+			background-color: #35a4ff;
 			border: 0.05em solid #000;
 			border-radius: 0.3em;
 			padding: 0.1em 0.5em;
@@ -348,4 +361,51 @@ body {
 	height: 100%;
 	font-size: 2em;
 	font-family: akaDylanPlain;
+}
+
+.register-page-container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 3%;
+	gap: 3em;
+
+	.register-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
+		border-radius: 0.5em;
+		padding: 1em 5em;
+	
+		> form {
+			font-size: 2em;
+			display: flex;
+			flex-direction: column;
+			gap: 1.5em;
+			align-items: center;
+			justify-content: center;
+	
+			> div {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5em;
+
+				> div {
+					display: flex;
+					flex-direction: column;
+				}
+			}
+	
+			button {
+				font-family: akaDylanPlain;
+				border: 0.05em solid #000;
+				border-radius: 0.3em;
+				padding: 0.1em 0.5em;
+				font-size: 1.75em;
+				background-color: #35a4ff;
+			}
+		}
+	}
 }

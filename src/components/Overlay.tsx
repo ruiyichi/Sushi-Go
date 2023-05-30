@@ -1,7 +1,6 @@
 import classNames from "classnames";
-import { ReactElement } from "react";
 
-const Overlay = ({ show, setShow, children }: { show: boolean, setShow: React.Dispatch<React.SetStateAction<boolean>>, children?: ReactElement<any, any> }) => {
+const Overlay = ({ show, setShow, children }: { show: boolean, setShow: React.Dispatch<React.SetStateAction<boolean>>, children?: React.ReactNode }) => {
 	return (
 		<div 
 			onClick={e => {
