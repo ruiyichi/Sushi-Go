@@ -1,22 +1,23 @@
 import LobbyMenu from "./LobbyMenu";
 import LoginMenu from "./LoginMenu";
-import Logo from "./Logo";
 import UserInfo from "./UserInfo";
 import { useSushiGo } from "../contexts/SushiGoContext";
+import BaseScreen from "../routes/BaseScreen";
 
 const Home = () => {
 	const { user } = useSushiGo();
 
 	return (
 		<div className='home'>
-			{ user.username && <UserInfo /> }
-			<Logo />
-			{user.username
-				?
-					<LobbyMenu />
-				:
-					<LoginMenu />
-			}
+			<BaseScreen>
+				{ user.username && <UserInfo /> }
+				{user.username
+					?
+						<LobbyMenu />
+					:
+						<LoginMenu />
+				}
+			</BaseScreen>
 		</div>
 	);
 }

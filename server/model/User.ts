@@ -12,7 +12,7 @@ const userSchema = new Schema({
 	refreshToken: String,
 	profilePicture: {
 		type: String,
-		default: 'default.png'
+		default: 'maki.png'
 	}
 });
 

@@ -6,11 +6,13 @@ import classNames from "classnames";
 import CloseIcon from "../icons/CloseIcon";
 import Overlay from "./Overlay";
 import { axiosPrivate } from "../api/axios";
+import Button from "./Button";
 
 const UserImage = ({ onClick, size=50 }: { onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
 	const { user } = useSushiGo();
 	return (
 		<img 
+			id='user-image'
 			draggable={false}
 			src={`${SERVER_URI}/images/profiles/${user.id}?${Date.now()}`} 
 			alt={user.id}
@@ -41,28 +43,34 @@ const ProfilePictureSelection = ({ setShow }: { setShow: React.Dispatch<React.Se
 	
 	return (
 		<div className='profile-picture-selection-container'>
-			<UserImage size={100} />
-			<div className='profile-pictures-container'>
-				{profilePictureFilenames.map(filename => {
-					return (
-						<img
-							key={filename}
-							src={`${SERVER_URI}/images/profilePictures/${filename}`}
-							alt={filename}
-							width={50}
-							onClick={async () => {
-								await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
-								updateUser({ profilePictureFilename: filename });
-							}}
-						>
-						</img>
-					);
-				})}
+			<div>
+				<CloseIcon
+					width={25}
+					onClick={() => setShow(false)}
+				/>
+				<UserImage size={100} />
+				<div>
+					{profilePictureFilenames.map(filename => {
+						return (
+							<img
+								id='user-image'
+								draggable={false}
+								key={filename}
+								src={`${SERVER_URI}/images/profilePictures/${filename}`}
+								alt={filename}
+								width={50}
+								onClick={async () => {
+									await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
+									updateUser({ profilePictureFilename: filename });
+								}}
+							>
+							</img>
+						);
+					})}
+				</div>
 			</div>
-			<CloseIcon
-				width={25}
-				onClick={() => setShow(false)}
-			/>
+			
+			<Button onClick={() => setShow(false)}>Close</Button>
 		</div>
 	);
 }
@@ -84,11 +92,11 @@ const UserInfoDialog = ({ open, setOpen, setShow }: { open: boolean, setOpen: Re
 					<UserImage onClick={() => setShow(show => !show)}/>
 					{user.username}
 				</div>
-				<button
+				<Button
 					onClick={async () => await logout() }
 				>
 					Log out
-				</button>
+				</Button>
 			</div>
 		</dialog>
 	);
@@ -104,7 +112,7 @@ const UserInfo = () => {
 			"user-info-container": true,
 			hidden: user.id === undefined
 		})}>
-			<UserImage onClick={() => setOpenUserInfoDialog(open => !open)}/>
+			<UserImage size={50} onClick={() => setOpenUserInfoDialog(open => !open)}/>
 			<UserInfoDialog open={openUserInfoDialog} setOpen={setOpenUserInfoDialog} setShow={setShowProfilePictureSelection} />
 			<Overlay show={showProfilePictureSelection} setShow={setShowProfilePictureSelection}>
 				<ProfilePictureSelection setShow={setShowProfilePictureSelection} />

@@ -38,7 +38,8 @@ body {
 
 .user-info-container {
 	position: relative;
-	align-self: flex-end;
+	display: flex;
+	justify-content: flex-end;
 	margin-right: 5px;
 	margin-top: 5px;
 	
@@ -48,6 +49,7 @@ body {
 
 	dialog {
 		position: absolute;
+		top: 3.5em;
 		border-radius: 0.7em;
 		margin-right: 0px;
 		z-index: 1;
@@ -82,29 +84,41 @@ body {
 	}
 
 	.profile-picture-selection-container {
-		border-radius: 0.5em;
-		border: 0.3em solid black;
-		background-color: white;
+		position: relative;
+		display: flex;
+		flex-direction: column;
 		width: 30%;
 		height: 25%;
 		margin: 5% auto;
-		display: flex;
-		flex-direction: row;
-		position: relative;
-		gap: 5em;
 		padding: 1em;
+		border-radius: 0.5em;
+		border: 0.3em solid black;
+		background-color: white;
+		align-items: center;
+
+		> div {
+			display: flex;
+			flex-direction: row;
+			gap: 5em;
+
+			> div {
+				display: flex;
+				flex-wrap: wrap;
+				height: fit-content;
+				flex-grow: 1;
+				gap: 0.4em;
+			}
+		}
+
+		> button {
+			margin-top: auto;
+			font-size: 1.25em;
+		}
 
 		#close-icon {
 			position: absolute;
 			right: 0;
 			top: 0;
-		}
-
-		.profile-pictures-container {
-			display: flex;
-			height: fit-content;
-			flex-grow: 1;
-			gap: 0.5em;
 		}
 	}
 }
@@ -126,7 +140,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: 3%;
+	margin-top: 55px;
 	gap: 3em;
 
 	.login-container {
@@ -193,7 +207,7 @@ $logo-outline-color: #195383;
 
 	.login-menu {
 		position: relative;
-		margin-top: 3%;
+		margin-top: 55px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -216,21 +230,22 @@ $logo-outline-color: #195383;
 	}
 
 	.main-page-container {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 1em;
+		gap: 4em;
 
 		.lobby-dialog {
 			display: flex;
 			flex-direction: column;
-			border: 0.05em solid #000;
+			border: none;
 			align-items: center;
 			justify-content: space-evenly;
-			background-color: white;
 			border-radius: 0.5em;
-			font-size: 2em;
+			font-size: 3em;
 			padding: .8em .6em;
+			gap: 1em;
 			
 			button {
 				width: max-content;
@@ -368,7 +383,7 @@ $logo-outline-color: #195383;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: 3%;
+	margin-top: 55px;
 	gap: 3em;
 
 	.register-container {
@@ -408,4 +423,8 @@ $logo-outline-color: #195383;
 			}
 		}
 	}
+}
+
+#user-image {
+	border-radius: 5em;
 }
