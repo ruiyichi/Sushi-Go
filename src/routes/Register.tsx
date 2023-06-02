@@ -4,10 +4,13 @@ import { isAxiosError } from 'axios';
 import BaseScreen from "./BaseScreen";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
+import { useNavigate } from "react-router-dom";
 
 const REGISTER_URL = '/register';
 
 const Register = () => {
+	const navigate = useNavigate();
+
 	const userRef = useRef<HTMLInputElement | null>(null);
 	const errRef = useRef<HTMLInputElement | null>(null);
 
@@ -58,71 +61,68 @@ const Register = () => {
 	}
 
 	return (
-		<>
-			{success ? (
-				<div>
-					<div>Success!</div>
-					<div>
-						<a href="/">Sign In</a>
-					</div>
-				</div>
-			) : (
-				<BaseScreen>
-					<div className='register-page-container'>
-						<Logo />
-						<div className='register-container'>
-							<div ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</div>
-							<form onSubmit={handleSubmit}>
-								<div>
-									<div>
-										<label htmlFor='username'>
-											Username:
-										</label>
-										<input
-											type='text'
-											ref={userRef}
-											autoComplete='off'
-											onChange={e => setUsername(e.target.value)}
-											value={username}
-											required
-											placeholder='Username'
-										/>
-									</div>
-
-									<div>
-										<label htmlFor='password'>
-											Password:
-										</label>
-										<input
-											type='password'
-											onChange={e => setPwd(e.target.value)}
-											value={pwd}
-											required
-											placeholder='Password'
-										/>
-									</div>
-
-									<div>
-										<label>
-											Confirm Password:
-										</label>
-										<input
-											type='password'
-											onChange={e => setMatchPwd(e.target.value)}
-											value={matchPwd}
-											required
-											placeholder='Confirm password'
-										/>
-									</div>
-								</div>
-								
-								<Button>Go!</Button>
-							</form>
+		<BaseScreen>
+			<div className='register-page-container'>
+				<Logo />
+				{success 
+					? 
+						<div>
+							Success!
+							<Button onClick={() => navigate('/')}>Sign in</Button>
 						</div>
+					:
+					<div className='register-container'>
+						<div ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</div>
+						<form onSubmit={handleSubmit}>
+							<div>
+								<div>
+									<label htmlFor='username'>
+										Username:
+									</label>
+									<input
+										type='text'
+										ref={userRef}
+										autoComplete='off'
+										onChange={e => setUsername(e.target.value)}
+										value={username}
+										required
+										placeholder='Username'
+									/>
+								</div>
+
+								<div>
+									<label htmlFor='password'>
+										Password:
+									</label>
+									<input
+										type='password'
+										onChange={e => setPwd(e.target.value)}
+										value={pwd}
+										required
+										placeholder='Password'
+									/>
+								</div>
+
+								<div>
+									<label>
+										Confirm Password:
+									</label>
+									<input
+										type='password'
+										onChange={e => setMatchPwd(e.target.value)}
+										value={matchPwd}
+										required
+										placeholder='Confirm password'
+									/>
+								</div>
+							</div>
+							
+							<Button>Go!</Button>
+						</form>
 					</div>
-				</BaseScreen>
-			)}
-		</>
+				}
+			</div>
+		</BaseScreen>
 	);
 }
 

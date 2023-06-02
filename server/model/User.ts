@@ -4,15 +4,24 @@ const userSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
+		unique: true,
 	},
 	password: {
 		type: String,
 		required: true,
 	},
-	refreshToken: String,
 	profilePicture: {
 		type: String,
 		default: 'maki.png'
+	},
+	refreshToken: String,
+	experience: {
+		type: Number,
+		default: 0,
+	},
+	mmr: {
+		type: Number,
+		default: 0
 	}
 });
 
