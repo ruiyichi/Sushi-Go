@@ -1,8 +1,10 @@
 export class Card {
 	name: string;
+	type: string;
 
-	constructor(name: string) {
+	constructor(name: string, type?: string) {
 		this.name = name;
+		this.type = type || name;
 	}
 
 	static pointValue(...params: any) {
@@ -26,8 +28,9 @@ export class Tempura extends Card {
 
 export class Maki extends Card {
 	numRolls: number;
+
 	constructor(numRolls: number) {
-		super(`Maki ${numRolls}`);
+		super(`Maki ${numRolls}`, "Maki");
 		this.numRolls = numRolls;
 	}
 
@@ -120,7 +123,7 @@ export class Nigiri extends Card {
 	points: number;
 
 	constructor(name: string, points: number) {
-		super(name);
+		super(name, "Nigiri");
 		this.hasWasabi = false;
 		this.points = points;
 	}

@@ -1,4 +1,4 @@
-import { Card, Nigiri, Wasabi } from "./Cards";
+import { Card, Nigiri, Wasabi, Tempura, Maki, Chopsticks, Pudding, Sashimi, Dumpling} from "./Cards";
 
 export class Player {
   hand: Array<Card>;
@@ -15,6 +15,11 @@ export class Player {
     this.score = 0;
     this.keptCard = false;
     this.hadChopsticks = false;
+  }
+
+  static sort(cards: Array<Card>) {
+    const sortingArray = [Maki.name, Dumpling.name, Sashimi.name, Tempura.name, Nigiri.name, Pudding.name, Chopsticks.name];
+    return cards.sort((a, b) => sortingArray.indexOf(a.constructor.name) - sortingArray.indexOf(b.constructor.name));
   }
 
   keepCard(card: Card) {

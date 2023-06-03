@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CARD_IMAGES } from "../game/Images";
 
-export const Card = ({ cardName, onClick=() => {}, style }: { cardName: string, onClick?: Function, style?: Record<string, any> }) => {
+export const Card = ({ cardName, height=150, onClick=() => {}, style }: { cardName: string, height?: number, onClick?: Function, style?: Record<string, any> }) => {
 	const [loaded, setLoaded] = useState(false);
 
 	return (
@@ -17,8 +17,7 @@ export const Card = ({ cardName, onClick=() => {}, style }: { cardName: string, 
 				style={{ visibility: loaded ? 'inherit' : 'hidden' }}
 				src={CARD_IMAGES[cardName]}
 				onLoad={() => setLoaded(true)}
-				width={100} 
-				height={150}
+				height={height}
 				draggable={false}
 			/>
 		</div>

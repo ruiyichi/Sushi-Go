@@ -151,7 +151,7 @@ io.use((socket: Socket, next) => {
 			});
 		});
 		
-		createRoundTimer(game);
+		//createRoundTimer(game);
 	}
 
 	const getGame = () => {
@@ -187,7 +187,7 @@ io.use((socket: Socket, next) => {
 		emitUpdatedGameToAllClients(game);
 
 		if (game.status !== 'Completed') {
-			createRoundTimer(game);
+			//createRoundTimer(game);
 		}
 	}
 
@@ -203,7 +203,7 @@ io.use((socket: Socket, next) => {
 		if (player && !player.keptCard) {
 			let cardOnServer = player.hand[idx];
 
-			if (cardOnServer.name === card.name && Date.now() - game.roundStartTime <= MS_PER_ROUND) {
+			if (cardOnServer.name === card.name) { //&& Date.now() - game.roundStartTime <= MS_PER_ROUND
 				player.keepCard(cardOnServer);
 
 				clientSenderSocket?.emit("updateGame", { player });
