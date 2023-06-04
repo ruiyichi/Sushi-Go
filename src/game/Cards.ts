@@ -1,10 +1,8 @@
 export class Card {
 	name: string;
-	type: string;
 
-	constructor(name: string, type?: string) {
+	constructor(name: string) {
 		this.name = name;
-		this.type = type || name;
 	}
 
 	static pointValue(...params: any) {
@@ -13,6 +11,36 @@ export class Card {
 
 	pointValue(...params: any) {
 		return 0;
+	}
+
+	static castToInstance(card: { name: string }) {
+		let instance = Object.create(Card.prototype);
+		if (card.name === "Tempura") {
+			instance = Object.create(Tempura.prototype);
+		} else if (card.name === "Maki 1") {
+			instance = Object.create(Maki_1.prototype);
+		} else if (card.name === "Maki 2") {
+			instance = Object.create(Maki_2.prototype);
+		} else if (card.name === "Maki 3") {
+			instance = Object.create(Maki_3.prototype);
+		} else if (card.name === "Sashimi") {
+			instance = Object.create(Sashimi.prototype);
+		} else if (card.name === "Dumpling") {
+			instance = Object.create(Dumpling.prototype);
+		} else if (card.name === "Chopsticks") {
+			instance = Object.create(Chopsticks.prototype);
+		} else if (card.name === "Wasabi") {
+			instance = Object.create(Wasabi.prototype);
+		} else if (card.name === "Pudding") {
+			instance = Object.create(Pudding.prototype);
+		} else if (card.name === "Squid Nigiri") {
+			instance = Object.create(SquidNigiri.prototype);
+		} else if (card.name === "Salmon Nigiri") {
+			instance = Object.create(SalmonNigiri.prototype);
+		} else if (card.name === "Egg Nigiri") {
+			instance = Object.create(EggNigiri.prototype);
+		} 
+		return Object.assign(instance, card);
 	}
 }
 
@@ -30,7 +58,7 @@ export class Maki extends Card {
 	numRolls: number;
 
 	constructor(numRolls: number) {
-		super(`Maki ${numRolls}`, "Maki");
+		super(`Maki ${numRolls}`);
 		this.numRolls = numRolls;
 	}
 
@@ -123,7 +151,7 @@ export class Nigiri extends Card {
 	points: number;
 
 	constructor(name: string, points: number) {
-		super(name, "Nigiri");
+		super(name);
 		this.hasWasabi = false;
 		this.points = points;
 	}

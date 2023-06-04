@@ -1,63 +1,75 @@
+import { useSushiGo } from "../contexts/SushiGoContext";
 import { Card as GameCard, Nigiri, Wasabi, Tempura, Maki, Chopsticks, Pudding, Sashimi, Dumpling} from "../game/Cards";
+import { Game } from "../game/Game";
 import { Card } from "./Cards";
 
-const Bucket = ({ bucket }: { bucket: string[][] }) => {
+const Bucket = ({ bucket }: { bucket: GameCard[][] }) => {
 	return (
 		<div className='bucket-container'>
-			{bucket?.map(cardNames => 
-				<CardGroup cardNames={cardNames} />
+			{bucket?.map(cards => 
+				<CardGroup cards={cards} />
 			)}
 		</div>
 	);
 }
 
-const CardGroup = ({ cardNames }: { cardNames: string[] }) => {
+const CardGroup = ({ cards }: { cards: GameCard[] }) => {
 	return (
 		<div>
-			{cardNames.map((cardName, i) => 
-				<Card cardName={cardName} height={100} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }}/>
+			{cards.map((card, i) => 
+				<Card cardName={card.name} height={100} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }}/>
 			)}
 		</div>
 	);
 }
 
-const Score = ({ cardNames }: { cardNames: Array<string>}) => {
-	return (
+const Points = ({ cards }: { cards: Array<GameCard>}) => {
+	const { game } = useSushiGo();
+	const playerCards = {[game?.player?.id as string]: cards} as Record<string, GameCard[]>;
+	
+	for (let player of game.players) {
+		playerCards[player.id] = player.keptHand;
+	}
+	const points = Game.scoreCards(playerCards, cards.some(c => c instanceof Maki));
+	return game.player && (
 		<div>
-			Score: {cardNames}
+			Points: {points[game?.player?.id]}
 		</div>
 	);
 }
 
 const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
-	const usedNigiris = hand.filter(c => c.type === 'Nigiri' && 'hasWasabi' in c && c.hasWasabi);
-	const usedWasabis = hand.filter(c => c.type === 'Wasabi' && 'used' in c && c.used);
+	const usedNigiris = hand.filter(c => c instanceof Nigiri && c.hasWasabi);
+	const usedWasabis = hand.filter(c => c instanceof Wasabi && c.used);
 
-	const pairedWasabiAndNigiris = usedNigiris.map((nigiri, i) => [usedWasabis[i].name, nigiri.name]);
+	const pairedWasabiAndNigiris = usedNigiris.map((nigiri, i) => [usedWasabis[i], nigiri]);
 
-	const buckets = [Maki.name, Dumpling.name, Sashimi.name, Tempura.name, Nigiri.name, Pudding.name, Chopsticks.name];
+	const bucketClasses = [Maki, Dumpling, Sashimi, Tempura, Nigiri, Pudding, Chopsticks];
 
-	const bucketedHand = hand.filter(card => !usedNigiris.includes(card) && !usedWasabis.includes(card)).reduce((g: Record<string, string[]>, c: GameCard) => {
-		const bucketName = c.type === Wasabi.name ? "Sashimi" : buckets[buckets.findIndex(bucketName => bucketName.includes(c.type))];
+	const bucketedHand = hand.filter(card => !usedNigiris.includes(card) && !usedWasabis.includes(card)).reduce((g: Record<string, GameCard[]>, c: GameCard) => {
+		const bucketName = c instanceof Wasabi ? Nigiri.name : bucketClasses[bucketClasses.findIndex(bucketName => c instanceof bucketName)].name;
 		g[bucketName] = g[bucketName] || [];
-		g[bucketName].push(c.name);
+		g[bucketName].push(c);
 		return g;
 	}, Object.create(null));
 
 	const groupedCardNames = Object.fromEntries(
-		Object.entries(bucketedHand).map(([key, value]) => [key, value.sort().reduce((result: string[][], current: string) => {
-			if (result.length === 0 || result[result.length - 1][0] !== current) {
-				result.push([current]);
-			} else {
-				result[result.length - 1].push(current);
-			}
-			return result;
-		}, [])])
+		Object.entries(bucketedHand).map(([key, values]) => [key, values.sort(
+			(a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)
+			).reduce((result: GameCard[][], current: GameCard) => {
+				if (result.length === 0 || result[result.length - 1][0] !== current) {
+					result.push([current]);
+				} else {
+					result[result.length - 1].push(current);
+				}
+				return result;
+			}, [])
+		])
 	);
 	
 	if (pairedWasabiAndNigiris.length > 0) {
-		groupedCardNames["Sashimi"] = groupedCardNames["Sashimi"] || [];
-		groupedCardNames["Sashimi"].push(...pairedWasabiAndNigiris);
+		groupedCardNames[Nigiri.name] = groupedCardNames[Nigiri.name] || [];
+		groupedCardNames[Nigiri.name].push(...pairedWasabiAndNigiris);
 	}
 
 	return (
@@ -66,11 +78,11 @@ const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
 				You
 			</div>
 			<div className="player-kept-hand">
-				{buckets.filter(bucketName => Object.keys(groupedCardNames).includes(bucketName)).map(bucketName => 
+				{bucketClasses.map(c => c.name).filter(bucketName => Object.keys(groupedCardNames).includes(bucketName)).map(bucketName => 
 					<div className="buckets-container">
 						{bucketName}
 						<Bucket bucket={groupedCardNames[bucketName]} />
-						<Score cardNames={groupedCardNames[bucketName].flat()}/>
+						<Points cards={groupedCardNames[bucketName].flat()}/>
 					</div>
 				)}
 			</div>

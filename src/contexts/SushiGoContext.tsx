@@ -64,6 +64,22 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const socketRef = useRef<undefined | Socket>();
 
 	const gameReducer = (game: Game, payload: Game) => {
+		const castPlayerCardsToInstance = (player: Player | ProtectedPlayer) => {
+			if ('hand' in player) {
+				player.hand = player.hand.map(c => Card.castToInstance(c));
+			}
+			if (player.keptHand) {
+				player.keptHand = player.keptHand.map(c => Card.castToInstance(c));
+			}
+		}
+		if (payload.player) {
+			castPlayerCardsToInstance(payload.player);
+		}
+		if (payload.players) {
+			for (let player of payload.players) {
+				castPlayerCardsToInstance(player);
+			}
+		}
 		return { ...game, ...payload };
 	}
 	const [game, updateGame] = useReducer(gameReducer, defaultGameState);

@@ -4,12 +4,14 @@ export class Player {
   hand: Array<Card>;
   keptHand: Array<Card>;
   id: string;
+  name: string;
   score: number;
   keptCard: boolean;
   hadChopsticks: boolean;
 
-  constructor(id: string) {
+  constructor(id: string, name: string) {
     this.id = id;
+    this.name = name;
     this.hand = [];
     this.keptHand = [];
     this.score = 0;

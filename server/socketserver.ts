@@ -131,7 +131,7 @@ io.use((socket: Socket, next) => {
 		const hostUserID = socketUsers[socket.id];
 		const lobby = playerLobbies[hostUserID];
 
-		const players = lobby.players.map(p => new Player(p.id));
+		const players = lobby.players.map(p => new Player(p.id, p.username));
 		const game = new Game(players);
 
 		players.forEach(player => playerGames[player.id] = game);
