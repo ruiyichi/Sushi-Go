@@ -23,9 +23,10 @@ const UserImage = ({ onClick, size=50 }: { onClick?: MouseEventHandler<HTMLImage
 	);
 };
 
-const ProfilePictureSelection = ({ setShow }: { setShow: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const [profilePictureFilenames, setProfilePictureFilenames] = useState<string[]>([]);
-	const { updateUser } = useSushiGo();
+	const { user, updateUser } = useSushiGo();
+	const logout = useLogout();
 
 	useEffect(() => {
 		const fetchProfilePictures = async () => {
@@ -42,14 +43,22 @@ const ProfilePictureSelection = ({ setShow }: { setShow: React.Dispatch<React.Se
 	}, []);
 	
 	return (
-		<div className='profile-picture-selection-container'>
-			<div>
+		<div className='user-settings-container'>
+			<div className='content'>
 				<CloseIcon
 					width={25}
 					onClick={() => setShow(false)}
 				/>
-				<UserImage size={100} />
-				<div>
+				<div className='user-container'>
+					<UserImage size={100} />
+					{user.username}
+					<Button
+						onClick={async () => await logout() }
+					>
+						Log out
+					</Button>
+				</div>
+				<div className='profile-pictures-container'>
 					{profilePictureFilenames.map(filename => {
 						return (
 							<img
@@ -70,52 +79,23 @@ const ProfilePictureSelection = ({ setShow }: { setShow: React.Dispatch<React.Se
 				</div>
 			</div>
 			
-			<Button onClick={() => setShow(false)}>Close</Button>
+			<Button id='close-button' onClick={() => setShow(false)}>Close</Button>
 		</div>
-	);
-}
-
-const UserInfoDialog = ({ open, setOpen, setShow }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, setShow: React.Dispatch<React.SetStateAction<boolean>> }) => {
-	const { user } = useSushiGo();
-	const logout = useLogout();
-
-	return (
-		<dialog
-			className={classNames({ hidden: !open })}
-			open={open}
-		>
-			<CloseIcon 
-				onClick={() => setOpen(false)}
-			/>
-			<div className='user-info-dialog-container'>
-				<div className='profile-picture-container'>
-					<UserImage onClick={() => setShow(show => !show)}/>
-					{user.username}
-				</div>
-				<Button
-					onClick={async () => await logout() }
-				>
-					Log out
-				</Button>
-			</div>
-		</dialog>
 	);
 }
 
 const UserInfo = () => {
 	const { user } = useSushiGo();
-	const [openUserInfoDialog, setOpenUserInfoDialog] = useState(false);
-	const [showProfilePictureSelection, setShowProfilePictureSelection] = useState(false);
+	const [showUserOverlay, setShowUserOverlay] = useState(false);
 
 	return (
 		<div className={classNames({
 			"user-info-container": true,
 			hidden: user.id === undefined
 		})}>
-			<UserImage size={50} onClick={() => setOpenUserInfoDialog(open => !open)}/>
-			<UserInfoDialog open={openUserInfoDialog} setOpen={setOpenUserInfoDialog} setShow={setShowProfilePictureSelection} />
-			<Overlay show={showProfilePictureSelection} setShow={setShowProfilePictureSelection}>
-				<ProfilePictureSelection setShow={setShowProfilePictureSelection} />
+			<UserImage size={50} onClick={() => setShowUserOverlay(open => !open)}/>
+			<Overlay show={showUserOverlay} setShow={setShowUserOverlay}>
+				<UserSettings setShow={setShowUserOverlay} />
 			</Overlay>
 		</div>
 	);

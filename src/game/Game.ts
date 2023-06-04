@@ -80,7 +80,7 @@ export class Game {
 	nextRound() {
 		let playerCards = {} as Record<string, Array<Cards.Card>>;
 		for (let player of this.players) {
-			playerCards[player.id] = player.keptHand;
+			playerCards[player.id] = player.keptCards;
 		}
 		let points = Game.scoreCards(playerCards, true);
 		this.players.forEach(p => {
@@ -105,7 +105,7 @@ export class Game {
 	finalRound() {
 		let playerCards = {} as Record<string, Array<Cards.Card>>;
 		for (let player of this.players) {
-			playerCards[player.id] = player.keptHand;
+			playerCards[player.id] = player.keptCards;
 		}
 		let points = Game.scoreCards(playerCards, true, true);
 		this.players.forEach(p => {

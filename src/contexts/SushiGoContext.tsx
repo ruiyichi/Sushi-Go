@@ -17,7 +17,7 @@ interface User {
 export interface ProtectedPlayer {
 	id: string,
 	username: string,
-	keptHand: Card[],
+	keptCards: Card[],
 	score: number,
 };
 
@@ -68,8 +68,8 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 			if ('hand' in player) {
 				player.hand = player.hand.map(c => Card.castToInstance(c));
 			}
-			if (player.keptHand) {
-				player.keptHand = player.keptHand.map(c => Card.castToInstance(c));
+			if (player.keptCards) {
+				player.keptCards = player.keptCards.map(c => Card.castToInstance(c));
 			}
 		}
 		if (payload.player) {

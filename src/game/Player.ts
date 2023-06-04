@@ -1,48 +1,43 @@
-import { Card, Nigiri, Wasabi, Tempura, Maki, Chopsticks, Pudding, Sashimi, Dumpling} from "./Cards";
+import { Card, Nigiri, Wasabi, Chopsticks, Pudding} from "./Cards";
 
 export class Player {
-  hand: Array<Card>;
-  keptHand: Array<Card>;
-  id: string;
-  name: string;
-  score: number;
-  keptCard: boolean;
-  hadChopsticks: boolean;
+	hand: Array<Card>;
+	keptCards: Array<Card>;
+	id: string;
+	username: string;
+	score: number;
+	keptCard: boolean;
+	hadChopsticks: boolean;
 
-  constructor(id: string, name: string) {
-    this.id = id;
-    this.name = name;
-    this.hand = [];
-    this.keptHand = [];
-    this.score = 0;
-    this.keptCard = false;
-    this.hadChopsticks = false;
-  }
+	constructor(id: string, username: string) {
+		this.id = id;
+		this.username = username;
+		this.hand = [];
+		this.keptCards = [];
+		this.score = 0;
+		this.keptCard = false;
+		this.hadChopsticks = false;
+	}
 
-  static sort(cards: Array<Card>) {
-    const sortingArray = [Maki.name, Dumpling.name, Sashimi.name, Tempura.name, Nigiri.name, Pudding.name, Chopsticks.name];
-    return cards.sort((a, b) => sortingArray.indexOf(a.constructor.name) - sortingArray.indexOf(b.constructor.name));
-  }
+	keepCard(card: Card) {
+		const unusedWasabi = this.keptCards.find(card => card instanceof Wasabi && !card.used) as Wasabi | undefined;
+		if (unusedWasabi && card instanceof Nigiri) {
+			card.addWasabi();
+			unusedWasabi.addNigiri();
+		}
+		this.keptCards.push(card);
+		this.hand = this.hand.filter(c => c !== card);
+		this.keptCard = true;
+	}
 
-  keepCard(card: Card) {
-    const unusedWasabi = this.keptHand.find(card => card instanceof Wasabi && !card.used) as Wasabi | undefined;
-    if (unusedWasabi && card instanceof Nigiri) {
-      card.addWasabi();
-      unusedWasabi.addNigiri();
-    }
-    this.keptHand.push(card);
-    this.hand = this.hand.filter(c => c !== card);
-    this.keptCard = true;
-  }
+	clearKeptHand() {
+		this.keptCards = this.keptCards.filter(c => c instanceof Pudding);
+	}
 
-  clearKeptHand() {
-    this.keptHand = this.keptHand.filter(c => c.name === 'Pudding');
-  }
-
-  setHadChopsticks() {
-    this.hadChopsticks = false;
-    if (this.keptHand.some(card => card.name === 'Chopsticks')) {
-      this.hadChopsticks = true;
-    }
-  }
+	setHadChopsticks() {
+		this.hadChopsticks = false;
+		if (this.keptCards.some(c => c instanceof Chopsticks)) {
+			this.hadChopsticks = true;
+		}
+	}
 }

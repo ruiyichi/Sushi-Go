@@ -9,6 +9,10 @@ export class Card {
 		return 0;
 	}
 
+	static sort(cards: Card[]) {
+		return cards.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+	}
+
 	pointValue(...params: any) {
 		return 0;
 	}

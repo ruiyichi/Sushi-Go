@@ -8,6 +8,7 @@ import { Lobby } from "../src/game/Lobby";
 import jwt, { Secret } from 'jsonwebtoken';
 import { BasicUser } from "../src/interfaces";
 import { MS_PER_ROUND, SECONDS_PER_ROUND } from "../src/game/Settings";
+import { MAX_ITER } from "./CONSTANTS";
 
 dotenv.config();
 
@@ -87,8 +88,9 @@ io.use((socket: Socket, next) => {
 				player: game.players.find(p => p.id === userID),
 				players: game.players.filter(p => p.id !== userID).map(p => ({
 					id: p.id,
+					username: p.username,
 					score: p.score,
-					keptHand: p.keptHand
+					keptCards: p.keptCards
 				})),
 			});
 		});
@@ -96,8 +98,10 @@ io.use((socket: Socket, next) => {
 
 	const createLobby = (user: BasicUser, callback: Function) => {
 		let lobbyCode = createLobbyCode(5);
-		while (Object.values(playerLobbies).map(lobby => lobby.code).includes(lobbyCode)) {
+		let iterations = 0;
+		while (Object.values(playerLobbies).map(lobby => lobby.code).includes(lobbyCode) && iterations < MAX_ITER) {
 			lobbyCode = createLobbyCode(5);
+			iterations++;
 		}
 		const lobby = new Lobby(lobbyCode, [user]);
 		playerLobbies[userID] = lobby;
@@ -167,8 +171,9 @@ io.use((socket: Socket, next) => {
 			player: players.find(p => p.id === userID),
 			players: players.filter(p => p.id !== userID).map(p => ({
 				id: p.id,
+				username: p.username,
 				score: p.score,
-				keptHand: p.keptHand
+				keptCards: p.keptCards
 			})),
 		});
 	}
@@ -228,12 +233,12 @@ io.use((socket: Socket, next) => {
 		if (player) {
 			const cardOnServer = player.hand[idx];
 
-			if (player.hadChopsticks && player.keptHand.some(card => card.name === 'Chopsticks') && cardOnServer.name === card.name) {
+			if (player.hadChopsticks && player.keptCards.some(card => card.name === 'Chopsticks') && cardOnServer.name === card.name) {
 				player.keepCard(cardOnServer);
-				const chopsticks = player.keptHand.find(card => card.name === 'Chopsticks');
+				const chopsticks = player.keptCards.find(card => card.name === 'Chopsticks');
 				if (chopsticks) {
 					player.hand.push(chopsticks);
-					player.keptHand.splice(player.keptHand.indexOf(chopsticks), 1);
+					player.keptCards.splice(player.keptCards.indexOf(chopsticks), 1);
 				}
 				player.hadChopsticks = false;
 

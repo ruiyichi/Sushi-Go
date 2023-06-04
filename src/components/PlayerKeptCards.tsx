@@ -28,17 +28,17 @@ const Points = ({ cards }: { cards: Array<GameCard>}) => {
 	const playerCards = {[game?.player?.id as string]: cards} as Record<string, GameCard[]>;
 	
 	for (let player of game.players) {
-		playerCards[player.id] = player.keptHand;
+		playerCards[player.id] = player.keptCards;
 	}
 	const points = Game.scoreCards(playerCards, cards.some(c => c instanceof Maki));
 	return game.player && (
-		<div>
+		<div className="points-container">
 			Points: {points[game?.player?.id]}
 		</div>
 	);
 }
 
-const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
+const PlayerKeptCards = ({ hand }: { hand: GameCard[] }) => {
 	const usedNigiris = hand.filter(c => c instanceof Nigiri && c.hasWasabi);
 	const usedWasabis = hand.filter(c => c instanceof Wasabi && c.used);
 
@@ -46,7 +46,7 @@ const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
 
 	const bucketClasses = [Maki, Dumpling, Sashimi, Tempura, Nigiri, Pudding, Chopsticks];
 
-	const bucketedHand = hand.filter(card => !usedNigiris.includes(card) && !usedWasabis.includes(card)).reduce((g: Record<string, GameCard[]>, c: GameCard) => {
+	const bucketedCards = hand.filter(card => !usedNigiris.includes(card) && !usedWasabis.includes(card)).reduce((g: Record<string, GameCard[]>, c: GameCard) => {
 		const bucketName = c instanceof Wasabi ? Nigiri.name : bucketClasses[bucketClasses.findIndex(bucketName => c instanceof bucketName)].name;
 		g[bucketName] = g[bucketName] || [];
 		g[bucketName].push(c);
@@ -54,10 +54,8 @@ const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
 	}, Object.create(null));
 
 	const groupedCardNames = Object.fromEntries(
-		Object.entries(bucketedHand).map(([key, values]) => [key, values.sort(
-			(a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)
-			).reduce((result: GameCard[][], current: GameCard) => {
-				if (result.length === 0 || result[result.length - 1][0] !== current) {
+		Object.entries(bucketedCards).map(([key, values]) => [key, GameCard.sort(values).reduce((result: GameCard[][], current: GameCard) => {
+				if (result.length === 0 || result[result.length - 1][0].name !== current.name) {
 					result.push([current]);
 				} else {
 					result[result.length - 1].push(current);
@@ -90,4 +88,4 @@ const PlayerKeptHand = ({ hand }: { hand: GameCard[] }) => {
 	);
 }
 
-export default PlayerKeptHand;
+export default PlayerKeptCards;

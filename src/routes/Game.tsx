@@ -1,8 +1,8 @@
 import { ProtectedPlayer, useSushiGo } from "../contexts/SushiGoContext";
 import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
-import PlayerKeptHand from "../components/PlayerKeptHand";
-import OtherPlayersHands from "../components/OtherPlayersHands";
+import PlayerKeptCards from "../components/PlayerKeptCards";
+import OpponentsKeptCards from "../components/OpponentsKeptCards";
 import { PlayerHand } from "../components/Hands";
 
 const GameOver = ({ players }: { players: Array<ProtectedPlayer>}) => {
@@ -11,7 +11,7 @@ const GameOver = ({ players }: { players: Array<ProtectedPlayer>}) => {
 
 	return (
 		<div className='game-over-container'>
-			Player { players.find(p => p.score === maxScore)?.id } wins!
+			Player { players.find(p => p.score === maxScore)?.username } wins!
 			<button onClick={() => navigate('/')}>
 				Back to main menu
 			</button>
@@ -27,6 +27,7 @@ const Game = () => {
 			<div className="player-info-container">
 				{user.id && 
 					<img 
+						id='user-image'
 						src={`${SERVER_URI}/images/profiles/${user.id}`} 
 						alt={user.id}
 					/>
@@ -49,13 +50,13 @@ const Game = () => {
 				?
 				<>
 					<div className="played-hands-container">
-						<PlayerKeptHand hand={game.player.keptHand} />
-						<OtherPlayersHands />
+						<PlayerKeptCards hand={game.player.keptCards} />
+						<OpponentsKeptCards players={game.players} />
 					</div>
 					<PlayerHand hand={game.player.hand} keptCard={game.player.keptCard} />
 				</>
 				:
-				<GameOver players={game.players} />
+				<GameOver players={game.players.concat(game.player)} />
 			}
 		</div>
 	);
