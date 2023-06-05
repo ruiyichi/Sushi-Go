@@ -1,8 +1,7 @@
 import { ProtectedPlayer, useSushiGo } from "../contexts/SushiGoContext";
 import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
-import PlayerKeptCards from "../components/PlayerKeptCards";
-import OpponentsKeptCards from "../components/OpponentsKeptCards";
+import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
 import { PlayerHand } from "../components/Hands";
 
 const GameOver = ({ players }: { players: Array<ProtectedPlayer>}) => {
@@ -50,7 +49,7 @@ const Game = () => {
 				?
 				<>
 					<div className="played-hands-container">
-						<PlayerKeptCards hand={game.player.keptCards} />
+						<PlayerKeptCards player={game.player} />
 						<OpponentsKeptCards players={game.players} />
 					</div>
 					<PlayerHand hand={game.player.hand} keptCard={game.player.keptCard} />

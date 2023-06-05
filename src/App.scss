@@ -73,7 +73,7 @@ body {
 		.content {
 			display: flex;
 			flex-direction: row;
-			gap: 5em;
+			gap: 5%;
 
 			.profile-pictures-container {
 				display: flex;
@@ -81,6 +81,7 @@ body {
 				height: fit-content;
 				flex-grow: 1;
 				gap: 0.4em;
+				margin-bottom: 5%;
 			}
 
 			.user-container {
@@ -372,32 +373,43 @@ $logo-outline-color: #195383;
 			align-self: center;
 		}
 
-		.player-kept-hand {
-			border-radius: 0.5em;
+		.content {
 			display: flex;
 			flex-direction: column;
+			gap: 1em;
+			border-radius: 0.5em;
 			padding: 1em;
 			border: 0.1em solid black;
-			gap: 2em;
-			overflow-y: auto;
 			height: 100%;
-	
-			.buckets-container {
-				display: flex;
-				position: relative;
-				gap: 1em;
-	
-				.bucket-container {
-					display: flex;
-					gap: 1em;
-					flex-grow: 1;
-				}
+			overflow-y: auto;
 
-				.points-container {
-					justify-self: flex-end;
+			.score-container {
+				align-self: center;
+			}
+			
+			.player-kept-hand {
+				display: flex;
+				flex-direction: column;
+				gap: 2em;
+		
+				.buckets-container {
+					display: flex;
+					position: relative;
+					gap: 1em;
+		
+					.bucket-container {
+						display: flex;
+						gap: 1em;
+						flex-grow: 1;
+					}
+	
+					.points-container {
+						justify-self: flex-end;
+					}
 				}
 			}
 		}
+		
 	}
 	
 	.other-players-hands-container {
@@ -417,6 +429,49 @@ $logo-outline-color: #195383;
 			overflow-y: auto;
 			padding: 1em;
 			border: 0.1em solid black;
+
+			.opponent-hand-container {
+				display: flex;
+				flex-direction: column;
+				gap: 1em;
+
+				.opponent-info-container {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+	
+					.opponent-info {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+					}
+				}
+			}
+
+			.player-kept-hand {
+				border-radius: 0.5em;
+				display: flex;
+				flex-direction: column;
+				gap: .5em;
+				overflow-y: auto;
+				height: 100%;
+		
+				.buckets-container {
+					display: flex;
+					position: relative;
+					gap: 1em;
+		
+					.bucket-container {
+						display: flex;
+						gap: 1em;
+						flex-grow: 1;
+					}
+	
+					.points-container {
+						justify-self: flex-end;
+					}
+				}
+			}
 		}
 	}
 }
@@ -483,4 +538,9 @@ $logo-outline-color: #195383;
 
 #user-image {
 	border-radius: 5em;
+}
+
+.opponent-kept-cards-container {
+	display: flex;
+	flex-direction: column;
 }

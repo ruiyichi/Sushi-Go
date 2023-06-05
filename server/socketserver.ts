@@ -152,6 +152,7 @@ io.use((socket: Socket, next) => {
 			clientSocket?.emit("updateGame", { 
 				...game,
 				player: players.find(p => p.id === userID),
+				players: players.filter(p => p.id !== userID)
 			});
 		});
 		

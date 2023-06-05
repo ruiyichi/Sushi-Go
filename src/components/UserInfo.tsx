@@ -8,14 +8,13 @@ import Overlay from "./Overlay";
 import { axiosPrivate } from "../api/axios";
 import Button from "./Button";
 
-const UserImage = ({ onClick, size=50 }: { onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
-	const { user } = useSushiGo();
+export const UserImage = ({ userID, onClick, size=50 }: { userID: string, onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
 	return (
 		<img 
 			id='user-image'
 			draggable={false}
-			src={`${SERVER_URI}/images/profiles/${user.id}?${Date.now()}`} 
-			alt={user.id}
+			src={`${SERVER_URI}/images/profiles/${userID}?${Date.now()}`} 
+			alt={userID}
 			onClick={onClick}
 			width={size}
 			height={size}
@@ -50,11 +49,9 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 					onClick={() => setShow(false)}
 				/>
 				<div className='user-container'>
-					<UserImage size={100} />
+					<UserImage userID={user.id} size={100} />
 					{user.username}
-					<Button
-						onClick={async () => await logout() }
-					>
+					<Button onClick={async () => await logout() }>
 						Log out
 					</Button>
 				</div>
@@ -93,7 +90,7 @@ const UserInfo = () => {
 			"user-info-container": true,
 			hidden: user.id === undefined
 		})}>
-			<UserImage size={50} onClick={() => setShowUserOverlay(open => !open)}/>
+			<UserImage userID={user.id} size={50} onClick={() => setShowUserOverlay(open => !open)}/>
 			<Overlay show={showUserOverlay} setShow={setShowUserOverlay}>
 				<UserSettings setShow={setShowUserOverlay} />
 			</Overlay>
