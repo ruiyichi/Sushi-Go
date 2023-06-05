@@ -21,7 +21,7 @@ const CardGroup = ({ cards }: { cards: GameCard[] }) => {
 	return (
 		<div>
 			{cards.map((card, i) => 
-				<Card cardName={card.name} height={100} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }}/>
+				<Card cardName={card.name} height={100} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }} key={i}/>
 			)}
 		</div>
 	);
@@ -31,7 +31,7 @@ export const CardIconGroup = ({ cards }: { cards: GameCard[] }) => {
 	return (
 		<div>
 			{cards.map((card, i) => 
-				<CardIcon cardName={card.name} height={30} />
+				<CardIcon cardName={card.name} height={30} key={i} />
 			)}
 		</div>
 	);
@@ -90,7 +90,7 @@ export const PlayerKeptHand = ({ player, CardGroupType }: { player: Opponent, Ca
 	return (
 		<div className="player-kept-hand">
 			{bucketClasses.map(c => c.name).filter(bucketName => Object.keys(groupedCardNames).includes(bucketName)).map(bucketName => 
-				<div className="buckets-container">
+				<div key={bucketName} className="buckets-container">
 					<div className="bucket-label">
 						{bucketName}
 					</div>
@@ -127,7 +127,7 @@ export const OpponentsKeptCards = ({ players }: { players: Opponent[] }) => {
 			<div className="other-players-hands">
 				{players.map(player => {
 					return (
-						<div className="opponent-hand-container">
+						<div key={player.id} className="opponent-hand-container">
 							<div className='opponent-info-container'>
 								<div className='opponent-info'>
 									<UserImage userID={player.id} />

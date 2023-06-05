@@ -1,27 +1,34 @@
 import { useState } from "react";
 import { CARD_FILES } from "../game/Images";
+import { motion, Variants } from "framer-motion";
 
-export const Card = ({ cardName, height=150, onClick=() => {}, style }: { cardName: string, height?: number, onClick?: Function, style?: React.CSSProperties }) => {
+export const Card = ({ cardName, height=150, onClick, style, variant="default" }: { cardName: string, height?: number, onClick?: null | Function, style?: React.CSSProperties, variant?: string }) => {
 	const [loaded, setLoaded] = useState(false);
+	const animationVariants: Variants = {
+		default: {},
+		playable: { translateY: -50 }
+	};
 
 	return (
-		<div
+		<motion.div
+			key={cardName}
+			whileHover={variant}
+			variants={animationVariants}
 			className="card"
-			onClick={() => onClick()}
-			style={style}
+			onClick={() => onClick && onClick()}
+			style={{ ...style, cursor: !onClick ? "default" : "pointer", visibility: loaded ? 'inherit' : 'hidden' }}
 		>
 			<div className="card-info">
 				{cardName}
 			</div>
 			<img 
-				style={{ visibility: loaded ? 'inherit' : 'hidden' }}
 				src={CARD_FILES[cardName].image}
 				onLoad={() => setLoaded(true)}
 				height={height}
 				draggable={false}
 				alt={cardName}
 			/>
-		</div>
+		</motion.div>
 	);
 }
 

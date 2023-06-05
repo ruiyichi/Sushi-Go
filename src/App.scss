@@ -323,7 +323,6 @@ $logo-outline-color: #195383;
 	.card {
 		display: flex;
 		position: relative;
-		cursor: pointer;
 		border: 2px solid black;
 		border-radius: 10px;
 		overflow: hidden;
@@ -546,9 +545,4 @@ $logo-outline-color: #195383;
 
 #user-image {
 	border-radius: 5em;
-}
-
-.opponent-kept-cards-container {
-	display: flex;
-	flex-direction: column;
 }

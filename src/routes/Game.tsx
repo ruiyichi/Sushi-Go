@@ -2,7 +2,7 @@ import { Opponent, useSushiGo } from "../contexts/SushiGoContext";
 import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
 import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
-import { PlayerHand } from "../components/Hands";
+import PlayerHand from "../components/PlayerHand";
 
 const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
