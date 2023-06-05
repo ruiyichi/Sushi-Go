@@ -19,31 +19,9 @@ export class Card {
 
 	static castToInstance(card: { name: string }) {
 		let instance = Object.create(Card.prototype);
-		if (card.name === "Tempura") {
-			instance = Object.create(Tempura.prototype);
-		} else if (card.name === "Maki 1") {
-			instance = Object.create(Maki_1.prototype);
-		} else if (card.name === "Maki 2") {
-			instance = Object.create(Maki_2.prototype);
-		} else if (card.name === "Maki 3") {
-			instance = Object.create(Maki_3.prototype);
-		} else if (card.name === "Sashimi") {
-			instance = Object.create(Sashimi.prototype);
-		} else if (card.name === "Dumpling") {
-			instance = Object.create(Dumpling.prototype);
-		} else if (card.name === "Chopsticks") {
-			instance = Object.create(Chopsticks.prototype);
-		} else if (card.name === "Wasabi") {
-			instance = Object.create(Wasabi.prototype);
-		} else if (card.name === "Pudding") {
-			instance = Object.create(Pudding.prototype);
-		} else if (card.name === "Squid Nigiri") {
-			instance = Object.create(SquidNigiri.prototype);
-		} else if (card.name === "Salmon Nigiri") {
-			instance = Object.create(SalmonNigiri.prototype);
-		} else if (card.name === "Egg Nigiri") {
-			instance = Object.create(EggNigiri.prototype);
-		} 
+		if (Object.keys(CARD_PROPERTIES).includes(card.name)) {
+			instance = Object.create(CARD_PROPERTIES[card.name].prototype);
+		}
 		return Object.assign(instance, card);
 	}
 }
@@ -105,7 +83,7 @@ export class Dumpling extends Card {
 	}
 
 	static pointValue(numCards: number) {
-		let pointsDistribution: { [key: number]: number } = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 };
+		let pointsDistribution: Record<number, number> = { 0:0, 1:1, 2:3, 3:6, 4:10, 5:15 };
 		if (numCards > 5) {
 			numCards = 5;
 		}
@@ -185,4 +163,67 @@ export class EggNigiri extends Nigiri {
 	constructor() {
 		super("Egg Nigiri", 1);
 	}
+}
+
+export const CARD_PROPERTIES: { [key: string]: { numCards: number, constructor: any, prototype: any } } = {
+	"Tempura": {
+		numCards: 14,
+		constructor: Tempura,
+		prototype: Tempura.prototype
+	},
+	"Sashimi": {
+		numCards: 14,
+		constructor: Sashimi,
+		prototype: Sashimi.prototype
+	},
+	"Dumpling": {
+		numCards: 14,
+		constructor: Dumpling,
+		prototype: Dumpling.prototype
+	},
+	"Maki 1": {
+		numCards: 6,
+		constructor: Maki_1,
+		prototype: Maki_1.prototype
+	},
+	"Maki 2": {
+		numCards: 12,
+		constructor: Maki_2,
+		prototype: Maki_2.prototype
+	},
+	"Maki 3": {
+		numCards: 8,
+		constructor: Maki_3,
+		prototype: Maki_3.prototype
+	},
+	"Salmon Nigiri": {
+		numCards: 10,
+		constructor: SalmonNigiri,
+		prototype: SalmonNigiri.prototype
+	},
+	"Squid Nigiri": {
+		numCards: 5,
+		constructor: SquidNigiri,
+		prototype: SquidNigiri.prototype
+	},
+	"Egg Nigiri": {
+		numCards: 5,
+		constructor: EggNigiri,
+		prototype: EggNigiri.prototype
+	},
+	"Pudding": {
+		numCards: 10,
+		constructor: Pudding,
+		prototype: Pudding.prototype
+	},
+	"Wasabi": {
+		numCards: 6,
+		constructor: Wasabi,
+		prototype: Wasabi.prototype
+	},
+	"Chopsticks": {
+		numCards: 4,
+		constructor: Chopsticks,
+		prototype: Chopsticks.prototype
+	},
 }

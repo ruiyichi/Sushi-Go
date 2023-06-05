@@ -1,10 +1,10 @@
-import { ProtectedPlayer, useSushiGo } from "../contexts/SushiGoContext";
+import { Opponent, useSushiGo } from "../contexts/SushiGoContext";
 import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
 import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
 import { PlayerHand } from "../components/Hands";
 
-const GameOver = ({ players }: { players: Array<ProtectedPlayer>}) => {
+const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
 	const maxScore = Math.max(...players.map(p => p.score));
 
@@ -50,12 +50,12 @@ const Game = () => {
 				<>
 					<div className="played-hands-container">
 						<PlayerKeptCards player={game.player} />
-						<OpponentsKeptCards players={game.players} />
+						<OpponentsKeptCards players={game.opponents} />
 					</div>
 					<PlayerHand hand={game.player.hand} keptCard={game.player.keptCard} />
 				</>
 				:
-				<GameOver players={game.players.concat(game.player)} />
+				<GameOver players={game.opponents.concat(game.player)} />
 			}
 		</div>
 	);

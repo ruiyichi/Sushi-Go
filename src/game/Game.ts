@@ -1,7 +1,8 @@
 import * as Cards from "./Cards"
 import { v4 as uuid } from "uuid";
 import { Player } from "./Player";
-import { CARD_SETTINGS, CARDS_TO_DEAL, NUM_ROUNDS } from "./Settings";
+import { CARD_PROPERTIES } from "./Cards";
+import { CARDS_TO_DEAL, NUM_ROUNDS } from "./Settings";
 
 export class Game {
 	id: string;
@@ -38,11 +39,10 @@ export class Game {
 	}
 
 	setDeck() {
-		Object.keys(CARD_SETTINGS).forEach(cardName => {
-			let cardSetting = CARD_SETTINGS[cardName];
-			let { className } = cardSetting;
-			for (let i = 0; i < cardSetting.numCards; i++) {
-				this.deck.push(new className());
+		Object.keys(CARD_PROPERTIES).forEach(cardName => {
+			const cardProperties = CARD_PROPERTIES[cardName];
+			for (let i = 0; i < cardProperties.numCards; i++) {
+				this.deck.push(new cardProperties.constructor());
 			}
 		});
 	}
@@ -124,11 +124,11 @@ export class Game {
 	}
 
 	static scoreCards(playerCards: Record<string, Cards.Card[]>, includeMakis=false, finalRound=false) {
-		let makis = {} as { [key: string]: number };
+		let makis = {} as Record<string, number>;
 		let playersWithMostMakis = [];
 		let playersWithSecondMostMakis = [];
-		let puddings = {} as { [key: string]: number };
-		let points = {} as { [key: string]: number };
+		let puddings = {} as Record<string, number>;
+		let points = {} as Record<string, number>;
 		for (let id of Object.keys(playerCards)) {
 			points[id] = 0;
 		}

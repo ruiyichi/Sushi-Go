@@ -396,6 +396,10 @@ $logo-outline-color: #195383;
 					display: flex;
 					position: relative;
 					gap: 1em;
+
+					.bucket-label {
+						flex: 0 0 15%;
+					}
 		
 					.bucket-container {
 						display: flex;
@@ -455,12 +459,16 @@ $logo-outline-color: #195383;
 				gap: .5em;
 				overflow-y: auto;
 				height: 100%;
-		
+
 				.buckets-container {
 					display: flex;
 					position: relative;
 					gap: 1em;
-		
+
+					.bucket-label {
+						flex: 0 0 15%;
+					}
+
 					.bucket-container {
 						display: flex;
 						gap: 1em;

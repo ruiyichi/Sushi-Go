@@ -86,7 +86,7 @@ io.use((socket: Socket, next) => {
 			clientSocket?.emit("updateGame", { 
 				...game,
 				player: game.players.find(p => p.id === userID),
-				players: game.players.filter(p => p.id !== userID).map(p => ({
+				opponents: game.players.filter(p => p.id !== userID).map(p => ({
 					id: p.id,
 					username: p.username,
 					score: p.score,
@@ -152,7 +152,7 @@ io.use((socket: Socket, next) => {
 			clientSocket?.emit("updateGame", { 
 				...game,
 				player: players.find(p => p.id === userID),
-				players: players.filter(p => p.id !== userID)
+				opponents: players.filter(p => p.id !== userID)
 			});
 		});
 		
@@ -170,7 +170,7 @@ io.use((socket: Socket, next) => {
 		clientSocket?.emit("updateGame", { 
 			...game,
 			player: players.find(p => p.id === userID),
-			players: players.filter(p => p.id !== userID).map(p => ({
+			opponents: players.filter(p => p.id !== userID).map(p => ({
 				id: p.id,
 				username: p.username,
 				score: p.score,

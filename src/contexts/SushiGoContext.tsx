@@ -14,7 +14,7 @@ interface User {
 	profilePictureFilename: string
 };
 
-export interface ProtectedPlayer {
+export interface Opponent {
 	id: string,
 	username: string,
 	keptCards: Card[],
@@ -37,11 +37,12 @@ interface SushiGoInterface {
 interface Game {
 	status: "In lobby" | "Pending" | "Completed",
 	player: null | Player,
-	players: ProtectedPlayer[],
+	opponents: Opponent[],
 	turn: number,
 	round: number,
 	roundStatus: string,
 	maxTurns: number,
+	maxRounds: number,
 };
 
 type UserAction = { type: 'update', payload: User } | { type: 'clear'};
@@ -53,18 +54,19 @@ interface LobbyAction {
 const defaultGameState = {
 	status: "In lobby",
 	player: null,
-	players: [],
+	opponents: [],
 	turn: 0,
 	round: 0,
 	roundStatus: "",
-	maxTurns: 0
+	maxTurns: 0,
+	maxRounds: 0
 } as Game;
 
 export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => {
 	const socketRef = useRef<undefined | Socket>();
 
 	const gameReducer = (game: Game, payload: Game) => {
-		const castPlayerCardsToInstance = (player: Player | ProtectedPlayer) => {
+		const castPlayerCardsToInstance = (player: Player | Opponent) => {
 			if ('hand' in player) {
 				player.hand = player.hand.map(c => Card.castToInstance(c));
 			}
@@ -75,9 +77,9 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		if (payload.player) {
 			castPlayerCardsToInstance(payload.player);
 		}
-		if (payload.players) {
-			for (let player of payload.players) {
-				castPlayerCardsToInstance(player);
+		if (payload.opponents) {
+			for (let opponent of payload.opponents) {
+				castPlayerCardsToInstance(opponent);
 			}
 		}
 		return { ...game, ...payload };

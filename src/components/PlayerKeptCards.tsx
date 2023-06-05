@@ -1,4 +1,4 @@
-import { ProtectedPlayer } from "../contexts/SushiGoContext";
+import { Opponent } from "../contexts/SushiGoContext";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { Card as GameCard, Nigiri, Wasabi, Tempura, Maki, Chopsticks, Pudding, Sashimi, Dumpling} from "../game/Cards";
 import { Game } from "../game/Game";
@@ -37,22 +37,25 @@ export const CardIconGroup = ({ cards }: { cards: GameCard[] }) => {
 	);
 }
 
-const Points = ({ cards }: { cards: Array<GameCard>}) => {
+const Points = ({ cards, playerID }: { cards: Array<GameCard>, playerID: string }) => {
 	const { game } = useSushiGo();
-	const playerCards = {[game?.player?.id as string]: cards} as Record<string, GameCard[]>;
+	const playerCards = {} as Record<string, GameCard[]>;
+	const allPlayers = game.opponents.concat(game?.player as Opponent);
 	
-	for (let player of game.players) {
-		playerCards[player.id] = player.keptCards;
+	for (let player of allPlayers) {
+		playerCards[player.id] = player.id === playerID ? cards : player.keptCards;
 	}
-	const points = Game.scoreCards(playerCards, cards.some(c => c instanceof Maki));
+	const points = Game.scoreCards(playerCards, cards.some(c => c instanceof Maki), cards.some(c => c instanceof Pudding) && game.round === game.maxRounds);
+
 	return game.player && (
 		<div className="points-container">
-			Points: {points[game?.player?.id]}
+			Points: {points[playerID]}
 		</div>
 	);
 }
 
-export const PlayerKeptHand = ({ hand, CardGroupType }: { hand: GameCard[], CardGroupType: React.ComponentType<{ cards: GameCard[] }> }) => {
+export const PlayerKeptHand = ({ player, CardGroupType }: { player: Opponent, CardGroupType: React.ComponentType<{ cards: GameCard[] }> }) => {
+	const hand = player.keptCards;
 	const usedNigiris = hand.filter(c => c instanceof Nigiri && c.hasWasabi);
 	const usedWasabis = hand.filter(c => c instanceof Wasabi && c.used);
 
@@ -88,9 +91,11 @@ export const PlayerKeptHand = ({ hand, CardGroupType }: { hand: GameCard[], Card
 		<div className="player-kept-hand">
 			{bucketClasses.map(c => c.name).filter(bucketName => Object.keys(groupedCardNames).includes(bucketName)).map(bucketName => 
 				<div className="buckets-container">
-					{bucketName}
+					<div className="bucket-label">
+						{bucketName}
+					</div>
 					<Bucket bucket={groupedCardNames[bucketName]} CardGroupType={CardGroupType} />
-					<Points cards={groupedCardNames[bucketName].flat()}/>
+					<Points cards={groupedCardNames[bucketName].flat()} playerID={player.id} />
 				</div>
 			)}
 		</div>
@@ -107,13 +112,13 @@ export const PlayerKeptCards = ({ player }: { player: Player }) => {
 				<div className="score-container">
 					Score: {player.score}
 				</div>
-				<PlayerKeptHand hand={player.keptCards} CardGroupType={CardGroup} />
+				<PlayerKeptHand player={player} CardGroupType={CardGroup} />
 			</div>
 		</div>
 	);
 }
 
-export const OpponentsKeptCards = ({ players }: { players: ProtectedPlayer[] }) => {
+export const OpponentsKeptCards = ({ players }: { players: Opponent[] }) => {
 	return (
 		<div className="other-players-hands-container">
 			<div className="title">
@@ -131,7 +136,7 @@ export const OpponentsKeptCards = ({ players }: { players: ProtectedPlayer[] }) 
 								Score: {player.score}
 							</div>
 							<div>
-								<PlayerKeptHand hand={player.keptCards} CardGroupType={CardIconGroup}/>
+								<PlayerKeptHand player={player} CardGroupType={CardIconGroup}/>
 							</div>
 						</div>
 					);

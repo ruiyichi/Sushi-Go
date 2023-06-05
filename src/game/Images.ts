@@ -24,32 +24,17 @@ import sashimi_icon from "./assets/sashimi_icon.png";
 import tempura_icon from "./assets/tempura_icon.png";
 import wasabi_icon from "./assets/wasabi_icon.png";
 
-export const CARD_IMAGES: { [key: string]: string } = {
-	"Tempura": tempura,
-	"Sashimi": sashimi,
-	"Dumpling": dumpling,
-	"Maki 1": maki1,
-	"Maki 2": maki2,
-	"Maki 3": maki3,
-	"Salmon Nigiri": salmonnigiri,
-	"Squid Nigiri": squidnigiri,
-	"Egg Nigiri": eggnigiri,
-	"Pudding": pudding,
-	"Wasabi": wasabi,
-	"Chopsticks": chopsticks,
+export const CARD_FILES: { [key: string]: { image: string, icon: string } } = {
+	"Tempura": { image: tempura, icon: tempura_icon },
+	"Sashimi": { image: sashimi, icon: sashimi_icon },
+	"Dumpling": { image: dumpling, icon: dumpling_icon },
+	"Maki 1": { image: maki1, icon: maki1_icon },
+	"Maki 2": { image: maki2, icon: maki2_icon },
+	"Maki 3": { image: maki3, icon: maki3_icon },
+	"Salmon Nigiri": { image: salmonnigiri, icon: salmonnigiri_icon },
+	"Squid Nigiri": { image: squidnigiri, icon: squidnigiri_icon },
+	"Egg Nigiri": { image: eggnigiri, icon: eggnigiri_icon },
+	"Pudding": { image: pudding, icon: pudding_icon },
+	"Wasabi": { image: wasabi, icon: wasabi_icon },
+	"Chopsticks": { image: chopsticks, icon: chopsticks_icon },
 };
-
-export const CARD_ICONS: { [key: string]: string } = {
-	"Tempura": tempura_icon,
-	"Sashimi": sashimi_icon,
-	"Dumpling": dumpling_icon,
-	"Maki 1": maki1_icon,
-	"Maki 2": maki2_icon,
-	"Maki 3": maki3_icon,
-	"Salmon Nigiri": salmonnigiri_icon,
-	"Squid Nigiri": squidnigiri_icon,
-	"Egg Nigiri": eggnigiri_icon,
-	"Pudding": pudding_icon,
-	"Wasabi": wasabi_icon,
-	"Chopsticks": chopsticks_icon,
-}
