@@ -32,7 +32,9 @@ interface SushiGoInterface {
 	setPersist: React.Dispatch<any>,
 	lobby: Lobby,
 	updateLobby: React.Dispatch<any>,
-	getUpdatedGame: Function
+	getUpdatedGame: Function,
+	turnTimer: number,
+	setTurnTimer: React.Dispatch<any>
 };
 interface Game {
 	status: "In lobby" | "Pending" | "Completed",
@@ -40,7 +42,6 @@ interface Game {
 	opponents: Opponent[],
 	turn: number,
 	round: number,
-	roundStatus: string,
 	maxTurns: number,
 	maxRounds: number,
 };
@@ -57,7 +58,6 @@ const defaultGameState = {
 	opponents: [],
 	turn: 0,
 	round: 0,
-	roundStatus: "",
 	maxTurns: 0,
 	maxRounds: 0
 } as Game;
@@ -102,6 +102,7 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		socketRef.current = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
 		socketRef.current.on("updateGame", payload => updateGame(payload as Game));
 		socketRef.current.on("updateLobby", payload => updateLobby(payload as Lobby));
+		socketRef.current.on("setTurnTimer", payload => setTurnTimer(payload));
 
 		return () => {
 			if (socketRef.current) {
@@ -134,6 +135,7 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	}
 
 	const [persist, setPersist] = useState(JSON.parse(localStorage.getItem('persist') || 'false') || false);
+	const [turnTimer, setTurnTimer] = useState(0);
 
 	const getUpdatedGame = () => {
 		socketRef.current?.emit("getGame");
@@ -151,6 +153,8 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		lobby,
 		updateLobby,
 		getUpdatedGame,
+		turnTimer,
+		setTurnTimer,
 	};
 
 	return (

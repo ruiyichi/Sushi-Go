@@ -3,6 +3,7 @@ import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
 import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
 import PlayerHand from "../components/PlayerHand";
+import { useEffect } from "react";
 
 const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
@@ -19,7 +20,17 @@ const GameOver = ({ players }: { players: Array<Opponent>}) => {
 }
 
 const Game = () => {
-	const { game, user } = useSushiGo();
+	const { game, user, turnTimer, setTurnTimer } = useSushiGo();
+
+	useEffect(() => {
+		if (turnTimer > 0 && game.status !== 'Completed') {
+			const interval = setInterval(() => {
+				setTurnTimer(turnTimer - 100);
+			}, 100);
+
+			return () => clearInterval(interval);
+		}
+	}, [turnTimer]);
 
 	return game.player && (
 		<div className="game-container flex column">
@@ -41,7 +52,7 @@ const Game = () => {
 					Round { game.round } - Turn { game.turn } / { game.maxTurns }
 				</div>
 				<div>
-					{ game.roundStatus }
+					{ turnTimer > 10000 ? Math.floor(turnTimer / 1000) : (Math.trunc(turnTimer * Math.pow(0.1, 1)) / Math.pow(100, 1)).toFixed(1) } seconds remaining
 				</div>
 			</div>
 			

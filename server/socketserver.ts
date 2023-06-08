@@ -7,7 +7,7 @@ import { Card } from "../src/game/Cards";
 import { Lobby } from "../src/game/Lobby";
 import jwt, { Secret } from 'jsonwebtoken';
 import { BasicUser } from "../src/interfaces";
-import { MS_PER_ROUND, SECONDS_PER_ROUND } from "../src/game/Settings";
+import { MS_PER_ROUND } from "../src/game/Settings";
 import { MAX_ITER } from "./CONSTANTS";
 
 dotenv.config();
@@ -41,29 +41,22 @@ io.use((socket: Socket, next) => {
 	const getSocketByID = (id: string) => io.sockets.sockets.get(id);
 
 	const createRoundTimer = (game: Game) => {
-		let counter = SECONDS_PER_ROUND;
-		game.setRoundStartTime();
-
-		const clients = getSocketsByCode(game.id);
+		let counter = MS_PER_ROUND;
+		game.setTurnStartTime();
 
 		const updateClientRoundTimer = () => {
-			game.roundStatus = `${counter} seconds remaining`;
+			game.turnTimer = counter;
 			if (counter === 0) {
 				clearInterval(timer);
 				autopickPlayerCards(game);
 				handleEndTurn(game);
 			}
 
-			clients?.forEach(clientID => {
-				const clientSocket = getSocketByID(clientID);
-				clientSocket?.emit("updateGame", { roundStatus: game.roundStatus } );
-			});
-
-			counter--;
+			counter -= 100;
 		}
 
 		updateClientRoundTimer();  // call immediately first time without delay
-		const timer = setInterval(updateClientRoundTimer, 1000);
+		const timer = setInterval(updateClientRoundTimer, 100);
 		roundTimers[game.id] = timer;
 	}
 
@@ -79,21 +72,25 @@ io.use((socket: Socket, next) => {
 
 	const emitUpdatedGameToAllClients = (game: Game) => {
 		const clients = getSocketsByCode(game.id);
-		clients?.forEach(clientID => {
-			const clientSocket = getSocketByID(clientID);
-			const userID = socketUsers[clientID];
+		clients?.forEach(clientID => emitUpdatedGameToClient(game, clientID));
+	}
 
-			clientSocket?.emit("updateGame", { 
-				...game,
-				player: game.players.find(p => p.id === userID),
-				opponents: game.players.filter(p => p.id !== userID).map(p => ({
-					id: p.id,
-					username: p.username,
-					score: p.score,
-					keptCards: p.keptCards
-				})),
-			});
+	const emitUpdatedGameToClient = (game: Game, clientSocketID: string) => {
+		const { players } = game;
+		const clientSocket = getSocketByID(clientSocketID);
+		const userID = socketUsers[clientSocketID];
+
+		clientSocket?.emit("updateGame", { 
+			...game,
+			player: players.find(p => p.id === userID),
+			opponents: players.filter(p => p.id !== userID).map(p => ({
+				id: p.id,
+				username: p.username,
+				score: p.score,
+				keptCards: p.keptCards
+			})),
 		});
+		clientSocket?.emit("setTurnTimer", game.turnTimer);
 	}
 
 	const createLobby = (user: BasicUser, callback: Function) => {
@@ -144,19 +141,13 @@ io.use((socket: Socket, next) => {
 		lobbyClients?.forEach(clientID => {
 			const clientSocket = getSocketByID(clientID);
 			const userID = socketUsers[clientID];
-
 			clientSocket?.leave(lobby.code);
 			delete playerLobbies[userID];
-
 			clientSocket?.join(game.id);
-			clientSocket?.emit("updateGame", { 
-				...game,
-				player: players.find(p => p.id === userID),
-				opponents: players.filter(p => p.id !== userID)
-			});
 		});
 		
-		//createRoundTimer(game);
+		createRoundTimer(game);
+		emitUpdatedGameToAllClients(game);
 	}
 
 	const getGame = () => {
@@ -164,19 +155,7 @@ io.use((socket: Socket, next) => {
 		const game = playerGames[userID];
 		if (!game) return;
 
-		const clientSocket = getSocketByID(socket.id);
-
-		const { players } = game;
-		clientSocket?.emit("updateGame", { 
-			...game,
-			player: players.find(p => p.id === userID),
-			opponents: players.filter(p => p.id !== userID).map(p => ({
-				id: p.id,
-				username: p.username,
-				score: p.score,
-				keptCards: p.keptCards
-			})),
-		});
+		emitUpdatedGameToClient(game, socket.id);
 	}
 
 	const handleEndTurn = (game: Game) => {
@@ -190,11 +169,11 @@ io.use((socket: Socket, next) => {
 			game.finalRound();
 		}
 
-		emitUpdatedGameToAllClients(game);
-
 		if (game.status !== 'Completed') {
-			//createRoundTimer(game);
+			createRoundTimer(game);
 		}
+
+		emitUpdatedGameToAllClients(game);
 	}
 
 	const keepCard = (card: Card, idx: number) => {
@@ -202,22 +181,16 @@ io.use((socket: Socket, next) => {
 		const game = playerGames[userID];
 
 		const clientSenderSocket = getSocketByID(socket.id);
-		const clients = getSocketsByCode(game.id);
 
 		const player = game.players.find(p => p.id === userID);
 
 		if (player && !player.keptCard) {
 			let cardOnServer = player.hand[idx];
 
-			if (cardOnServer.name === card.name) { //&& Date.now() - game.roundStartTime <= MS_PER_ROUND
+			if (cardOnServer.name === card.name && Date.now() - game.turnStartTime <= MS_PER_ROUND) {
 				player.keepCard(cardOnServer);
 
 				clientSenderSocket?.emit("updateGame", { player });
-
-				clients?.forEach(clientID => {
-					const clientSocket = getSocketByID(clientID);
-					clientSocket?.emit("updateGame", { roundStatus: game.roundStatus });
-				});
 			}
 		}
 
