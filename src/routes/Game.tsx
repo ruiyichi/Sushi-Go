@@ -3,7 +3,7 @@ import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
 import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
 import PlayerHand from "../components/PlayerHand";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
@@ -19,8 +19,14 @@ const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	);
 }
 
-const Game = () => {
-	const { game, user, turnTimer, setTurnTimer } = useSushiGo();
+const TurnTimer = () => {
+	const [turnTimer, setTurnTimer] = useState(0);
+	const { user, game, socketRef } = useSushiGo();
+
+	useEffect(() => {
+		socketRef.current?.on("setTurnTimer", payload => setTurnTimer(payload));
+		socketRef.current?.emit("getTurnTimer");
+	}, [user.accessToken, socketRef.current]);
 
 	useEffect(() => {
 		if (turnTimer > 0 && game.status !== 'Completed') {
@@ -31,6 +37,16 @@ const Game = () => {
 			return () => clearInterval(interval);
 		}
 	}, [turnTimer]);
+
+	return (
+		<div>
+			{ turnTimer > 10000 ? Math.floor(turnTimer / 1000) : (Math.trunc(turnTimer * Math.pow(0.1, 1)) / Math.pow(100, 1)).toFixed(1) } seconds remaining
+		</div>
+	);
+}
+
+const Game = () => {
+	const { game, user } = useSushiGo();
 
 	return game.player && (
 		<div className="game-container flex column">
@@ -51,9 +67,7 @@ const Game = () => {
 				<div>
 					Round { game.round } - Turn { game.turn } / { game.maxTurns }
 				</div>
-				<div>
-					{ turnTimer > 10000 ? Math.floor(turnTimer / 1000) : (Math.trunc(turnTimer * Math.pow(0.1, 1)) / Math.pow(100, 1)).toFixed(1) } seconds remaining
-				</div>
+				<TurnTimer />
 			</div>
 			
 			{game.status === "Pending" 

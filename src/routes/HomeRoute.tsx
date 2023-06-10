@@ -1,14 +1,9 @@
-import { useEffect } from "react";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { Navigate } from "react-router-dom";
 import Home from "../components/Home";
 
 const HomeRoute = () => {
-	const { user, game, getUpdatedGame } = useSushiGo();
-
-	useEffect(() => {
-		getUpdatedGame();
-	}, [user.username]);
+	const { game } = useSushiGo();
 
 	return game.status === 'Pending' 
 	? 

@@ -35,6 +35,7 @@ io.use((socket: Socket, next) => {
 	// join existing games if disconnected
 	const userID = socketUsers[socket.id];
 	socket.join(playerGames[userID]?.id);
+	console.log(`Connected ${userID}`)
 
 	const getSocketsByCode = (code: string) => io.sockets.adapter.rooms.get(code);
 
@@ -150,13 +151,22 @@ io.use((socket: Socket, next) => {
 		emitUpdatedGameToAllClients(game);
 	}
 
-	const getGame = () => {
+	const emitExistingGame = () => {
 		const userID = socketUsers[socket.id];
 		const game = playerGames[userID];
 		if (!game) return;
 
 		emitUpdatedGameToClient(game, socket.id);
 	}
+	
+	const emitTurnTimer = () => {
+		const userID = socketUsers[socket.id];
+		const game = playerGames[userID];
+		if (!game) return;
+		
+		const clientSocket = getSocketByID(socket.id);
+		clientSocket?.emit("setTurnTimer", game.turnTimer);
+	} 
 
 	const handleEndTurn = (game: Game) => {
 		clearInterval(roundTimers[game.id]);
@@ -223,16 +233,18 @@ io.use((socket: Socket, next) => {
 	}
 
 	const handleDisconnect = () => {
-		console.log(`Disconnecting ${socket.id}`);
+		console.log(`Disconnected ${socketUsers[socket.id]}`);
 		delete socketUsers[socket.id];
 	}
 
 	socket.on("createLobby", createLobby);
 	socket.on("joinLobby", joinLobby);
 	socket.on("startGame", startGame);
-	socket.on("getGame", getGame);
 	socket.on("keepCard", keepCard);
+	socket.on("getTurnTimer", emitTurnTimer)
 	socket.on("keepSecondCard", keepSecondCard);
-
 	socket.on("disconnect", handleDisconnect);
+	
+	// Send on connect
+	emitExistingGame();
 });
