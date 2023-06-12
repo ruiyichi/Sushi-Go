@@ -41,11 +41,13 @@ io.use((socket: Socket, next) => {
 
 	const getSocketByID = (id: string) => io.sockets.sockets.get(id);
 
-	const createRoundTimer = (game: Game) => {
+	const createTurnTimer = (game: Game) => {
 		let counter = MS_PER_ROUND;
 		game.setTurnStartTime();
 
-		const updateClientRoundTimer = () => {
+		const updateTurnTimer = () => {
+			const sockets = getSocketsByCode(game.id);
+
 			game.turnTimer = counter;
 			if (counter === 0) {
 				clearInterval(timer);
@@ -53,11 +55,12 @@ io.use((socket: Socket, next) => {
 				handleEndTurn(game);
 			}
 
-			counter -= 100;
+			sockets?.forEach(socketID => emitTurnTimer(socketID));
+			counter -= 1000;
 		}
-
-		updateClientRoundTimer();  // call immediately first time without delay
-		const timer = setInterval(updateClientRoundTimer, 100);
+		
+		updateTurnTimer();  // call immediately first time without delay
+		const timer = setInterval(updateTurnTimer, 1000);
 		roundTimers[game.id] = timer;
 	}
 
@@ -72,8 +75,8 @@ io.use((socket: Socket, next) => {
 	}
 
 	const emitUpdatedGameToAllClients = (game: Game) => {
-		const clients = getSocketsByCode(game.id);
-		clients?.forEach(clientID => emitUpdatedGameToClient(game, clientID));
+		const sockets = getSocketsByCode(game.id);
+		sockets?.forEach(socketID => emitUpdatedGameToClient(game, socketID));
 	}
 
 	const emitUpdatedGameToClient = (game: Game, clientSocketID: string) => {
@@ -83,15 +86,17 @@ io.use((socket: Socket, next) => {
 
 		clientSocket?.emit("updateGame", { 
 			...game,
-			player: players.find(p => p.id === userID),
-			opponents: players.filter(p => p.id !== userID).map(p => ({
-				id: p.id,
-				username: p.username,
-				score: p.score,
-				keptCards: p.keptCards
-			})),
+			players: getProtectedPlayers(players, userID)
 		});
-		clientSocket?.emit("setTurnTimer", game.turnTimer);
+	}
+
+	const getProtectedPlayers = (players: Player[], userID: string) => {
+		return players.map(p => p.id !== userID ? { 
+			id: p.id,
+			username: p.username,
+			score: p.score,
+			keptCards: p.keptCards 
+		} : p);
 	}
 
 	const createLobby = (user: BasicUser, callback: Function) => {
@@ -147,7 +152,7 @@ io.use((socket: Socket, next) => {
 			clientSocket?.join(game.id);
 		});
 		
-		createRoundTimer(game);
+		createTurnTimer(game);
 		emitUpdatedGameToAllClients(game);
 	}
 
@@ -159,12 +164,12 @@ io.use((socket: Socket, next) => {
 		emitUpdatedGameToClient(game, socket.id);
 	}
 	
-	const emitTurnTimer = () => {
-		const userID = socketUsers[socket.id];
+	const emitTurnTimer = (socketID=socket.id) => {
+		const userID = socketUsers[socketID];
 		const game = playerGames[userID];
 		if (!game) return;
 		
-		const clientSocket = getSocketByID(socket.id);
+		const clientSocket = getSocketByID(socketID);
 		clientSocket?.emit("setTurnTimer", game.turnTimer);
 	} 
 
@@ -180,7 +185,7 @@ io.use((socket: Socket, next) => {
 		}
 
 		if (game.status !== 'Completed') {
-			createRoundTimer(game);
+			createTurnTimer(game);
 		}
 
 		emitUpdatedGameToAllClients(game);
@@ -200,7 +205,7 @@ io.use((socket: Socket, next) => {
 			if (cardOnServer.name === card.name && Date.now() - game.turnStartTime <= MS_PER_ROUND) {
 				player.keepCard(cardOnServer);
 
-				clientSenderSocket?.emit("updateGame", { player });
+				clientSenderSocket?.emit("updateGame", { players: getProtectedPlayers(game.players, userID) });
 			}
 		}
 
@@ -211,8 +216,8 @@ io.use((socket: Socket, next) => {
 
 	const keepSecondCard = (card: Card, idx: number) => {
 		const userID = socketUsers[socket.id];
-		const gameState = playerGames[userID];
-		const player = gameState.players.find(p => p.id === userID);
+		const game = playerGames[userID];
+		const player = game.players.find(p => p.id === userID);
 
 		if (player) {
 			const cardOnServer = player.hand[idx];
@@ -227,7 +232,7 @@ io.use((socket: Socket, next) => {
 				player.hadChopsticks = false;
 
 				const clientSenderSocket = getSocketByID(socket.id);
-				clientSenderSocket?.emit("updateGame", { player });
+				clientSenderSocket?.emit("updateGame", { players: getProtectedPlayers(game.players, userID) });
 			}
 		}
 	}

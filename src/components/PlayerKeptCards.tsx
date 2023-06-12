@@ -38,20 +38,20 @@ export const CardIconGroup = ({ cards }: { cards: GameCard[] }) => {
 }
 
 const Points = ({ cards, playerID }: { cards: Array<GameCard>, playerID: string }) => {
-	const { game } = useSushiGo();
+	const { user, game } = useSushiGo();
+	const player = game.players.find(player => player.id === user.id);
 	const playerCards = {} as Record<string, GameCard[]>;
-	const allPlayers = game.opponents.concat(game?.player as Opponent);
 	
-	for (let player of allPlayers) {
+	for (let player of game.players) {
 		playerCards[player.id] = player.id === playerID ? cards : player.keptCards;
 	}
 	const points = Game.scoreCards(playerCards, cards.some(c => c instanceof Maki), cards.some(c => c instanceof Pudding) && game.round === game.maxRounds);
 
-	return game.player && (
+	return player ? (
 		<div className="points-container">
 			Points: {points[playerID]}
 		</div>
-	);
+	) : null;
 }
 
 export const PlayerKeptHand = ({ player, CardGroupType }: { player: Opponent, CardGroupType: React.ComponentType<{ cards: GameCard[] }> }) => {
@@ -118,14 +118,14 @@ export const PlayerKeptCards = ({ player }: { player: Player }) => {
 	);
 }
 
-export const OpponentsKeptCards = ({ players }: { players: Opponent[] }) => {
+export const OpponentsKeptCards = ({ opponents }: { opponents: Opponent[] }) => {
 	return (
 		<div className="other-players-hands-container">
 			<div className="title">
 				Opponents
 			</div>
 			<div className="other-players-hands">
-				{players.map(player => {
+				{opponents.map(player => {
 					return (
 						<div key={player.id} className="opponent-hand-container">
 							<div className='opponent-info-container'>

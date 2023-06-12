@@ -35,8 +35,7 @@ interface SushiGoInterface {
 };
 interface Game {
 	status: "In lobby" | "Pending" | "Completed",
-	player: null | Player,
-	opponents: Opponent[],
+	players: Array<Player | Opponent>,
 	turn: number,
 	round: number,
 	maxTurns: number,
@@ -51,8 +50,7 @@ interface LobbyAction {
 
 const defaultGameState = {
 	status: "In lobby",
-	player: null,
-	opponents: [],
+	players: [],
 	turn: 0,
 	round: 0,
 	maxTurns: 0,
@@ -71,12 +69,9 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 				player.keptCards = player.keptCards.map(c => Card.castToInstance(c));
 			}
 		}
-		if (payload.player) {
-			castPlayerCardsToInstance(payload.player);
-		}
-		if (payload.opponents) {
-			for (let opponent of payload.opponents) {
-				castPlayerCardsToInstance(opponent);
+		if (payload.players) {
+			for (let player of payload.players) {
+				castPlayerCardsToInstance(player);
 			}
 		}
 		return { ...game, ...payload };
@@ -96,7 +91,6 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const [user, dispatchUser] = useReducer(userReducer, {} as User);
 
 	useEffect(() => {
-		console.log('set')
 		socketRef.current = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
 		socketRef.current.on("updateGame", payload => updateGame(payload as Game));
 		socketRef.current.on("updateLobby", payload => updateLobby(payload as Lobby));

@@ -3,9 +3,10 @@ import { useSushiGo } from '../contexts/SushiGoContext';
 import Game from './Game';
 
 const GameRoute = () => {
-  const { game } = useSushiGo();
+  const { user, game } = useSushiGo();
+	const player = game.players.find(player => player.id === user.id);
   
-	if (game.player) {
+	if (player) {
 		return <Game />;
 	} else {
 		return <Navigate to="/" />;

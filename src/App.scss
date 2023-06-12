@@ -342,6 +342,36 @@ $logo-outline-color: #195383;
 		width: 100%;
 		margin-top: 1em;
 		height: 18%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		#pass-to {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin-left: 1%;
+			margin-right: 1%;
+
+			.user-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+		}
+
+		#receive-from {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin-right: 1%;
+
+			.user-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+		}
 
 		.background-image {
 			border-top: 0.2em solid #000;
@@ -349,6 +379,7 @@ $logo-outline-color: #195383;
 			position: absolute;
 			height: 100%;
 			width: 100%;
+			z-index: -1;
 		}
 
 		.player-hand {

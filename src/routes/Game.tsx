@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
 import PlayerHand from "../components/PlayerHand";
 import { useEffect, useState } from "react";
+import { Player } from "../game/Player";
 
 const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
@@ -26,29 +27,22 @@ const TurnTimer = () => {
 	useEffect(() => {
 		socketRef.current?.on("setTurnTimer", payload => setTurnTimer(payload));
 		socketRef.current?.emit("getTurnTimer");
-	}, [user.accessToken, socketRef.current]);
-
-	useEffect(() => {
-		if (turnTimer > 0 && game.status !== 'Completed') {
-			const interval = setInterval(() => {
-				setTurnTimer(turnTimer - 100);
-			}, 100);
-
-			return () => clearInterval(interval);
-		}
-	}, [turnTimer]);
+	}, [user.accessToken, socketRef.current, game.round, game.turn]);
 
 	return (
 		<div>
-			{ turnTimer > 10000 ? Math.floor(turnTimer / 1000) : (Math.trunc(turnTimer * Math.pow(0.1, 1)) / Math.pow(100, 1)).toFixed(1) } seconds remaining
+			{ game.status === 'Completed' ? '' : 
+			 `${(turnTimer > 10000 ? Math.floor(turnTimer / 1000) : (Math.trunc(turnTimer * Math.pow(0.1, 1)) / Math.pow(100, 1)).toFixed(1))} seconds remaining`}
 		</div>
 	);
 }
 
 const Game = () => {
 	const { game, user } = useSushiGo();
+	const player = game.players.find(player => player.id === user.id) as Player;
+	const opponents = game.players.filter(p => p !== player);
 
-	return game.player && (
+	return player && (
 		<div className="game-container flex column">
 			<div className="player-info-container">
 				{user.id && 
@@ -74,13 +68,13 @@ const Game = () => {
 				?
 				<>
 					<div className="played-hands-container">
-						<PlayerKeptCards player={game.player} />
-						<OpponentsKeptCards players={game.opponents} />
+						<PlayerKeptCards player={player} />
+						<OpponentsKeptCards opponents={opponents} />
 					</div>
-					<PlayerHand hand={game.player.hand} keptCard={game.player.keptCard} />
+					<PlayerHand hand={player.hand} keptCard={player.keptCard} />
 				</>
 				:
-				<GameOver players={game.opponents.concat(game.player)} />
+				<GameOver players={game.players} />
 			}
 		</div>
 	);
