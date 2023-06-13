@@ -10,8 +10,8 @@ import { Player } from "../game/Player";
 const Bucket = ({ bucket, CardGroupType }: { bucket: GameCard[][], CardGroupType: React.ComponentType<{ cards: GameCard[] }> }) => {
 	return (
 		<div className='bucket-container'>
-			{bucket?.map(cards => 
-				<CardGroupType cards={cards} />
+			{bucket?.map((cards, i) => 
+				<CardGroupType key={i} cards={cards} />
 			)}
 		</div>
 	);

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CARD_FILES } from "../game/Images";
 import { motion, Variants } from "framer-motion";
 
-export const Card = ({ cardName, height=150, onClick, style, variant="default" }: { cardName: string, height?: number, onClick?: null | Function, style?: React.CSSProperties, variant?: string }) => {
+export const Card = ({ cardName, height=150, onClick, style, variant="default" }: { cardName: string, height?: number, onClick?: Function, style?: React.CSSProperties, variant?: string }) => {
 	const [loaded, setLoaded] = useState(false);
 	const animationVariants: Variants = {
 		default: {},
@@ -16,7 +16,7 @@ export const Card = ({ cardName, height=150, onClick, style, variant="default" }
 			variants={animationVariants}
 			className="card"
 			onClick={() => onClick && onClick()}
-			style={{ ...style, cursor: !onClick ? "default" : "pointer", visibility: loaded ? 'inherit' : 'hidden' }}
+			style={{ ...style, cursor: onClick === undefined ? "default" : "pointer", visibility: loaded ? 'inherit' : 'hidden' }}
 		>
 			<div className="card-info">
 				{cardName}
@@ -32,7 +32,7 @@ export const Card = ({ cardName, height=150, onClick, style, variant="default" }
 	);
 }
 
-export const CardIcon = ({ cardName, height=50, style }: { cardName : string, height?: number, style?: React.CSSProperties }) => {
+export const CardIcon = ({ cardName, height=50, style }: { cardName: string, height?: number, style?: React.CSSProperties }) => {
 	const [loaded, setLoaded] = useState(false);
 	
 	return (
