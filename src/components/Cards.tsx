@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CARD_FILES } from "../game/Images";
 import { motion, Variants } from "framer-motion";
 
-export const Card = ({ cardName, height=150, onClick, style, variant="default" }: { cardName: string, height?: number, onClick?: Function, style?: React.CSSProperties, variant?: string }) => {
+export const Card = ({ cardName, onClick, style, variant="default" }: { cardName: string, onClick?: Function, style?: React.CSSProperties, variant?: string }) => {
 	const [loaded, setLoaded] = useState(false);
 	const animationVariants: Variants = {
 		default: {},
@@ -18,13 +18,12 @@ export const Card = ({ cardName, height=150, onClick, style, variant="default" }
 			onClick={() => onClick && onClick()}
 			style={{ ...style, cursor: onClick === undefined ? "default" : "pointer", visibility: loaded ? 'inherit' : 'hidden' }}
 		>
-			<div className="card-info">
+			{/*<div className="card-info">
 				{cardName}
-			</div>
+			</div>*/}
 			<img 
 				src={CARD_FILES[cardName].image}
 				onLoad={() => setLoaded(true)}
-				height={height}
 				draggable={false}
 				alt={cardName}
 			/>

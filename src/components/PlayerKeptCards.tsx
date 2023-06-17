@@ -21,7 +21,7 @@ const CardGroup = ({ cards }: { cards: GameCard[] }) => {
 	return (
 		<div>
 			{cards.map((card, i) => 
-				<Card cardName={card.name} height={100} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }} key={i}/>
+				<Card cardName={card.name} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }} key={i}/>
 			)}
 		</div>
 	);

@@ -340,8 +340,6 @@ $logo-outline-color: #195383;
 	.player-hand-container {
 		position: relative;
 		width: 100%;
-		margin-top: 1em;
-		height: 18%;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -383,12 +381,20 @@ $logo-outline-color: #195383;
 		}
 
 		.player-hand {
-			flex: 1;
 			margin-top: 1em;
 			margin-bottom: 1em;
 			display: flex;
 			justify-content: center;
 			gap: 5px;
+			min-width: 0px;
+
+			.card {
+				img {
+					min-width: 0px;
+					max-width: 100px;
+					height: auto;
+				}
+			}
 		}
 	}
 
@@ -405,10 +411,10 @@ $logo-outline-color: #195383;
 }
 
 .played-hands-container {
-	margin: 1em 5em 0em;
+	margin: 1em 5em;
 	display: flex;
+	flex: 1;
 	gap: 5em;
-	height: 70%;
 
 	.player-kept-hand-container {
 		display: flex;
