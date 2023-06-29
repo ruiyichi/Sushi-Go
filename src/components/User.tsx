@@ -1,24 +1,28 @@
 import { MouseEventHandler, useEffect, useState } from "react";
 import { SERVER_URI } from "../CONSTANTS";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { Opponent, User, useSushiGo } from "../contexts/SushiGoContext";
 import useLogout from "../hooks/useLogout";
 import classNames from "classnames";
 import CloseIcon from "../icons/CloseIcon";
 import Overlay from "./Overlay";
 import { axiosPrivate } from "../api/axios";
 import Button from "./Button";
+import { Player } from "../game/Player";
 
-export const UserImage = ({ userID, onClick, size=50 }: { userID: string, onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
+export const UserImage = ({ user, onClick, size=50 }: { user: User | Player | Opponent, onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
 	return (
-		<img 
-			id='user-image'
-			draggable={false}
-			src={`${SERVER_URI}/images/profiles/${userID}?${Date.now()}`} 
-			alt={userID}
-			onClick={onClick}
-			width={size}
-			height={size}
-		/>
+		<div className='user-image-container'>
+			<img 
+				className='user-image'
+				draggable={false}
+				src={`${SERVER_URI}/images/profiles/${user.id}?${Date.now()}`} 
+				alt={user.id}
+				onClick={onClick}
+				width={size}
+				height={size}
+			/>
+			{user.username}
+		</div>
 	);
 };
 
@@ -49,30 +53,27 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 					onClick={() => setShow(false)}
 				/>
 				<div className='user-container'>
-					<UserImage userID={user.id} size={100} />
-					{user.username}
+					<UserImage user={user} size={100} />
 					<Button onClick={async () => await logout() }>
 						Log out
 					</Button>
 				</div>
 				<div className='profile-pictures-container'>
-					{profilePictureFilenames.map(filename => {
-						return (
-							<img
-								id='user-image'
-								draggable={false}
-								key={filename}
-								src={`${SERVER_URI}/images/profilePictures/${filename}`}
-								alt={filename}
-								width={50}
-								onClick={async () => {
-									await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
-									updateUser({ profilePictureFilename: filename });
-								}}
-							>
-							</img>
-						);
-					})}
+					{profilePictureFilenames.map(filename => (
+						<img
+							id='user-image'
+							draggable={false}
+							key={filename}
+							src={`${SERVER_URI}/images/profilePictures/${filename}`}
+							alt={filename}
+							width={50}
+							onClick={async () => {
+								await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
+								updateUser({ profilePictureFilename: filename });
+							}}
+						>
+						</img>
+					))}
 				</div>
 			</div>
 			
@@ -81,7 +82,7 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 	);
 }
 
-const UserInfo = () => {
+export const UserInfo = () => {
 	const { user } = useSushiGo();
 	const [showUserOverlay, setShowUserOverlay] = useState(false);
 
@@ -90,12 +91,10 @@ const UserInfo = () => {
 			"user-info-container": true,
 			hidden: user.id === undefined
 		})}>
-			<UserImage userID={user.id} size={50} onClick={() => setShowUserOverlay(open => !open)}/>
+			<UserImage user={user} size={50} onClick={() => setShowUserOverlay(open => !open)}/>
 			<Overlay show={showUserOverlay} setShow={setShowUserOverlay}>
 				<UserSettings setShow={setShowUserOverlay} />
 			</Overlay>
 		</div>
 	);
 }
-
-export default UserInfo;

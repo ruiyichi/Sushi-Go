@@ -1,6 +1,6 @@
 import LobbyMenu from "./LobbyMenu";
 import LoginMenu from "./LoginMenu";
-import UserInfo from "./UserInfo";
+import { UserInfo } from "./User";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import BaseScreen from "../routes/BaseScreen";
 

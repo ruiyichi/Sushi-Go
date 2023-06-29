@@ -1,10 +1,10 @@
 import { Opponent, useSushiGo } from "../contexts/SushiGoContext";
-import { SERVER_URI } from "../CONSTANTS";
 import { useNavigate } from "react-router-dom";
-import { PlayerKeptCards, OpponentsKeptCards } from "../components/PlayerKeptCards";
-import PlayerHand from "../components/PlayerHand";
+import ConveyorBeltContainer from "../components/ConveyorBeltContainer";
 import { useEffect, useState } from "react";
-import { Player } from "../game/Player";
+import Player from "../components/Player";
+import { Player as PlayerClass } from "../game/Player";
+import { UserImage } from "../components/User";
 
 const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
@@ -39,25 +39,12 @@ const TurnTimer = () => {
 
 const Game = () => {
 	const { game, user } = useSushiGo();
-	const player = game.players.find(player => player.id === user.id) as Player;
-	const opponents = game.players.filter(p => p !== player);
+	const player = game.players.find(player => player.id === user.id) as PlayerClass;
 
 	return player && (
-		<div className="game-container flex column">
-			<div className="player-info-container">
-				{user.id && 
-					<img 
-						id='user-image'
-						src={`${SERVER_URI}/images/profiles/${user.id}`} 
-						alt={user.id}
-					/>
-				}	
-				<div>
-					{user.username}
-				</div>
-			</div>
-
-			<div className="header-container">
+		<div className="game-container">
+			<UserImage user={player} />
+			<div className="game-header-container">
 				<div>
 					Round { game.round } - Turn { game.turn } / { game.maxTurns }
 				</div>
@@ -67,11 +54,22 @@ const Game = () => {
 			{game.status === "Pending" 
 				?
 				<>
-					<div className="played-hands-container">
-						<PlayerKeptCards player={player} />
-						<OpponentsKeptCards opponents={opponents} />
+					<div className="players-overflow-container">
+						<div className="players-container">
+							{game.players.map(player => {
+								return (
+									<Player player={player} />
+								)
+							})}
+							{game.players.map(player => {
+								return (
+									<Player player={player} />
+								)
+							})}
+						</div>
 					</div>
-					<PlayerHand hand={player.hand} keptCard={player.keptCard} />
+					
+					<ConveyorBeltContainer hand={player.hand} keptCard={player.keptCard} />
 				</>
 				:
 				<GameOver players={game.players} />

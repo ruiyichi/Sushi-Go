@@ -18,9 +18,9 @@ export const Card = ({ cardName, onClick, style, variant="default" }: { cardName
 			onClick={() => onClick && onClick()}
 			style={{ ...style, cursor: onClick === undefined ? "default" : "pointer", visibility: loaded ? 'inherit' : 'hidden' }}
 		>
-			{/*<div className="card-info">
+			<div className="card-info">
 				{cardName}
-			</div>*/}
+			</div>
 			<img 
 				src={CARD_FILES[cardName].image}
 				onLoad={() => setLoaded(true)}
@@ -28,22 +28,5 @@ export const Card = ({ cardName, onClick, style, variant="default" }: { cardName
 				alt={cardName}
 			/>
 		</motion.div>
-	);
-}
-
-export const CardIcon = ({ cardName, height=50, style }: { cardName: string, height?: number, style?: React.CSSProperties }) => {
-	const [loaded, setLoaded] = useState(false);
-	
-	return (
-		<div className='card-icon' style={style}>
-			<img 
-				style={{ visibility: loaded ? 'inherit' : 'hidden' }}
-				src={CARD_FILES[cardName].icon} 
-				height={height}
-				onLoad={() => setLoaded(true)}
-				draggable={false}
-				alt={cardName}
-			/>
-		</div>
 	);
 }

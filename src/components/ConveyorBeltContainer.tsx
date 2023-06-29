@@ -3,7 +3,7 @@ import { Card as GameCard } from "../game/Cards";
 import { Card } from "./Cards";
 import { AnimationProps, motion } from "framer-motion";
 import conveyorBelt from "../assets/conveyor_belt.png";
-import { UserImage } from "./UserInfo";
+import { UserImage } from "./User";
 import DoubleArrowLeftIcon from "../icons/DoubleArrowLeftIcon";
 import { Player } from "../game/Player";
 
@@ -15,10 +15,7 @@ const PlayerIndicator = ({ id, player}: { id: string, player: Player | Opponent 
 			transition={{ duration: 2, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
 		>
 			<DoubleArrowLeftIcon width={70} height={70} />
-			<div className='user-container'>
-				<UserImage userID={player.id} />
-				{player.username}
-			</div>
+			<UserImage user={player} />
 		</motion.div>
 	);
 }
@@ -39,7 +36,7 @@ const ConveyorBeltImage = ({ animate }: { animate: AnimationProps["animate"] }) 
 	);
 }
 
-const PlayerHand = ({ hand, keptCard }: { hand: GameCard[], keptCard: boolean }) => {
+const ConveyorBeltContainer = ({ hand, keptCard }: { hand: GameCard[], keptCard: boolean }) => {
 	const { socketRef, game, user } = useSushiGo();
 
 	const player = game.players.find(p => p.id === user.id);
@@ -52,39 +49,41 @@ const PlayerHand = ({ hand, keptCard }: { hand: GameCard[], keptCard: boolean })
 	const receivingFromPlayer = game.players[playerIdx - 1 < 0 ? game.players.length - 1 : playerIdx - 1];
 
 	return (
-		<div className="player-hand-container">
-			<PlayerIndicator id='pass-to' player={passingToPlayer} />
-			
-			<motion.div
-				className="player-hand"
-				key={game.turn}
-				initial={{ x: "100%" }}
-				animate={{
-					x: ['0%', '-100%', '100%', '0%'],
-					transition: {
-						duration: 1,
-						times: [0, 0.25, 0.25, 1],
-					},
-				}}
-			>
-				{hand.map((card, idx) => {
-					return (
-						<Card
-							variant="playable"
-							key={idx}
-							cardName={card.name}
-							onClick={() => socketRef.current?.emit(keptCard ? 'keepSecondCard' : 'keepCard', card, idx)}
-						/>
-					);
-				})}
-			</motion.div>
-
-			<PlayerIndicator id='receive-from' player={receivingFromPlayer} />
-
+		<div className="conveyor-belt-container">
 			<ConveyorBeltImage animate={{ x: ["0%", "-100%", "100%"] }} />
 			<ConveyorBeltImage animate={{ x: ["100%", "0%", "100%"] }} />
+
+			<div className="player-hand-container">
+				<PlayerIndicator id='pass-to' player={passingToPlayer} />
+				
+				<motion.div
+					className="player-hand"
+					key={game.turn}
+					initial={{ x: "100%" }}
+					animate={{
+						x: ['0%', '-100%', '100%', '0%'],
+						transition: {
+							duration: 1,
+							times: [0, 0.25, 0.25, 1],
+						},
+					}}
+				>
+					{hand.map((card, idx) => {
+						return (
+							<Card
+								variant="playable"
+								key={idx}
+								cardName={card.name}
+								onClick={() => socketRef.current?.emit(keptCard ? 'keepSecondCard' : 'keepCard', card, idx)}
+							/>
+						);
+					})}
+				</motion.div>
+
+				<PlayerIndicator id='receive-from' player={receivingFromPlayer} />
+			</div>
 		</div>
 	);
 }
 
-export default PlayerHand;
+export default ConveyorBeltContainer;

@@ -7,7 +7,7 @@ import { SOCKET_SERVER_URI } from "../CONSTANTS";
 
 const SushiGoContext = createContext({} as SushiGoInterface);
 
-interface User {
+export interface User {
 	id: string,
 	username: string,
 	accessToken: string,
