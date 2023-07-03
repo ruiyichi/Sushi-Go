@@ -19,7 +19,7 @@ const CardGroup = ({ cards }: { cards: GameCard[] }) => {
 	return (
 		<div>
 			{cards.map((card, i) => 
-				<Card cardName={card.name} style={{ zIndex: cards.length - i, marginTop: i === 0 ? 0 : '-170%' }} key={i}/>
+				<Card cardName={card.name} style={{ zIndex: i, marginTop: i === 0 ? 0 : '-120%' }} key={i}/>
 			)}
 		</div>
 	);
@@ -35,8 +35,8 @@ const RoundScore = ({ cards, playerID }: { cards: Array<GameCard>, playerID: str
 	const scores = Game.scoreCards(playerCards, cards.some(c => c instanceof Maki), cards.some(c => c instanceof Pudding) && game.round === game.maxRounds);
 
 	return (
-		<div>
-			Round score: {scores[playerID]}
+		<div className='round-score-container'>
+			Round score: <span>{scores[playerID]}</span>
 		</div>
 	);
 }
@@ -97,9 +97,7 @@ const Player = ({ player }: { player: PlayerClass | Opponent }) => {
 				<div className='kept-cards'>
 					<KeptCards keptCards={player.keptCards} />
 				</div>
-				<div>
-					<RoundScore cards={player.keptCards} playerID={player.id} />
-				</div>
+				<RoundScore cards={player.keptCards} playerID={player.id} />
 			</div>
 		</div>
 	);

@@ -3,6 +3,11 @@
 	src: url(./assets/akaDylanPlain.ttf) format('truetype');
 }
 
+@font-face {
+	font-family: 'Kalam';
+	src: url(./assets/Kalam/Kalam-Regular.ttf) format('truetype');
+}
+
 $primary-color: #6DE5ED;
 
 #close-icon {
@@ -17,6 +22,8 @@ $primary-color: #6DE5ED;
 
 body {
 	background-color: $primary-color;
+	font-family: Kalam;
+	font-size: 18px;
 }
 
 .flex {
@@ -101,6 +108,7 @@ main {
 
 $logo-outline-color: #195383;
 #logo {
+	margin-top: -0.15em;
 	position: relative;
 	font-family: akaDylanPlain;
 	font-size: 6em;
@@ -188,7 +196,7 @@ $logo-outline-color: #195383;
 
 #home {
 	#login-menu-container {
-		margin-top: 5%;
+		margin-top: 5em;
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -383,6 +391,7 @@ $logo-outline-color: #195383;
 				justify-content: center;
 				gap: 5px;
 				min-width: 0px;
+				flex-grow: 1;
 	
 				.card {
 					img {
@@ -438,13 +447,22 @@ $logo-outline-color: #195383;
 			.content-container {
 				display: flex;
 				justify-content: space-between;
-				align-items: baseline;
 				gap: 1em;
+
+				.round-score-container {
+					align-self: flex-end;
+					white-space: nowrap;
+
+					span {
+						color: rgb(0, 0, 0);
+					}
+				}
 	
 				.kept-cards {
 					flex-grow: 1;
 					display: flex;
 					gap: 0.25em;
+					flex-wrap: wrap;
 		
 					.card {
 						img {
@@ -476,8 +494,20 @@ $logo-outline-color: #195383;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: 55px;
 	gap: 3em;
+
+	.success-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2em;
+		margin-top: 1em;
+		font-size: 2em;
+
+		.menu-button {
+			font-size: 1.25em;
+		}
+	}
 
 	.register-container {
 		display: flex;

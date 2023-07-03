@@ -8,8 +8,9 @@ import Overlay from "./Overlay";
 import { axiosPrivate } from "../api/axios";
 import MenuButton from "./MenuButton";
 import { Player } from "../game/Player";
+import { BasicUser } from "../interfaces";
 
-export const UserImage = ({ user, onClick, size=50 }: { user: User | Player | Opponent, onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
+export const UserImage = ({ user, onClick, size=50, label }: { user: User | Player | Opponent | BasicUser, onClick?: MouseEventHandler<HTMLImageElement>, size?: number, label?: string }) => {
 	return (
 		<div className={classNames({
 			'user-image-container': true,
@@ -24,7 +25,7 @@ export const UserImage = ({ user, onClick, size=50 }: { user: User | Player | Op
 				width={size}
 				height={size}
 			/>
-			{user.username || 'username'}
+			{label || user.username || 'username'}
 		</div>
 	);
 };

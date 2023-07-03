@@ -3,7 +3,6 @@ import axios from '../api/axios';
 import { isAxiosError } from 'axios';
 import BaseScreen from "./BaseScreen";
 import MenuButton from "../components/MenuButton";
-import Logo from "../components/Logo";
 import { useNavigate } from "react-router-dom";
 
 const REGISTER_URL = '/register';
@@ -63,12 +62,11 @@ const Register = () => {
 	return (
 		<BaseScreen id='register'>
 			<div className='register-page-container'>
-				<Logo />
 				{success 
 					? 
-						<div>
+						<div className='success-container'>
 							Success!
-							<MenuButton onClick={() => navigate('/')}>Sign in</MenuButton>
+							<MenuButton onClick={() => navigate('/login')}>Sign in</MenuButton>
 						</div>
 					:
 					<div className='register-container'>

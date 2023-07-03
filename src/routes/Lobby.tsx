@@ -3,6 +3,7 @@ import { useSushiGo } from "../contexts/SushiGoContext";
 import { useEffect } from "react";
 import BaseScreen from "./BaseScreen";
 import MenuButton from "../components/MenuButton";
+import { UserImage, UserInfo } from "../components/User";
 
 const Lobby = ({ code }: { code: string }) => {
 	const { lobby, game, user, socketRef } = useSushiGo();
@@ -38,13 +39,14 @@ const Lobby = ({ code }: { code: string }) => {
 					{lobby?.players?.slice()?.sort?.((a, b) => {
 						if (a.username === user.username) {
 							return -1;
-						} else if (b.username === user.username) {
+						}
+						if (b.username === user.username) {
 							return 1;
-						} else {
-							return 0;
-						}}).map(player => (
+						} 
+						return 0;
+					}).map(player => (
 							<div key={player.id}>
-								{ player.username === user.username ? 'You' : player.username }
+								<UserImage user={player} label={player.username === user.username ? "You" : undefined} />
 							</div>
 						))}
 				</div>
