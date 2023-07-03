@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import axios from '../api/axios';
 import { isAxiosError } from 'axios';
 import BaseScreen from "./BaseScreen";
-import Button from "../components/Button";
+import MenuButton from "../components/MenuButton";
 import Logo from "../components/Logo";
 import { useNavigate } from "react-router-dom";
 
@@ -61,14 +61,14 @@ const Register = () => {
 	}
 
 	return (
-		<BaseScreen>
+		<BaseScreen id='register'>
 			<div className='register-page-container'>
 				<Logo />
 				{success 
 					? 
 						<div>
 							Success!
-							<Button onClick={() => navigate('/')}>Sign in</Button>
+							<MenuButton onClick={() => navigate('/')}>Sign in</MenuButton>
 						</div>
 					:
 					<div className='register-container'>
@@ -117,7 +117,7 @@ const Register = () => {
 								</div>
 							</div>
 							
-							<Button>Go!</Button>
+							<MenuButton>Go!</MenuButton>
 						</form>
 					</div>
 				}

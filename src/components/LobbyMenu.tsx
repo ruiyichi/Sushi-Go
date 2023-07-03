@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useSushiGo } from "../contexts/SushiGoContext";
 import { useNavigate } from "react-router-dom";
-import Logo from "./Logo";
-import Button from "./Button";
+import MenuButton from "./MenuButton";
 
 const LobbyMenu = () => {
 	const { socketRef, user } = useSushiGo();
@@ -29,27 +28,24 @@ const LobbyMenu = () => {
 	);
 
 	return (
-		<div className="main-page-container">
-			<Logo />
-			<div className="lobby-dialog">
-				<div className="create-lobby-container">
-					<Button onClick={() => createLobby()}>
-						Create private lobby
-					</Button>
-				</div>
+		<div className="lobby-menu-container">
+			<div className="create-lobby-container">
+				<MenuButton onClick={() => createLobby()}>
+					Create private lobby
+				</MenuButton>
+			</div>
 
-				<label>
-					OR
-				</label>
+			<label>
+				OR
+			</label>
 
-				<div className="join-lobby-container">
-					<input placeholder="Enter code" onBlur={e => setGameCode(e.target.value)}/>
-					<Button onClick={joinLobby}>
-						Join private lobby
-					</Button>
-					<div id="lobby-message">
-						{lobbyMessage}
-					</div>
+			<div className="join-lobby-container">
+				<input placeholder="Enter code" onBlur={e => setGameCode(e.target.value)}/>
+				<MenuButton onClick={joinLobby}>
+					Join private lobby
+				</MenuButton>
+				<div id="lobby-message">
+					{lobbyMessage}
 				</div>
 			</div>
 		</div>

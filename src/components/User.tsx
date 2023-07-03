@@ -6,12 +6,15 @@ import classNames from "classnames";
 import CloseIcon from "../icons/CloseIcon";
 import Overlay from "./Overlay";
 import { axiosPrivate } from "../api/axios";
-import Button from "./Button";
+import MenuButton from "./MenuButton";
 import { Player } from "../game/Player";
 
 export const UserImage = ({ user, onClick, size=50 }: { user: User | Player | Opponent, onClick?: MouseEventHandler<HTMLImageElement>, size?: number }) => {
 	return (
-		<div className='user-image-container'>
+		<div className={classNames({
+			'user-image-container': true,
+			pointer: onClick !== undefined
+		})}>
 			<img 
 				className='user-image'
 				draggable={false}
@@ -21,7 +24,7 @@ export const UserImage = ({ user, onClick, size=50 }: { user: User | Player | Op
 				width={size}
 				height={size}
 			/>
-			{user.username}
+			{user.username || 'username'}
 		</div>
 	);
 };
@@ -54,13 +57,14 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 				/>
 				<div className='user-container'>
 					<UserImage user={user} size={100} />
-					<Button onClick={async () => await logout() }>
+					<MenuButton onClick={async () => await logout() }>
 						Log out
-					</Button>
+					</MenuButton>
 				</div>
 				<div className='profile-pictures-container'>
 					{profilePictureFilenames.map(filename => (
 						<img
+							className='pointer'
 							id='user-image'
 							draggable={false}
 							key={filename}
@@ -76,8 +80,6 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 					))}
 				</div>
 			</div>
-			
-			<Button id='close-button' onClick={() => setShow(false)}>Close</Button>
 		</div>
 	);
 }

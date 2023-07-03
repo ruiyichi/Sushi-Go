@@ -61,11 +61,6 @@ const Game = () => {
 									<Player player={player} />
 								)
 							})}
-							{game.players.map(player => {
-								return (
-									<Player player={player} />
-								)
-							})}
 						</div>
 					</div>
 					

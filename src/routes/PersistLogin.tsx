@@ -6,12 +6,8 @@ import Loading from "../components/Loading";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { user, persist } = useSushiGo();
+  const { user } = useSushiGo();
   const refresh = useRefreshToken();
-
-  useEffect(() => {
-		localStorage.setItem('persist', persist);
-	}, [persist]);
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
@@ -26,14 +22,13 @@ const PersistLogin = () => {
       }
     }
 
-    persist && !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
+    !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
   return (
     <>
-      {!persist
-        ? <Outlet /> 
-        : isLoading
+      {
+        isLoading
           ? <Loading />
           : <Outlet />
       }

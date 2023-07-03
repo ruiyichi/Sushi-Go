@@ -3,6 +3,7 @@ import { MouseEventHandler } from "react";
 const CloseIcon = ({ width=20, height=20, onClick }: { width?: number, height?: number, onClick?: MouseEventHandler } ) => {
   return (
     <svg
+      className='pointer'
       id='close-icon'
       width={width}
       height={height}

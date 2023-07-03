@@ -1,21 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import Logo from "./Logo";
-import Button from "./Button";
+import MenuButton from "./MenuButton";
 
 const LoginMenu = () => {
 	const navigate = useNavigate();
 
 	return (
-		<div className='login-menu'>
-			<Logo />
-			<div>
-				<Button onClick={() => navigate('login')}>
-					Log In
-				</Button>
-				<Button onClick={() => navigate('register')}>
-					Sign up
-				</Button>
-			</div>
+		<div id='login-menu-container'>
+			<MenuButton onClick={() => navigate('login')}>
+				Log In
+			</MenuButton>
+			<MenuButton onClick={() => navigate('register')}>
+				Sign up
+			</MenuButton>
 		</div>
 	);
 }

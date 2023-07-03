@@ -12,8 +12,6 @@ const useLogout = () => {
 			});
 		} catch (err) {
 			console.error(err);
-		} finally {
-			localStorage.setItem('persist', 'false');
 		}
 	};
 

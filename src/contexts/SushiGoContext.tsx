@@ -28,8 +28,6 @@ interface SushiGoInterface {
 	user: User,
 	updateUser: React.Dispatch<any>,
 	clearUser: React.Dispatch<any>,
-	persist: string,
-	setPersist: React.Dispatch<any>,
 	lobby: Lobby,
 	updateLobby: React.Dispatch<any>,
 };
@@ -125,8 +123,6 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		dispatchLobby({ type: 'update', payload });
 	}
 
-	const [persist, setPersist] = useState(JSON.parse(localStorage.getItem('persist') || 'false') || false);
-
 	const value: SushiGoInterface = { 
 		game,
 		updateGame,
@@ -134,8 +130,6 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 		user,
 		updateUser,
 		clearUser,
-		persist,
-		setPersist,
 		lobby,
 		updateLobby,
 	};

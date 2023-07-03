@@ -16,6 +16,7 @@ const Overlay = ({ show, setShow, children }: { show: boolean, setShow: React.Di
 				}}
 				className={classNames({ 
 					overlay: true, 
+					pointer: true,
 				})}
 			>
 				{children}

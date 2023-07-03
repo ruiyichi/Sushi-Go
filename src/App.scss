@@ -3,15 +3,20 @@
 	src: url(./assets/akaDylanPlain.ttf) format('truetype');
 }
 
+$primary-color: #6DE5ED;
+
 #close-icon {
-	cursor: pointer;
 	&:hover {
 		fill: red;
 	}
 }
 
+.pointer {
+	cursor: pointer;
+}
+
 body {
-	background-color: #6DE5ED;
+	background-color: $primary-color;
 }
 
 .flex {
@@ -32,7 +37,7 @@ body {
 	z-index: 999;
 }
 
-.App {
+main {
 	position: fixed;
   top: 0;
   left: 0;
@@ -44,87 +49,11 @@ body {
 	visibility: hidden;
 }
 
-.user-info-container {
-	position: relative;
-	display: flex;
-	justify-content: flex-end;
-	margin-right: 5px;
-	margin-top: 5px;
-	
-	img {
-		cursor: pointer;
-	}
-
-	.user-settings-container {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		width: 35%;
-		min-height: 25%;
-		max-height: 50%;
-		overflow-y: auto;
-		margin: 5% auto;
-		padding: 1em;
-		border-radius: 0.5em;
-		border: 0.3em solid black;
-		background-color: white;
-		align-items: center;
-
-		.content {
-			display: flex;
-			flex-direction: row;
-			gap: 5%;
-
-			.profile-pictures-container {
-				display: flex;
-				flex-wrap: wrap;
-				height: fit-content;
-				flex-grow: 1;
-				gap: 0.4em;
-				margin-bottom: 5%;
-			}
-
-			.user-container {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 0.15em;
-			}
-		}
-
-		#close-button {
-			margin-top: auto;
-			font-size: 1.25em;
-		}
-
-		#close-icon {
-			position: absolute;
-			right: 0;
-			top: 0;
-		}
-	}
-}
-
-.base-screen-container {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	
-	#background-image {
-		position: absolute;
-		width: 100%;
-		height: auto;
-		margin: auto;
-		top: 0; left: 0; bottom: 0; right: 0;
-	}
-}
-
 .login-page-container {
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: 55px;
 	gap: 3em;
 
 	.login-container {
@@ -181,110 +110,171 @@ $logo-outline-color: #195383;
 		.015em .015em $logo-outline-color, -.015em -.015em $logo-outline-color, .015em -.015em $logo-outline-color, -.015em .015em $logo-outline-color;
 }
 
-.home {
+.base-screen {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
+	background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	white-space: nowrap;
 
-	.login-menu {
+	.user-info-container {
 		position: relative;
-		margin-top: 55px;
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 7em;
-
-		> div {
-			display: flex;
-			flex-direction: column;
-			gap: 3em;
-		}
+		justify-content: flex-end;
+		align-self: flex-end;
+		margin-right: 0.5%;
+		margin-top: 0.5%;
 		
-		button {
-			background-color: #35a4ff;
-			border: 0.05em solid #000;
-			border-radius: 0.3em;
-			padding: 0.1em 0.5em;
-			font-size: 2.5em;
-		}
-	}
-
-	.main-page-container {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 4em;
-
-		.lobby-dialog {
+		.user-settings-container {
+			position: relative;
 			display: flex;
 			flex-direction: column;
-			border: none;
-			align-items: center;
-			justify-content: space-evenly;
+			width: 35%;
+			min-height: 25%;
+			max-height: 50%;
+			overflow-y: auto;
+			margin: 5% auto;
 			border-radius: 0.5em;
-			font-size: 3em;
-			padding: .8em .6em;
-			gap: 1em;
-			
-			button {
-				width: max-content;
-				font-size: 0.5em;
-			}
-		
-			.create-lobby-container {
+			border: 0.3em solid black;
+			background-color: white;
+			align-items: center;
+	
+			.content {
 				display: flex;
-				flex-direction: column;
-				gap: 0.5em;
-				align-items: center;
+				flex-direction: row;
+				gap: 5%;
+				flex-grow: 1;
+				padding: 1em;
+				cursor: auto;
+	
+				.profile-pictures-container {
+					display: flex;
+					flex-wrap: wrap;
+					height: fit-content;
+					flex-grow: 1;
+					gap: 0.4em;
+					margin-bottom: 5%;
+
+					#user-image {
+						border-radius: 5em;
+					}
+				}
+	
+				.user-container {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: 0.15em;
+
+					.menu-button {
+						font-size: 20px;
+					}
+				}
 			}
-		
-			.join-lobby-container {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 0.5em; 
-			}
-		
-			#lobby-message {
-				color: red;
-				font-size: 0.5em;
+	
+			#close-icon {
+				position: absolute;
+				right: 0;
+				top: 0;
 			}
 		}
 	}
 }
 
-.lobby-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 5em;
-	margin-top: 5em;
-
-	#game-code-button {
-		background-color: white;
-		border: 0.05em solid black;
-		padding: 0.3em 0.4em;
-		font-size: 2em;
-		cursor: pointer;
-	}
-
-	.lobby-title {
+#home {
+	#login-menu-container {
+		margin-top: 5%;
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 2px;
-		font-size: 1.5em;
+		justify-content: center;
+		gap: 6em;
+
+		> div {
+			display: flex;
+			flex-direction: column;
+			gap: 4em;
+			text-align: center;
+		}
 	}
 
-	.players-container {
+	.lobby-menu-container {
 		display: flex;
+		flex-direction: column;
+		border: none;
+		align-items: center;
+		justify-content: space-evenly;
+		border-radius: 0.5em;
+		font-size: 3em;
+		padding: .8em .6em;
 		gap: 1em;
-		font-size: 1.5em;
+		
+		button {
+			width: max-content;
+			font-size: 0.5em;
+		}
+	
+		.create-lobby-container {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+			align-items: center;
+		}
+	
+		.join-lobby-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 0.5em; 
+		}
+	
+		#lobby-message {
+			color: red;
+			font-size: 0.5em;
+		}
+	}
+}
+
+.menu-button {
+	background: linear-gradient(180deg, #e7939f 0%, #edafb8 50%);
+	box-shadow: inset 0px -0.5em 0.15em -0.4em #ce949c, inset 0.05em 0.05em 0.3em 0.075em #f7d3d9;
+	border: 0.05em solid #000;
+	border-radius: 0.3em;
+	padding: 0.1em 0.5em;
+	font-size: 2.5em;
+}
+
+#lobby {
+	.lobby-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 5em;
+
+		.menu-button {
+			margin-top: 2em;
+			padding: 0.3em 0.4em;
+			font-size: 2em;
+		}
+
+		.lobby-title {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			font-size: 1.5em;
+		}
+
+		.players-container {
+			display: flex;
+			gap: 1em;
+			font-size: 1.5em;
+		}
 	}
 }
 

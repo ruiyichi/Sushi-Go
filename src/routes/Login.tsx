@@ -3,14 +3,13 @@ import axios from '../api/axios';
 import { isAxiosError } from 'axios';
 import { useSushiGo } from '../contexts/SushiGoContext';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-import Button from '../components/Button';
+import MenuButton from '../components/MenuButton';
 import BaseScreen from './BaseScreen';
-import Logo from '../components/Logo';
 
 const LOGIN_URL = '/auth';
 
 const Login = () => {
-	const { user, updateUser, persist, setPersist } = useSushiGo();
+	const { user, updateUser } = useSushiGo();
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -65,9 +64,8 @@ const Login = () => {
 		? 
 			<Navigate to={"/"} />
 		: 
-			<BaseScreen>
+			<BaseScreen id='login'>
 				<div className='login-page-container'>
-					<Logo />
 					<div className='login-container'>
 						<div ref={errRef} className={errMsg ? "error" : "hidden"}>{errMsg}</div>
 						<form onSubmit={handleSubmit}>
@@ -96,19 +94,9 @@ const Login = () => {
 										placeholder='Password'
 									/>
 								</div>
-								
-								<div>
-									Stay signed in
-									<input 
-										type='checkbox'
-										id='persist'
-										onChange={() => setPersist((prev: boolean) => !prev)}
-										value={persist}
-									/>
-								</div>
 							</div>
 							
-							<Button>Go!</Button>
+							<MenuButton>Go!</MenuButton>
 						</form>
 					</div>
 				</div>
