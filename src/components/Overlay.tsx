@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Overlay = ({ show, setShow, children }: { show: boolean, setShow: React.Dispatch<React.SetStateAction<boolean>>, children?: React.ReactNode }) => {
-	return show ? (
+	return (
 		<AnimatePresence>
 			<motion.div 
 				key='overlay'
@@ -17,12 +17,13 @@ const Overlay = ({ show, setShow, children }: { show: boolean, setShow: React.Di
 				className={classNames({ 
 					overlay: true, 
 					pointer: true,
+					hidden: !show,
 				})}
 			>
 				{children}
 			</motion.div>
 		</AnimatePresence>
-	) : null;
+	);
 }
 
 export default Overlay;

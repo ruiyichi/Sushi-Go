@@ -9,7 +9,6 @@ export const getUserProfilePicture = async (req: Request, res: Response) => {
 	if (!id) return res.status(400).json({ message: 'User ID required' });
 	try {
 		const user = await User.findOne({ _id: id }).exec();
-		console.log(user)
 		if (!user) {
 			return res.status(204).json({ message: `User ID ${id} not found` });
 		}

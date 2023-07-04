@@ -19,7 +19,7 @@ export const UserImage = ({ user, onClick, size=50, label }: { user: User | Play
 			<img 
 				className='user-image'
 				draggable={false}
-				src={`${SERVER_URI}/images/profiles/${user.id}?${Date.now()}`} 
+				src={!user.id ? '' : `${SERVER_URI}/images/profiles/${user.id}?${Date.now()}`} 
 				alt={user.id}
 				onClick={onClick}
 				width={size}
