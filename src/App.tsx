@@ -10,6 +10,8 @@ import PersistLogin from './routes/PersistLogin';
 import LobbyRoute from './routes/LobbyRoute';
 import GameRoute from './routes/GameRoute';
 import HomeRoute from './routes/HomeRoute';
+import ServerConnection from './routes/ServerConnection';
+import SocketServerConnection from './routes/SocketServerConnection';
 
 const App = () => {
 	return (
@@ -18,12 +20,16 @@ const App = () => {
 				<Route path="register" element={<Register />} />
 				<Route path="unauthorized" element={<Unauthorized />} />
 
-				<Route element={<PersistLogin />}>
-					<Route path="/" element={<HomeRoute />} />
-					<Route path="login" element={<Login />} />
-					<Route element={<RequireAuth />}>
-						<Route path="game" element={<GameRoute />} />
-						<Route path="lobby/*" element={<LobbyRoute />} />
+				<Route element={<ServerConnection />}>
+					<Route element={<PersistLogin />}>
+						<Route path="/" element={<HomeRoute />} />
+						<Route path="login" element={<Login />} />
+						<Route element={<RequireAuth />}>
+							<Route element={<SocketServerConnection />}>
+								<Route path="game" element={<GameRoute />} />
+								<Route path="lobby/*" element={<LobbyRoute />} />
+							</Route>
+						</Route>
 					</Route>
 				</Route>
 

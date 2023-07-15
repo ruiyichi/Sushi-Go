@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { SERVER_URI } from "../CONSTANTS";
 import { Opponent, User, useSushiGo } from "../contexts/SushiGoContext";
 import useLogout from "../hooks/useLogout";
@@ -9,26 +9,56 @@ import { axiosPrivate } from "../api/axios";
 import MenuButton from "./MenuButton";
 import { Player } from "../game/Player";
 import { BasicUser } from "../interfaces";
+import { motion } from "framer-motion";
+import CheckIcon from "../icons/CheckIcon";
 
 export const UserImage = ({ user, onClick, size=50, label }: { user: User | Player | Opponent | BasicUser, onClick?: MouseEventHandler<HTMLImageElement>, size?: number, label?: string }) => {
 	return (
-		<div className={classNames({
-			'user-image-container': true,
-			pointer: onClick !== undefined
-		})}>
-			<img 
-				className='user-image'
+		<div className='user-image-container'>
+			<motion.img 
+				className={classNames({
+					'user-image': true,
+					pointer: onClick !== undefined
+				})}
 				draggable={false}
 				src={!user.id ? '' : `${SERVER_URI}/images/profiles/${user.id}?${Date.now()}`} 
 				alt={user.id}
 				onClick={onClick}
 				width={size}
 				height={size}
+
+				whileHover={{ scale: onClick ? 1.1 : 1 }}
 			/>
 			{label || user.username || 'username'}
 		</div>
 	);
 };
+
+const ProfilePicture = ({ current, filename, onClick }: { current: boolean, filename: string, onClick: MouseEventHandler<HTMLImageElement> }) => {
+	return (
+		<div>
+			{ current && 
+				<>
+					<CheckIcon width={50} height={50} />
+					<motion.div id='overlay' />
+				</>
+			}
+			<motion.img
+				className='pointer'
+				id='user-image'
+				draggable={false}
+				key={filename}
+				src={`${SERVER_URI}/images/profilePictures/${filename}`}
+				alt={filename}
+				width={50}
+				onClick={onClick}
+
+				whileHover={{ scale: 1.1 }}
+			>
+			</motion.img>
+		</div>
+	);
+}
 
 const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const [profilePictureFilenames, setProfilePictureFilenames] = useState<string[]>([]);
@@ -64,20 +94,10 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 				</div>
 				<div className='profile-pictures-container'>
 					{profilePictureFilenames.map(filename => (
-						<img
-							className='pointer'
-							id='user-image'
-							draggable={false}
-							key={filename}
-							src={`${SERVER_URI}/images/profilePictures/${filename}`}
-							alt={filename}
-							width={50}
-							onClick={async () => {
-								await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
-								updateUser({ profilePictureFilename: filename });
-							}}
-						>
-						</img>
+						<ProfilePicture	current={filename === user.profilePictureFilename} filename={filename} onClick={async () => {
+							await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
+							updateUser({ profilePictureFilename: filename });
+						}} />
 					))}
 				</div>
 			</div>

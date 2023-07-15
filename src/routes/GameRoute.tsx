@@ -8,9 +8,9 @@ const GameRoute = () => {
   
 	if (player) {
 		return <Game />;
-	} else {
-		return <Navigate to="/" />;
 	}
+	
+	return <Navigate to="/" />;
 }
 
 export default GameRoute;

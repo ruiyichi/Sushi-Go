@@ -5,6 +5,46 @@ import { useEffect, useState } from "react";
 import Player from "../components/Player";
 import { Player as PlayerClass } from "../game/Player";
 import { UserImage } from "../components/User";
+import { AnimatePresence, motion } from "framer-motion";
+import MenuButton from "../components/MenuButton";
+
+const PrepareScreen = () => {
+	const [show, setShow] = useState(true);
+
+	useEffect(() => {
+		setShow(true);
+
+		const timer = setTimeout(() => {
+			setShow(false);
+		}, 2000);
+
+		return () => clearTimeout(timer);
+	}, []);
+
+	return (
+		<AnimatePresence>
+			{show && (
+				<motion.div 
+					className="prepare-screen-container"
+				>
+					<motion.div
+						initial={{ scale: 2, opacity: 0 }}
+						animate={{ 
+							scale: [2, 2, 2, 3, 7],
+							opacity: [0, 0, 1, 1, 0],
+						}}
+						transition={{ duration: 2, times: [0, 0.5, 0.5, 0.85, 1] }}
+					>
+						Sushi Go!
+					</motion.div>
+					<motion.div>
+						Prepare!
+					</motion.div>
+				</motion.div>
+			)}
+		</AnimatePresence>
+	);
+}
 
 const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	const navigate = useNavigate();
@@ -13,9 +53,9 @@ const GameOver = ({ players }: { players: Array<Opponent>}) => {
 	return (
 		<div className='game-over-container'>
 			Player { players.find(p => p.score === maxScore)?.username } wins!
-			<button onClick={() => navigate('/')}>
+			<MenuButton onClick={() => navigate('/')}>
 				Back to main menu
-			</button>
+			</MenuButton>
 		</div>
 	);
 }
@@ -42,34 +82,36 @@ const Game = () => {
 	const player = game.players.find(player => player.id === user.id) as PlayerClass;
 
 	return player && (
-		<div className="game-container">
-			<UserImage user={player} />
-			<div className="game-header-container">
-				<div>
-					Round { game.round } - Turn { game.turn } / { game.maxTurns }
-				</div>
-				<TurnTimer />
-			</div>
-			
-			{game.status === "Pending" 
-				?
-				<>
-					<div className="players-overflow-container">
-						<div className="players-container">
-							{game.players.map(player => {
-								return (
-									<Player player={player} />
-								)
-							})}
-						</div>
+		<>
+			<PrepareScreen />
+			<motion.div 
+				className="game-container"
+			>
+
+				<UserImage user={player} />
+				<div className="game-header-container">
+					<div>
+						Round { game.round } - Turn { game.turn } / { game.maxTurns }
 					</div>
-					
-					<ConveyorBeltContainer hand={player.hand} keptCard={player.keptCard} />
-				</>
-				:
-				<GameOver players={game.players} />
-			}
-		</div>
+					<TurnTimer />
+				</div>
+				
+				{game.status === "Pending" 
+					?
+					<>
+						<div className="players-overflow-container">
+							<div className="players-container">
+								{game.players.map(player => <Player player={player} />)}
+							</div>
+						</div>
+						
+						<ConveyorBeltContainer hand={player.hand} keptCard={player.keptCard} />
+					</>
+					:
+					<GameOver players={game.players} />
+				}
+			</motion.div>
+		</>
 	);
 }
 

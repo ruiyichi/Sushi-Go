@@ -3,7 +3,7 @@ import { useSushiGo } from "../contexts/SushiGoContext";
 import { useEffect } from "react";
 import BaseScreen from "./BaseScreen";
 import MenuButton from "../components/MenuButton";
-import { UserImage, UserInfo } from "../components/User";
+import { UserImage } from "../components/User";
 
 const Lobby = ({ code }: { code: string }) => {
 	const { lobby, game, user, socketRef } = useSushiGo();
