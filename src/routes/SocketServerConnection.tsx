@@ -16,7 +16,7 @@ const SocketServerConnection = () => {
 			clearInterval(intervalID.current);
 		};
 
-	}, []);
+	}, [socketRef.current]);
 
 	const connectToSocketServer = async () => {
 		if (socketRef.current?.connected) {

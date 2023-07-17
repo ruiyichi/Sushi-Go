@@ -94,9 +94,9 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 				</div>
 				<div className='profile-pictures-container'>
 					{profilePictureFilenames.map(filename => (
-						<ProfilePicture	current={filename === user.profilePictureFilename} filename={filename} onClick={async () => {
+						<ProfilePicture	current={filename === user.profilePicture} filename={filename} onClick={async () => {
 							await axiosPrivate.post(`${SERVER_URI}/images/profilePicture`, { filename });
-							updateUser({ profilePictureFilename: filename });
+							updateUser({ profilePicture: filename });
 						}} />
 					))}
 				</div>

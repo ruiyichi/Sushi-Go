@@ -5,44 +5,45 @@ import { useEffect, useState } from "react";
 import Player from "../components/Player";
 import { Player as PlayerClass } from "../game/Player";
 import { UserImage } from "../components/User";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import MenuButton from "../components/MenuButton";
+import Delayed from "../components/Delayed";
 
-const PrepareScreen = () => {
-	const [show, setShow] = useState(true);
-
-	useEffect(() => {
-		setShow(true);
-
-		const timer = setTimeout(() => {
-			setShow(false);
-		}, 2000);
-
-		return () => clearTimeout(timer);
-	}, []);
+const PregameScreen = () => {
+	const { game } = useSushiGo();
 
 	return (
-		<AnimatePresence>
-			{show && (
-				<motion.div 
-					className="prepare-screen-container"
-				>
-					<motion.div
-						initial={{ scale: 2, opacity: 0 }}
-						animate={{ 
-							scale: [2, 2, 2, 3, 7],
-							opacity: [0, 0, 1, 1, 0],
-						}}
-						transition={{ duration: 2, times: [0, 0.5, 0.5, 0.85, 1] }}
-					>
-						Sushi Go!
-					</motion.div>
-					<motion.div>
-						Prepare!
-					</motion.div>
-				</motion.div>
-			)}
-		</AnimatePresence>
+		<Delayed duration={3}>
+			<motion.div className="pregame-screen-container">
+				<div id='messages-container'>
+					<Delayed duration={1}>
+						<motion.div 
+							id='player-previews-container'
+							initial={{ x: '100%' }}
+							animate={{ x: ['100%', '0%', '0%', '0%', '-100%'] }}
+							transition={{ duration: 1, times: [0, 0.1, 0.4, 0.9, 1]}}
+						>
+							{game.players.map(p => 
+								<UserImage user={p} size={250} />
+							)}
+						</motion.div>
+					</Delayed>
+					<Delayed delay={0.5}>
+						<motion.div
+							initial={{ scale: 2, opacity: 0 }}
+							animate={{ 
+								scale: [2, 2, 2, 3, 7],
+								opacity: [0, 0, 1, 1, 0],
+							}}
+							transition={{ duration: 2, times: [0, 0.5, 0.5, 0.85, 1] }}
+						>
+							Sushi Go!
+						</motion.div>
+					</Delayed>
+					
+				</div>
+			</motion.div>
+		</Delayed>
 	);
 }
 
@@ -83,34 +84,35 @@ const Game = () => {
 
 	return player && (
 		<>
-			<PrepareScreen />
-			<motion.div 
-				className="game-container"
-			>
-
-				<UserImage user={player} />
-				<div className="game-header-container">
-					<div>
-						Round { game.round } - Turn { game.turn } / { game.maxTurns }
-					</div>
-					<TurnTimer />
-				</div>
-				
-				{game.status === "Pending" 
-					?
-					<>
-						<div className="players-overflow-container">
-							<div className="players-container">
-								{game.players.map(player => <Player player={player} />)}
-							</div>
+			<PregameScreen />
+			<Delayed delay={3}>
+				<motion.div 
+					className="game-container"
+				>
+					<UserImage user={player} />
+					<div className="game-header-container">
+						<div>
+							Round { game.round } - Turn { game.turn } / { game.maxTurns }
 						</div>
-						
-						<ConveyorBeltContainer hand={player.hand} keptCard={player.keptCard} />
-					</>
-					:
-					<GameOver players={game.players} />
-				}
-			</motion.div>
+						<TurnTimer />
+					</div>
+					
+					{game.status === "Pending" 
+						?
+						<>
+							<div className="players-overflow-container">
+								<div className="players-container">
+									{game.players.map(player => <Player player={player} />)}
+								</div>
+							</div>
+							
+							<ConveyorBeltContainer hand={player.hand} keptCard={player.keptCard} />
+						</>
+						:
+						<GameOver players={game.players} />
+					}
+				</motion.div>
+			</Delayed>
 		</>
 	);
 }

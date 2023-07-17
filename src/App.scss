@@ -305,7 +305,7 @@ $logo-outline-color: #195383;
 	}
 }
 
-.prepare-screen-container {
+.pregame-screen-container {
 	position: absolute;
 	z-index: 999;
 	top: 0;
@@ -316,7 +316,21 @@ $logo-outline-color: #195383;
 	align-items: center;
 	justify-content: center;
 	font-size: 5em;
-	flex-direction: column;
+
+	#messages-container {
+		display: grid;
+		text-align: center;
+
+		div {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		#player-previews-container {
+			display: flex;
+			gap: 5em;
+		}
+	}
 }
 
 .game-container {

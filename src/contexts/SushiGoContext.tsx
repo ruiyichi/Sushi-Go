@@ -11,7 +11,7 @@ export interface User {
 	id: string,
 	username: string,
 	accessToken: string,
-	profilePictureFilename: string
+	profilePicture: string
 };
 
 export interface Opponent {
@@ -89,9 +89,11 @@ export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => 
 	const [user, dispatchUser] = useReducer(userReducer, {} as User);
 
 	useEffect(() => {
-		socketRef.current = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
-		socketRef.current.on("updateGame", payload => updateGame(payload as Game));
-		socketRef.current.on("updateLobby", payload => updateLobby(payload as Lobby));
+		if (user.accessToken) {
+			socketRef.current = io(SOCKET_SERVER_URI, { query: { token: user.accessToken }});
+			socketRef.current.on("updateGame", payload => updateGame(payload as Game));
+			socketRef.current.on("updateLobby", payload => updateLobby(payload as Lobby));
+		}
 
 		return () => {
 			if (socketRef.current) {

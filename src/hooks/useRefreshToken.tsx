@@ -9,10 +9,8 @@ const useRefreshToken = () => {
 			withCredentials: true
 		});
 
-		const { accessToken, username, id } = response.data;
-
-		updateUser({ accessToken, username, id });
-		return accessToken;
+		updateUser(response.data);
+		return response.data.accessToken;
 	}
 
 	return refresh;
