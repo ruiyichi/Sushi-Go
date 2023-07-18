@@ -11,8 +11,8 @@ const Lobby = ({ code }: { code: string }) => {
 
 	const is_host = lobby?.players?.[0].id === user.id;
 
-	const startGame = () => {
-		socketRef.current?.emit("startGame");
+	const preStartGame = () => {
+		socketRef.current?.emit("preStartGame");
 	};
 
 	useEffect(() => {
@@ -54,7 +54,7 @@ const Lobby = ({ code }: { code: string }) => {
 				<div className="lobby-title">
 					{ is_host ? "YOU are the host" : "Waiting for host to start..." }
 					{is_host && lobby?.players?.length > 1 &&
-						<MenuButton onClick={startGame}>
+						<MenuButton onClick={preStartGame}>
 							Start game
 						</MenuButton>
 					}

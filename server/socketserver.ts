@@ -134,7 +134,7 @@ io.use((socket: Socket, next) => {
 		callback(status);
 	}
 
-	const startGame = () => {
+	const preStartGame = () => {
 		const hostUserID = socketUsers[socket.id];
 		const lobby = playerLobbies[hostUserID];
 
@@ -151,9 +151,19 @@ io.use((socket: Socket, next) => {
 			delete playerLobbies[userID];
 			clientSocket?.join(game.id);
 		});
-		
-		createTurnTimer(game);
+
 		emitUpdatedGameToAllClients(game);
+	}
+
+	const startGame = () => {
+		const userID = socketUsers[socket.id];
+		const game = playerGames[userID];
+
+		if (!game.started) {
+			game.started = true;
+			createTurnTimer(game);
+			emitUpdatedGameToAllClients(game);
+		}
 	}
 
 	const emitExistingGame = () => {
@@ -245,6 +255,7 @@ io.use((socket: Socket, next) => {
 	socket.on("createLobby", createLobby);
 	socket.on("joinLobby", joinLobby);
 	socket.on("startGame", startGame);
+	socket.on("preStartGame", preStartGame);
 	socket.on("keepCard", keepCard);
 	socket.on("getTurnTimer", emitTurnTimer)
 	socket.on("keepSecondCard", keepSecondCard);

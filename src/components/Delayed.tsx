@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const Delayed = ({ children, delay=0, duration }: { children: JSX.Element, delay?: number, duration?: number }) => {
+const Delayed = ({ children, delay=0, duration, onExit }: { children: JSX.Element, delay?: number, duration?: number, onExit?: Function }) => {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
@@ -12,6 +12,7 @@ const Delayed = ({ children, delay=0, duration }: { children: JSX.Element, delay
 			if (duration) {
 				durationTimer = setTimeout(() => {
 					setShow(false);
+					onExit?.();
 				}, duration * 1000);
 			}
 		}, delay * 1000);

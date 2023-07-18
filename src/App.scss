@@ -326,6 +326,12 @@ $logo-outline-color: #195383;
 			grid-row: 1;
 		}
 
+		#prepare-container {
+			display: flex;
+			gap: 1em;
+			flex-direction: column;
+		}
+
 		#player-previews-container {
 			display: flex;
 			gap: 5em;

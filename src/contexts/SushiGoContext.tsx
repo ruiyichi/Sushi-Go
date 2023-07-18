@@ -38,6 +38,7 @@ interface Game {
 	round: number,
 	maxTurns: number,
 	maxRounds: number,
+	started: boolean,
 };
 
 type UserAction = { type: 'update', payload: User } | { type: 'clear'};
@@ -52,7 +53,8 @@ const defaultGameState = {
 	turn: 0,
 	round: 0,
 	maxTurns: 0,
-	maxRounds: 0
+	maxRounds: 0,
+	started: false
 } as Game;
 
 export const SushiGoProvider = ({ children }: { children: React.ReactNode }) => {

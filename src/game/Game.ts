@@ -17,6 +17,7 @@ export class Game {
 	status: string;
 	turnStartTime: number;
 	startTime: number;
+	started: boolean;
 
 	constructor(players: Player[]=[]) {
 		this.id = uuid();
@@ -31,6 +32,7 @@ export class Game {
 		this.turnTimer = 0;
 		this.startTime = Date.now();
 		this.turnStartTime = Date.now();
+		this.started = false;
 
 		this.setDeck();
 		this.shuffleDeck();
