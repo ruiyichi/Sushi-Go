@@ -28,7 +28,7 @@ const SocketServerConnection = () => {
 	return (
 		<>
 			{isLoading
-				? <Loading title={'Connecting to socket server...'} />
+				? <Loading title='Connecting to socket server...' />
 				: <Outlet />
 			}
 		</>

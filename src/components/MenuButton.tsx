@@ -12,8 +12,9 @@ const MenuButton = ({ onClick, children }: { onClick?: React.MouseEventHandler<H
 				scale: 0.9
 			}}
 			onClick={onClick}
-			children={children}
-		/>
+		>
+			{children}
+		</motion.button>
 	);
 }
 

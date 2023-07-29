@@ -33,7 +33,7 @@ const ServerConnection = () => {
 	return (
 		<>
 			{isLoading
-				? <Loading title={'Connecting to server...'} />
+				? <Loading title='Connecting to server...' />
 				: <Outlet />
 			}
 		</>
