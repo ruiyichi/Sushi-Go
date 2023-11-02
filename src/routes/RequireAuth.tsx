@@ -1,8 +1,8 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useUser } from "../contexts/UserContext";
 
 const RequireAuth = () => {
-  const { user } = useSushiGo();
+  const { user } = useUser();
   const location = useLocation();
 
   return (

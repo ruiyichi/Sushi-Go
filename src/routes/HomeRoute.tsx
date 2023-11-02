@@ -1,13 +1,13 @@
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useGame } from "../contexts/GameContext";
 import { Navigate } from "react-router-dom";
 import Home from "../components/Home";
 
 const HomeRoute = () => {
-	const { game } = useSushiGo();
+	const { game } = useGame();
 
-	return game.status === 'Pending' 
+	return game.status === "Pending"
 	? 
-		<Navigate to={"/game"} />
+		<Navigate to="/game" />
 	:
 		<Home />
 }

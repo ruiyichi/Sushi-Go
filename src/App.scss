@@ -495,6 +495,7 @@ $logo-outline-color: #195383;
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items: center;
 			}
 	
 			.content-container {
@@ -534,6 +535,7 @@ $logo-outline-color: #195383;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	text-align: center;
 	flex-direction: column;
 	gap: 1em;
 	width: 100%;
@@ -606,6 +608,11 @@ $logo-outline-color: #195383;
 	flex-direction: column;
 	align-items: center;
 	user-select: none;
+
+	&.horizontal {
+		flex-direction: row;
+		gap: 5px;
+	}
 
 	.user-image {
 		border-radius: 5em;

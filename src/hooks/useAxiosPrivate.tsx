@@ -1,10 +1,10 @@
 import { axiosPrivate } from "../api/axios";
 import { useEffect } from 'react';
 import useRefreshToken from "./useRefreshToken";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useUser } from "../contexts/UserContext";
 
 const useAxiosPrivate = () => {
-	const { user } = useSushiGo();
+	const { user } = useUser();
 	const refresh = useRefreshToken();
 
 	useEffect(() => {

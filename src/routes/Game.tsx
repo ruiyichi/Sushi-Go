@@ -1,4 +1,4 @@
-import { Opponent, useSushiGo } from "../contexts/SushiGoContext";
+import { Opponent, useGame } from "../contexts/GameContext";
 import { useNavigate } from "react-router-dom";
 import ConveyorBeltContainer from "../components/ConveyorBeltContainer";
 import { useEffect, useState } from "react";
@@ -8,9 +8,12 @@ import { UserImage } from "../components/User";
 import { motion } from "framer-motion";
 import MenuButton from "../components/MenuButton";
 import Delayed from "../components/Delayed";
+import { useSocket } from "../contexts/SocketContext";
+import { useUser } from "../contexts/UserContext";
 
 const PregameScreen = () => {
-	const { game, socketRef } = useSushiGo();
+	const { socketRef } = useSocket();
+	const { game } = useGame();
 
 	return !game.started ? (
 		<Delayed duration={8} onExit={() => {
@@ -74,7 +77,9 @@ const GameOver = ({ players }: { players: Array<Opponent>}) => {
 
 const TurnTimer = () => {
 	const [turnTimer, setTurnTimer] = useState(0);
-	const { user, game, socketRef } = useSushiGo();
+	const { user } = useUser();
+	const { game } = useGame();
+	const { socketRef } = useSocket();
 
 	useEffect(() => {
 		socketRef.current?.on("setTurnTimer", payload => setTurnTimer(payload));
@@ -90,15 +95,14 @@ const TurnTimer = () => {
 }
 
 const Game = () => {
-	const { game, user } = useSushiGo();
+	const { user } = useUser();
+	const { game } = useGame();
 	const player = game.players.find(player => player.id === user.id) as PlayerClass;
 
 	return player && (
 		<>
 			<PregameScreen />
-			<motion.div 
-				className="game-container"
-			>
+			<motion.div className="game-container">
 				<UserImage user={player} />
 				<div className="game-header-container">
 					<div>

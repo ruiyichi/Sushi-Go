@@ -1,4 +1,4 @@
-import { Opponent, useSushiGo } from "../contexts/SushiGoContext";
+import { Opponent, useGame } from "../contexts/GameContext";
 import { Card as GameCard } from "../game/Cards";
 import { Card } from "./Cards";
 import { AnimationProps, motion } from "framer-motion";
@@ -6,6 +6,8 @@ import conveyorBelt from "../assets/conveyor_belt.png";
 import { UserImage } from "./User";
 import DoubleArrowLeftIcon from "../icons/DoubleArrowLeftIcon";
 import { Player } from "../game/Player";
+import { useSocket } from "../contexts/SocketContext";
+import { useUser } from "../contexts/UserContext";
 
 const PlayerIndicator = ({ id, player}: { id: string, player: Player | Opponent }) => {
 	return (
@@ -37,7 +39,9 @@ const ConveyorBeltImage = ({ animate }: { animate: AnimationProps["animate"] }) 
 }
 
 const ConveyorBeltContainer = ({ hand, keptCard }: { hand: GameCard[], keptCard: boolean }) => {
-	const { socketRef, game, user } = useSushiGo();
+	const { socketRef } = useSocket();
+	const { game } = useGame();
+	const { user } = useUser();
 
 	const player = game.players.find(p => p.id === user.id);
 	if (!player) {

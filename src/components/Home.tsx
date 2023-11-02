@@ -1,10 +1,10 @@
 import LobbyMenu from "./LobbyMenu";
 import LoginMenu from "./LoginMenu";
-import { useSushiGo } from "../contexts/SushiGoContext";
 import BaseScreen from "../routes/BaseScreen";
+import { useUser } from "../contexts/UserContext";
 
 const Home = () => {
-	const { user } = useSushiGo();
+	const { user } = useUser();
 
 	return (
 		<BaseScreen id='home'>

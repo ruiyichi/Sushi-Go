@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import Loading from "../components/Loading";
 import { Outlet } from "react-router-dom";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useSocket } from "../contexts/SocketContext";
 
 const SocketServerConnection = () => {
-	const { socketRef } = useSushiGo();
+	const { socketRef } = useSocket();
 	const [isLoading, setIsLoading] = useState(true);
 	const intervalID = useRef<NodeJS.Timer>();
 

@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useSushiGo } from "../contexts/SushiGoContext";
 import { useNavigate } from "react-router-dom";
 import MenuButton from "./MenuButton";
+import { useUser } from "../contexts/UserContext";
+import { useSocket } from "../contexts/SocketContext";
 
 const LobbyMenu = () => {
-	const { socketRef, user } = useSushiGo();
+	const { user } = useUser();
+	const { socketRef } = useSocket();
 	const [gameCode, setGameCode] = useState('');
 	const [lobbyMessage, setLobbyMessage] = useState('');
 
@@ -22,8 +24,9 @@ const LobbyMenu = () => {
 		(status: "OK" | "Invalid code" | "Lobby full") => {
 			if (status !== "OK") {
 				setLobbyMessage(status);
+			} else {
+				navigate(`lobby?code=${gameCode}`);
 			}
-			navigate(`lobby?code=${gameCode}`);
 		}
 	);
 

@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import { SERVER_URI } from "../CONSTANTS";
-import { Opponent, User, useSushiGo } from "../contexts/SushiGoContext";
+import { Opponent } from "../contexts/GameContext";
 import useLogout from "../hooks/useLogout";
 import classNames from "classnames";
 import CloseIcon from "../icons/CloseIcon";
@@ -11,10 +11,14 @@ import { Player } from "../game/Player";
 import { BasicUser } from "../interfaces";
 import { motion } from "framer-motion";
 import CheckIcon from "../icons/CheckIcon";
+import { User, useUser } from "../contexts/UserContext";
 
-export const UserImage = ({ user, onClick, size=50, label }: { user: User | Player | Opponent | BasicUser, onClick?: MouseEventHandler<HTMLImageElement>, size?: number, label?: string }) => {
+export const UserImage = ({ user, onClick, size=50, label, orientation="vertical" }: { user: User | Player | Opponent | BasicUser, onClick?: MouseEventHandler<HTMLImageElement>, size?: number, label?: string, orientation?: "horizontal" | "vertical" }) => {
 	return (
-		<div className='user-image-container'>
+		<div className={classNames({
+			'user-image-container': true,
+			'horizontal': orientation === "horizontal"
+		})}>
 			<motion.img 
 				className={classNames({
 					'user-image': true,
@@ -62,7 +66,7 @@ const ProfilePicture = ({ current, filename, onClick }: { current: boolean, file
 
 const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const [profilePictureFilenames, setProfilePictureFilenames] = useState<string[]>([]);
-	const { user, updateUser } = useSushiGo();
+	const { user, updateUser } = useUser();
 	const logout = useLogout();
 
 	useEffect(() => {
@@ -106,7 +110,7 @@ const UserSettings = ({ setShow }: { setShow: React.Dispatch<React.SetStateActio
 }
 
 export const UserInfo = () => {
-	const { user } = useSushiGo();
+	const { user } = useUser();
 	const [showUserOverlay, setShowUserOverlay] = useState(false);
 
 	return (

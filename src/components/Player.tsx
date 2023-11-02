@@ -1,4 +1,4 @@
-import { Opponent, useSushiGo } from "../contexts/SushiGoContext";
+import { Opponent, useGame } from "../contexts/GameContext";
 import { Player as PlayerClass } from "../game/Player";
 import { UserImage } from "./User";
 import { Card as GameCard, Nigiri, Wasabi, Tempura, Maki, Chopsticks, Pudding, Sashimi, Dumpling} from "../game/Cards";
@@ -26,7 +26,7 @@ const CardGroup = ({ cards }: { cards: GameCard[] }) => {
 }
 
 const RoundScore = ({ cards, playerID }: { cards: Array<GameCard>, playerID: string }) => {
-	const { game } = useSushiGo();
+	const { game } = useGame();
 	const playerCards = {} as Record<string, GameCard[]>;
 	
 	for (let player of game.players) {
@@ -44,12 +44,11 @@ const RoundScore = ({ cards, playerID }: { cards: Array<GameCard>, playerID: str
 const KeptCards = ({ keptCards }: { keptCards: GameCard[] }) => {
 	const usedNigiris = keptCards.filter(c => c instanceof Nigiri && c.hasWasabi);
 	const usedWasabis = keptCards.filter(c => c instanceof Wasabi && c.used);
-
 	const pairedWasabiAndNigiris = usedNigiris.map((nigiri, i) => [usedWasabis[i], nigiri]);
 
 	const bucketClasses = [Maki, Dumpling, Sashimi, Tempura, Nigiri, Pudding, Chopsticks];
 
-	const bucketedCards = keptCards.filter(card => !usedNigiris.includes(card) && !usedWasabis.includes(card)).reduce((g: Record<string, GameCard[]>, c: GameCard) => {
+	const bucketedCards = keptCards.filter(c => !usedNigiris.includes(c) && !usedWasabis.includes(c)).reduce((g: Record<string, GameCard[]>, c: GameCard) => {
 		const bucketName = c instanceof Wasabi ? Nigiri.name : bucketClasses[bucketClasses.findIndex(bucketName => c instanceof bucketName)].name;
 		g[bucketName] = g[bucketName] || [];
 		g[bucketName].push(c);
@@ -87,7 +86,7 @@ const Player = ({ player }: { player: PlayerClass | Opponent }) => {
 		<div className='player-container'>
 			<div className='header-container'>
 				<div>
-					<UserImage user={player} />
+					<UserImage user={player} orientation="horizontal" />
 				</div>
 				<div>
 					Total score: {player.score}

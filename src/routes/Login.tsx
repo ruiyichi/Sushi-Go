@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from '../api/axios';
 import { isAxiosError } from 'axios';
-import { useSushiGo } from '../contexts/SushiGoContext';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import MenuButton from '../components/MenuButton';
 import BaseScreen from './BaseScreen';
+import { useUser } from '../contexts/UserContext';
 
 const LOGIN_URL = '/auth';
 
 const Login = () => {
-	const { user, updateUser } = useSushiGo();
+	const { user, updateUser } = useUser();
 
 	const navigate = useNavigate();
 	const location = useLocation();

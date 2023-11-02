@@ -24,7 +24,7 @@ import sashimi_icon from "./assets/sashimi_icon.png";
 import tempura_icon from "./assets/tempura_icon.png";
 import wasabi_icon from "./assets/wasabi_icon.png";
 
-export const CARD_FILES: { [key: string]: { image: string, icon: string } } = {
+export const CARD_ASSETS: { [key: string]: { image: string, icon: string } } = {
 	"Tempura": { image: tempura, icon: tempura_icon },
 	"Sashimi": { image: sashimi, icon: sashimi_icon },
 	"Dumpling": { image: dumpling, icon: dumpling_icon },

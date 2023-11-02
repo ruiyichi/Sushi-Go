@@ -1,8 +1,8 @@
 import axios from "../api/axios";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useUser } from "../contexts/UserContext";
 
 const useRefreshToken = () => {
-	const { updateUser } = useSushiGo();
+	const { updateUser } = useUser();
 
 	const refresh = async () => {
 		const response = await axios.get('/refresh', {

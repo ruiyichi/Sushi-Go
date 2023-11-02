@@ -1,1 +1,1 @@
-export interface BasicUser { id: string, username: string };
+export type BasicUser = { id: string, username: string };

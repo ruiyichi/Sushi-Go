@@ -1,12 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useGame } from "../contexts/GameContext";
 import { useEffect } from "react";
 import BaseScreen from "./BaseScreen";
 import MenuButton from "../components/MenuButton";
 import { UserImage } from "../components/User";
+import { useLobby } from "../contexts/LobbyContext";
+import { useUser } from "../contexts/UserContext";
+import { useSocket } from "../contexts/SocketContext";
 
 const Lobby = ({ code }: { code: string }) => {
-	const { lobby, game, user, socketRef } = useSushiGo();
+	const { lobby } = useLobby();
+	const { game } = useGame();
+	const { user } = useUser();
+	const { socketRef } = useSocket();
 	const navigate = useNavigate();
 
 	const is_host = lobby?.players?.[0].id === user.id;

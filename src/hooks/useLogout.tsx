@@ -1,8 +1,8 @@
 import axios from "../api/axios";
-import { useSushiGo } from "../contexts/SushiGoContext";
+import { useUser } from "../contexts/UserContext";
 
 const useLogout = () => {
-	const { clearUser } = useSushiGo();
+	const { clearUser } = useUser();
 
 	const logout = async () => {
 		clearUser({});
