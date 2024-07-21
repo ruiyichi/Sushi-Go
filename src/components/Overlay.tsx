@@ -1,7 +1,13 @@
 import classNames from "classnames";
 import { motion, AnimatePresence } from "framer-motion";
+import { FC } from "react";
 
-const Overlay = ({ show, setShow, children }: { show: boolean, setShow: React.Dispatch<React.SetStateAction<boolean>>, children?: React.ReactNode }) => {
+interface OverlayProps {
+	show: boolean, 
+	setShow: React.Dispatch<React.SetStateAction<boolean>>, 
+	children?: React.ReactNode
+}
+const Overlay: FC<OverlayProps> = ({ show, setShow, children }) => {
 	return (
 		<AnimatePresence>
 			<motion.div 

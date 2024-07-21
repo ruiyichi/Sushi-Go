@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from "react";
+import { createContext, useContext, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { SOCKET_SERVER_URI } from "../CONSTANTS";
 import { useUser } from "./UserContext";

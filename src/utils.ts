@@ -7,7 +7,7 @@ export const handleResponseErrors = (response: Response) => {
       return response.json();
     }
   }
-  catch(e) {
+  catch (e) {
     return console.log(e);
   }
 }

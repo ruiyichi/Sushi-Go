@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { CARD_ASSETS } from "../game/Images";
 import { motion, Variants } from "framer-motion";
 import classNames from "classnames";
 
-export const Card = ({ cardName, onClick, style, variant="default" }: { cardName: string, onClick?: Function, style?: React.CSSProperties, variant?: "playable" | "default" }) => {
+interface CardProps {
+	cardName: string, 
+	onClick?: Function, 
+	style?: React.CSSProperties, 
+	variant?: "playable" | "default"
+}
+export const Card: FC<CardProps> = ({ cardName, onClick, style, variant }) => {
 	const [loaded, setLoaded] = useState(false);
 	const animationVariants: Variants = {
 		default: {},

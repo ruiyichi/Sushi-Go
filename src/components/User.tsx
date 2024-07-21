@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { SERVER_URI } from "../CONSTANTS";
 import { Opponent } from "../contexts/GameContext";
 import useLogout from "../hooks/useLogout";
@@ -13,7 +13,14 @@ import { motion } from "framer-motion";
 import CheckIcon from "../icons/CheckIcon";
 import { User, useUser } from "../contexts/UserContext";
 
-export const UserImage = ({ user, onClick, size=50, label, orientation="vertical" }: { user: User | Player | Opponent | BasicUser, onClick?: MouseEventHandler<HTMLImageElement>, size?: number, label?: string, orientation?: "horizontal" | "vertical" }) => {
+interface UserImageProps {
+	user: User | Player | Opponent | BasicUser, 
+	onClick?: MouseEventHandler<HTMLImageElement>, 
+	size?: number, 
+	label?: string, 
+	orientation?: "horizontal" | "vertical"
+}
+export const UserImage: FC<UserImageProps> = ({ user, onClick, size=50, label, orientation="vertical" }) => {
 	return (
 		<div className={classNames({
 			'user-image-container': true,

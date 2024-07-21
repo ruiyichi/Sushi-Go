@@ -14,7 +14,7 @@ const Loading = ({ title='Loading...' }) => {
 					transition: { 
 						duration: 1.6, 
 						repeat: Infinity,
-						times: [0, 0.25, 0.475, .65],
+						times: [0, 0.25, 0.475, 0.65],
 					}
 				}}
 			/>

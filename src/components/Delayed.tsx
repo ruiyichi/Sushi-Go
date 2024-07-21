@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 
-const Delayed = ({ children, delay=0, duration, onExit }: { children: JSX.Element, delay?: number, duration?: number, onExit?: Function }) => {
+interface DelayedProps {
+	children: JSX.Element, 
+	delay?: number, 
+	duration?: number, 
+	onExit?: Function
+}
+const Delayed: FC<DelayedProps> = ({ children, delay=0, duration, onExit }) => {
 	const [show, setShow] = useState(false);
 
 	useEffect(() => {
